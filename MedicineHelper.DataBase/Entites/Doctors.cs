@@ -12,7 +12,7 @@ namespace MedicineHelper.DataBase.Entites
         public string Name { get; set; }
 
         public Guid VisitsId { get; set; }
-        public Visits Visit { get; set; }
+        public List<Visits> Visit { get; set; }
 
         public Guid DoctorsClinicId { get; set; }
         public DoctorsClinic DoctorsClinic { get; set; }

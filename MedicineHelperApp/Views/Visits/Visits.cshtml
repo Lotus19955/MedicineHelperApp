@@ -1,0 +1,23 @@
+﻿@model VisitsModel
+
+<div>
+    <h3>
+        @Html.DisplayFor(modelItem => Model.Id)
+    </h3>
+    <h5>
+        @Html.DisplayFor(modelItem => Model.Name)
+    </h5>
+    <i>@Html.DisplayFor(modelItem => Model.Id)</i>
+    <div>
+        <p>
+            @Html.DisplayFor(modelItem => Model.Cost)
+        </p>
+    </div>
+    <h6>
+        @Html.DisplayFor(modelItem => Model.VisitDate)
+    </h6>
+
+    <a class="btn btn-primary" href="~/article/details/@Model.Id">Read details</a>
+
+</div>
+<hr>

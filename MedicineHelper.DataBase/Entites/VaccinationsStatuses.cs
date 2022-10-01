@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MedicineHelper.Core.Enums;
 
 namespace MedicineHelper.DataBase.Entites
 {
     public class VaccinationsStatuses
     {
         public Guid Id { get; set; }
-        public VaccinationStatus Status { get; set; }
-    }
-
-    public enum VaccinationStatus
-    {
-        PrescriptionIsValid = 1,
-        NPrescriptionInvalid
+        public VaccinationStatusEnum Status { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace MedicineHelper.DataBase.Entites
         public VisitsStatuses VisitsStatus { get; set; }
 
         public Guid DoctorsId { get; set; }
-        public Doctors VisitedDoctors { get; set; }
+        public List<Doctors> VisitedDoctors { get; set; }
 
         public Guid UsersId { get; set; }
-        public Users Users { get; set; }
+        public List<Users> Users { get; set; }
     }
 }

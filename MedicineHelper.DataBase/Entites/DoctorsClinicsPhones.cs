@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicineHelper.DataBase.Entites
 {
-    public class DoctorsCilincsPhones
+    public class DoctorsClinicsPhones
     {
         public Guid Id { get; set; }
 

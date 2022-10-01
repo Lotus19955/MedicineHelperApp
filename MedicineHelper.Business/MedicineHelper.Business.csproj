@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MedicineHelper.Core\MedicineHelper.Core.csproj" />
     <ProjectReference Include="..\MedicineHelper.DataBase\MedicineHelper.DataBase.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ServiceImplemintations\" />
   </ItemGroup>
 
 </Project>

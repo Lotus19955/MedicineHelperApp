@@ -15,10 +15,10 @@ namespace MedicineHelper.DataBase.Entites
         public int DaysOfMedication { get; set; }
 
         public Guid MedicinesId { get; set; }
-        public Medicines Medicine { get; set; }
+        public List<Medicines> Medicine { get; set; }
 
         public Guid VisitsConclusionsId { get; set; }
-        public VisitsConclusions VisitsConclusion { get; set; }
+        public List<VisitsConclusions> VisitsConclusion { get; set; }
 
         public Guid MedicinesPrescriptionsStatusesId { get; set; }
         public MedicinesPrescriptionsStatuses MedicinesPrescriptionsStatuse { get; set; }
