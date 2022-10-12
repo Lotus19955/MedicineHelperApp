@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicineHelper.DataBase.Entites
 {
-    public class Vaccines
+    public class Vaccines : IBaceEntity
     {
         public Guid Id { get; set; }
         public DateTime DateOfEndVaccine { get; set; }

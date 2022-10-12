@@ -4,7 +4,10 @@ namespace MedicineHelper.Core.Abstractions
 {
     public interface IVisitsService
     {
-        Task<List<VisitsDto>> GetVisitByNumber(int number, int amount);
-        Task<List<VisitsDto>> GetVisitsCost(decimal cost);
+        Task<List<VisitsDto>> GetAllVisitsAsync();
+        Task<List<VisitsDto>> GetVisitsForPeriodAsync(DateTime firstDate, DateTime secondDate);
+        Task<VisitsDto> GetVisitsByIdAsync(Guid id);
+        Task<int> CreateVisitAsync(VisitsDto dto);
+        Task<int> PatchAsync(Guid id, List<PatchModel> patchList);
     }
 }

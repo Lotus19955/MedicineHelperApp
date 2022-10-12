@@ -7,7 +7,7 @@ using MedicineHelper.Core.Enums;
 
 namespace MedicineHelper.DataBase.Entites
 {
-    public class Users
+    public class Users : IBaceEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

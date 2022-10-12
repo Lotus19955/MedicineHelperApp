@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MedicineHelper.DataBase.Entites
 {
-    public class Medicines
+    public class Medicines : IBaceEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

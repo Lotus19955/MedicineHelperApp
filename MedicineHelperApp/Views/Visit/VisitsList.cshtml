@@ -1,0 +1,14 @@
+﻿@model VisitsDto
+
+
+<tbody>
+    <tr>
+        <td>@Html.DisplayFor(modelItem => Model.Name)</td>
+        <td>@Html.DisplayFor(modelItem => Model.VisitDate)</td>
+        <td>@Html.DisplayFor(modelItem => Model.Status)</td>
+        <td>@Html.DisplayFor(modelItem => Model.Cost)</td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", "Visit",
+            new {id = Model.Id}, new {@class="btn btn-warning"})
+        </td>
+    </tr>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MedicineHelper.Core.Enums;
 
 namespace MedicineHelper.Core.DataTransferObjects
 {
@@ -12,5 +8,6 @@ namespace MedicineHelper.Core.DataTransferObjects
         public string Name { get; set; }
         public DateTime VisitDate { get; set; }
         public decimal Cost { get; set; }
+        public VisitStatusEnum Status { get; set; }
     }
 }

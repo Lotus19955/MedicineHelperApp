@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicineHelper.DataBase.Entites
 {
-    public class Doctors
+    public class Doctors : IBaceEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -14,11 +14,11 @@ namespace MedicineHelper.DataBase.Entites
         public Guid VisitsId { get; set; }
         public List<Visits> Visit { get; set; }
 
-        public Guid DoctorsClinicId { get; set; }
-        public DoctorsClinic DoctorsClinic { get; set; }
+        //public Guid DoctorsClinicId { get; set; }
+        //public DoctorsClinic DoctorsClinic { get; set; }
 
-        public Guid DoctorsSpecializationsId { get; set; }
-        public DoctorsSpecializations DoctorsSpecialization { get; set; }
+        //public Guid DoctorsSpecializationsId { get; set; }
+        //public DoctorsSpecializations DoctorsSpecialization { get; set; }
 
     }
 }

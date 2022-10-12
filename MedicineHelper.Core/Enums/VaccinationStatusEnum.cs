@@ -2,7 +2,7 @@
 {
     public enum VaccinationStatusEnum
     {
-        PrescriptionIsValid = 1,
-        NPrescriptionInvalid
+        Vaccinated = 1,
+        NotVaccined
     }
 }

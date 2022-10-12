@@ -1,0 +1,50 @@
+﻿@using MedicineHelper.Core.Enums
+@model AddOrEditVisitsModel
+@{
+    ViewData["Title"] = "Add visit";
+}
+
+
+<div>
+
+    <h1>Add visit</h1>
+
+    <form asp-controller="visit" asp-action="Add" method="post">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input asp-for="Name" class="form-control" id="visit">
+            <span asp-validation-for="Name"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="cost" class="form-label">Cost $</label>
+            <input asp-for="Cost" class="form-label" id="cost">
+        </div>
+
+        <div class="mb-3">
+            <label for="visitdate" class="date">Visita date</label>
+            <input asp-for="VisitDate" class="date" id="visitdate">
+            <span asp-validation-for="VisitDate"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="status" class="form-label">Status Type</label>
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<VisitStatusEnum>()" id="status">
+                @*<option selected="selected" disabled="disabled">Select status</option>*@
+            </select>
+            <span asp-validation-for="Status"></span>
+        </div>
+
+        <input type="submit" class="btn btn-primary" value="Add">
+    </form>
+    
+</div>
+
+        @section Scripts
+        {
+            <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+            <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+        }

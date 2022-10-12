@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace MedicineHelper.DataBase.Entites
 {
-    public class DoctorsClinicsPhones
-    {
-        public Guid Id { get; set; }
+    //public class DoctorsClinicsPhones
+    //{
+    //    public Guid Id { get; set; }
 
         
-        public Guid DoctorsClinicId { get; set; }
-        public DoctorsClinic DoctorsClinic { get; set; }
+    //    public Guid DoctorsClinicId { get; set; }
+    //    public DoctorsClinic DoctorsClinic { get; set; }
 
-    }
+    //}
 }

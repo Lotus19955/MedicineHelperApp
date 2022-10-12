@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedicineHelper.DataBase.Entites
 {
-    public class Currencies
+    public class Currencies : IBaceEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

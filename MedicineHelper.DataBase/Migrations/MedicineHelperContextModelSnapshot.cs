@@ -34,7 +34,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("VisitedDoctorsId");
 
-                    b.ToTable("DoctorsVisits");
+                    b.ToTable("DoctorsVisits", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Currencies", b =>
@@ -49,19 +49,13 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Currencies");
+                    b.ToTable("Currencies", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Doctors", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DoctorsClinicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DoctorsSpecializationsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -76,48 +70,9 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorsClinicId");
-
-                    b.HasIndex("DoctorsSpecializationsId");
-
                     b.HasIndex("VaccinationsId");
 
-                    b.ToTable("Doctors");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entites.DoctorsClinic", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Adress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DoctorsClinic");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entites.DoctorsClinicsPhones", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DoctorsClinicId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorsClinicId");
-
-                    b.ToTable("DoctorsClinicsPhone");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.DoctorsSpecializations", b =>
@@ -132,7 +87,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("DoctorsSpecializations");
+                    b.ToTable("DoctorsSpecializations", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Medicines", b =>
@@ -166,21 +121,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("MedicinesPrescriptonsId");
 
-                    b.ToTable("Medicines");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entites.MedicinesPrescriptionsStatuses", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MedicinesPrescriptionsStatuses");
+                    b.ToTable("Medicines", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.MedicinesPrescriptons", b =>
@@ -201,10 +142,10 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<Guid>("MedicinesId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("MedicinesPrescriptionsStatusesId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("NumberOfMedicinePerDay")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<Guid>("VisitsConclusionsId")
@@ -212,9 +153,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MedicinesPrescriptionsStatusesId");
-
-                    b.ToTable("MedicinesPrescriptons");
+                    b.ToTable("MedicinesPrescriptons", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Users", b =>
@@ -243,7 +182,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("VisitsId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Vaccinations", b =>
@@ -255,19 +194,16 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<DateTime>("DateOfVaccination")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DoctorsClinicId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("DoctorsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("VaccinationsStatusId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("VaccinesId")
@@ -275,27 +211,9 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorsClinicId");
-
                     b.HasIndex("UserId");
 
-                    b.HasIndex("VaccinationsStatusId");
-
-                    b.ToTable("Vaccinations");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entites.VaccinationsStatuses", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VaccinationsStatuses");
+                    b.ToTable("Vaccinations", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Vaccines", b =>
@@ -326,7 +244,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("VaccinationsId");
 
-                    b.ToTable("Vaccines");
+                    b.ToTable("Vaccines", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Visits", b =>
@@ -338,15 +256,15 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<decimal>("Cost")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("CurrenciesId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("DoctorsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsersId")
                         .HasColumnType("uniqueidentifier");
@@ -357,18 +275,11 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<Guid?>("VisitsConclusionsId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("VisitsStatusId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CurrenciesId");
 
                     b.HasIndex("VisitsConclusionsId");
 
-                    b.HasIndex("VisitsStatusId");
-
-                    b.ToTable("Visits");
+                    b.ToTable("Visits", (string)null);
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.VisitsConclusions", b =>
@@ -390,21 +301,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("MedicinesPrescriptonsId");
 
-                    b.ToTable("VisitsConclusions");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entites.VisitsStatuses", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("VisitsStatuses");
+                    b.ToTable("VisitsConclusions", (string)null);
                 });
 
             modelBuilder.Entity("DoctorsVisits", b =>
@@ -424,36 +321,9 @@ namespace MedicineHelper.DataBase.Migrations
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Doctors", b =>
                 {
-                    b.HasOne("MedicineHelper.DataBase.Entites.DoctorsClinic", "DoctorsClinic")
-                        .WithMany()
-                        .HasForeignKey("DoctorsClinicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicineHelper.DataBase.Entites.DoctorsSpecializations", "DoctorsSpecialization")
-                        .WithMany()
-                        .HasForeignKey("DoctorsSpecializationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MedicineHelper.DataBase.Entites.Vaccinations", null)
                         .WithMany("Doctor")
                         .HasForeignKey("VaccinationsId");
-
-                    b.Navigation("DoctorsClinic");
-
-                    b.Navigation("DoctorsSpecialization");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entites.DoctorsClinicsPhones", b =>
-                {
-                    b.HasOne("MedicineHelper.DataBase.Entites.DoctorsClinic", "DoctorsClinic")
-                        .WithMany()
-                        .HasForeignKey("DoctorsClinicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DoctorsClinic");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Medicines", b =>
@@ -469,17 +339,6 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Navigation("Currencie");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entites.MedicinesPrescriptons", b =>
-                {
-                    b.HasOne("MedicineHelper.DataBase.Entites.MedicinesPrescriptionsStatuses", "MedicinesPrescriptionsStatuse")
-                        .WithMany()
-                        .HasForeignKey("MedicinesPrescriptionsStatusesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("MedicinesPrescriptionsStatuse");
-                });
-
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Users", b =>
                 {
                     b.HasOne("MedicineHelper.DataBase.Entites.Visits", null)
@@ -489,29 +348,13 @@ namespace MedicineHelper.DataBase.Migrations
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Vaccinations", b =>
                 {
-                    b.HasOne("MedicineHelper.DataBase.Entites.DoctorsClinic", "DoctorsClinic")
-                        .WithMany()
-                        .HasForeignKey("DoctorsClinicId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MedicineHelper.DataBase.Entites.Users", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MedicineHelper.DataBase.Entites.VaccinationsStatuses", "VaccinationsStatus")
-                        .WithMany()
-                        .HasForeignKey("VaccinationsStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("DoctorsClinic");
-
                     b.Navigation("User");
-
-                    b.Navigation("VaccinationsStatus");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Vaccines", b =>
@@ -531,25 +374,9 @@ namespace MedicineHelper.DataBase.Migrations
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.Visits", b =>
                 {
-                    b.HasOne("MedicineHelper.DataBase.Entites.Currencies", "Currensies")
-                        .WithMany()
-                        .HasForeignKey("CurrenciesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MedicineHelper.DataBase.Entites.VisitsConclusions", null)
                         .WithMany("Visit")
                         .HasForeignKey("VisitsConclusionsId");
-
-                    b.HasOne("MedicineHelper.DataBase.Entites.VisitsStatuses", "VisitsStatus")
-                        .WithMany()
-                        .HasForeignKey("VisitsStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Currensies");
-
-                    b.Navigation("VisitsStatus");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entites.VisitsConclusions", b =>
