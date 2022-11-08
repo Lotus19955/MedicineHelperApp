@@ -1,13 +1,19 @@
-using MedicineHelper.Business.ServiceImplemintations;
-using MedicineHelper.Core;
+using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Data.Abstractions;
-using MedicineHelper.Data.Abstractions.Repository;
+using MedicineHelper.Data.Abstractions.Repositories;
 using MedicineHelper.Data.Repositories;
-using MedicineHelper.Data.Repositories.Repository;
 using MedicineHelper.DataBase;
-using MedicineHelper.DataBase.Entites;
+using MedicineHelper.DataBase.Entities;
+using MedicineHelper.IdentityManagers;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Serilog;
+using Serilog.Events;
+using System.Reflection;
+using System.Text;
 
 namespace MedicineHelperApp
 {
@@ -16,6 +22,11 @@ namespace MedicineHelperApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Host.UseSerilog((ctx, lc) => lc
+                .WriteTo.Console()
+                .WriteTo.File(GetPathToLogFile(),
+                    LogEventLevel.Information));
 
             // Add services to the container.
 
@@ -26,13 +37,58 @@ namespace MedicineHelperApp
             optionsBuilder.UseSqlServer(connectionString));
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services
+               .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(options =>
+               {
+                   options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                   options.LoginPath = new PathString(@"/Account/Login");
+                   options.LogoutPath = new PathString(@"/Account/Logout");
+                   options.AccessDeniedPath = new PathString(@"/Account/Login");
+               });
 
-            builder.Services.AddScoped<IVisitsService, VisitsService> ();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            // Add business services
+            builder.Services.AddScoped<ICurrencyService, CurrencyService>();
+            builder.Services.AddScoped<IClinicService, ClinicService>();
+            builder.Services.AddScoped<IClinicPhoneService, ClinicPhoneService>();
+            builder.Services.AddScoped<IDrugService, DrugService>();
+            builder.Services.AddScoped<ISpecializationService, SpecializationService>();
+            builder.Services.AddScoped<IJobStatusService, JobStatusService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IDoctorPersonalDataService, DoctorPersonalDataService>();
+            builder.Services.AddScoped<IDoctorService, DoctorService>();
+            builder.Services.AddScoped<IVaccinationStatusService, VaccinationStatusService>();
+            builder.Services.AddScoped<IVaccineService, VaccineService>();
             builder.Services.AddScoped<IVaccinationService, VaccinationService>();
-            builder.Services.AddScoped<IAdditionalVisitRepository, VisitGenericRepository>();
+            builder.Services.AddScoped<IVisitService, VisitService>();
+            builder.Services.AddScoped<IVisitResultService, VisitResultService>();
+
+            // Add custom services
+            builder.Services.AddScoped<ISignInManager, SignInManager>();
+            builder.Services.AddScoped<IUserManager, UserManager>();
+
+            // Add repositories
+            builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+            builder.Services.AddScoped<IRepository<Clinic>, Repository<Clinic>>();
+            builder.Services.AddScoped<IRepository<ClinicPhone>, Repository<ClinicPhone>>();
+            builder.Services.AddScoped<IRepository<Drug>, Repository<Drug>>();
+            builder.Services.AddScoped<IRepository<DoctorSpecialization>, Repository<DoctorSpecialization>>();
+            builder.Services.AddScoped<IRepository<JobStatus>, Repository<JobStatus>>();
+            builder.Services.AddScoped<IRepository<User>, Repository<User>>();
+            builder.Services.AddScoped<IRepository<Role>, Repository<Role>>();
+            builder.Services.AddScoped<IRepository<DoctorPersonalData>, Repository<DoctorPersonalData>>();
+            builder.Services.AddScoped<IRepository<Doctor>, Repository<Doctor>>();
+            builder.Services.AddScoped<IRepository<VaccinationStatus>, Repository<VaccinationStatus>>();
+            builder.Services.AddScoped<IRepository<Vaccine>, Repository<Vaccine>>();
             builder.Services.AddScoped<IRepository<Vaccination>, Repository<Vaccination>>();
-            builder.Services.AddScoped<IVisitRepository, VisitRepository>();
-            builder.Services.AddScoped<IVaccinationRepository, VaccinationRepository>();
+            builder.Services.AddScoped<IRepository<Visit>, Repository<Visit>>();
+            builder.Services.AddScoped<IRepository<VisitResult>, Repository<VisitResult>>();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Configuration.AddJsonFile("secrets.json");
@@ -52,6 +108,7 @@ namespace MedicineHelperApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -59,6 +116,15 @@ namespace MedicineHelperApp
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+        private static string GetPathToLogFile()
+        {
+            var sb = new StringBuilder();
+            sb.Append(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            sb.Append(@"\logs\");
+            sb.Append($"{DateTime.Now:yyyyMMddhhmmss}");
+            sb.Append("data.log");
+            return sb.ToString();
         }
     }
 }

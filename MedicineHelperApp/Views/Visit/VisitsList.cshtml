@@ -1,8 +1,9 @@
-﻿@model VisitsDto
+﻿@model VisitDto
 
 
 <tbody>
     <tr>
+        <td></td>
         <td>@Html.DisplayFor(modelItem => Model.Name)</td>
         <td>@Html.DisplayFor(modelItem => Model.VisitDate)</td>
         <td>@Html.DisplayFor(modelItem => Model.Status)</td>
@@ -11,4 +12,9 @@
             @Html.ActionLink("Edit", "Edit", "Visit",
             new {id = Model.Id}, new {@class="btn btn-warning"})
         </td>
+        <td>
+            @Html.ActionLink("Delete", "Remove", "Visit",
+            new {id = Model.Id}, new {@class="btn btn-danger"})
+        </td>
     </tr>
+</tbody>

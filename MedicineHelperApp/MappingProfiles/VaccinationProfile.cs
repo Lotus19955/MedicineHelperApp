@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using MedicineHelper.Core.DataTransferObjects;
-using MedicineHelper.DataBase.Entites;
+using MedicineHelper.DataBase.Entities;
 using MedicineHelperApp.Models;
 
 namespace MedicineHelperApp.MappingProfiles

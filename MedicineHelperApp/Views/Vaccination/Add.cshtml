@@ -22,7 +22,7 @@
         </div>
         <div class="mb-3">
             <label for="status" class="form-label">Status Type</label>
-            <select asp-for="Status" asp-items="Html.GetEnumSelectList<VaccinationStatusEnum>()" id="status">
+           @* <select asp-for="Status" asp-items="Html.GetEnumSelectList<VaccinationStatus>()" id="status">
                 @*<option selected="selected" disabled="disabled">Select status</option>*@
             </select>
         </div>

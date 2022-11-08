@@ -7,11 +7,11 @@ namespace AspNetSampleMvcApp.Helpers;
 [HtmlTargetElement("serverSummary")]
 public class ServerSummaryTagHelper : TagHelper
 {
-    private readonly IVisitsService _visitsService;
+    private readonly IVisitService _visitsService;
     public bool Visible { get; set; }
     public StyleInformation? Style { get; set; }
 
-    public ServerSummaryTagHelper(IVisitsService visitsService)
+    public ServerSummaryTagHelper(IVisitService visitsService)
     {
         _visitsService = visitsService;
     }

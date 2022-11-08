@@ -1,13 +1,13 @@
 ﻿using MedicineHelper.Core;
-using MedicineHelper.Data.Abstractions.Repository;
+using MedicineHelper.Data.Abstractions.Repositories;
 using MedicineHelper.DataBase;
-using MedicineHelper.DataBase.Entites;
+using MedicineHelper.DataBase.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace MedicineHelper.Data.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class, IBaceEntity
+    public class Repository<T> : IRepository<T> where T : class, IBaseEntity
     {
         protected readonly MedicineHelperContext Database;
         protected readonly DbSet<T> DbSet;
@@ -60,7 +60,7 @@ namespace MedicineHelper.Data.Repositories
         }
         public virtual async Task PatchAsync(Guid id, List<PatchModel> patchData)
         {
-            var model = await DbSet.FirstOrDefaultAsync(entites => entites.Id.Equals(id));
+            var model = await DbSet.FirstOrDefaultAsync(Entities => Entities.Id.Equals(id));
 
             var nameValuePropertiesPairs = patchData.ToDictionary(patchModel => patchModel.PropertyName,
                 patchModel => patchModel.PropertyValue);

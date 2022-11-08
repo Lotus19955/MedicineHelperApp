@@ -1,4 +1,5 @@
-﻿@model VisitsModel
+﻿@using MedicineHelper.Core.Enums
+@model VisitModel
 @{
     ViewData["Title"] = "Edit Visit";
 }
@@ -27,8 +28,10 @@
         </div>
         <br />
         <div>
-            @Html.LabelFor(model => model.Status)
-            @Html.TextBoxFor(model => model.Status)
+            <label for="status" class="form-label">Status Type</label>
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<VisitStatus>()" id="status">
+            </select>
+            <span asp-validation-for="Status"></span>
         </div>
         <br />
         <button>Submit</button>

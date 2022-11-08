@@ -8,6 +8,6 @@ namespace MedicineHelper.Core.DataTransferObjects
         public string Name { get; set; }
         public DateTime VisitDate { get; set; }
         public decimal Cost { get; set; }
-        public VisitStatusEnum Status { get; set; }
+        public VisitStatus Status { get; set; }
     }
 }

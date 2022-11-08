@@ -1,16 +1,19 @@
 ﻿using MedicineHelper.Core.DataTransferObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MedicineHelper.Core.Abstractions
+namespace MedicineHelper.Core.Abstractions;
+
+public interface IVaccinationService
 {
-    public interface IVaccinationService
-    {
-        Task<List<VaccinationDto>> GetAllVaccinationAsync();
-        Task<int> CreateVaccinationAsync(VaccinationDto dto);
-        Task<VaccinationDto> GetVaccinationByIdAsync(Guid id);
-    }
+    //READ
+    Task<VaccinationDto> GetVaccinationByIdAsync(Guid id);
+    Task<bool> IsVaccinationExistAsync(Guid clinicId, Guid vaccineId, Guid userId, DateTime dateOfVaccination);
+    Task<List<VaccinationDto>> GetAllVaccinationsByUserIdAsync(Guid userId);
+
+    //CREATE
+    Task<int> CreateVaccinationAsync(VaccinationDto dto);
+
+    //UPDATE
+    Task<int> UpdateAsync(Guid id, VaccinationDto dto);
+
+    //REMOVE
 }

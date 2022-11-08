@@ -1,41 +1,54 @@
 ﻿using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using MedicineHelper.Business.ServiceImplemintations;
 using System.Diagnostics;
 using MedicineHelper.Core;
 using MedicineHelper.Core.Abstractions;
 using Serilog;
 using AutoMapper;
 using MedicineHelper.Core.DataTransferObjects;
+using Microsoft.AspNetCore.Authorization;
+using MedicineHelper.Business.ServicesImplementations;
+using MedicineHelper.Core.Enums;
 
 namespace MedicineHelperApp.Controllers
 {
+    [Authorize(Roles = "User, Admin")]
     public class VisitController : Controller
 
     {
-        private readonly IVisitsService _visitsService;
         private readonly IMapper _mapper;
+        private readonly IVisitService _visitService;
+        private readonly IUserManager _userManager;
 
 
-        public VisitController(IVisitsService visitsService, IMapper mapper)
+        public VisitController(IMapper mapper,
+            IVisitService visitService,
+            IUserManager userManager)
         {
-            _visitsService = visitsService;
             _mapper = mapper;
+            _visitService = visitService;
+            _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page)
         {
             try
             {
-                var visits = await _visitsService.GetAllVisitsAsync();
-                if (visits.Any())
+                var userId = (await _userManager.GetUserAsync()).Id;
+                var dto = await _visitService
+                    .GetAllVisitsByUserIdAsync(userId);
+                var visits = _mapper.Map<List<VisitHumanReadableModel>>(dto)
+                .OrderByDescending(visit => visit.DateOfVisit)
+                    .ToList();
+
+                var visitStatuses = (VisitStatus[])Enum.GetValues(typeof(VisitStatus));
+                var model = new VisitWithVisitStatusesModel()
                 {
-                    return View(visits);
-                }
-                else
-                {
-                    return View("NoVisits");
-                }
+                    Visits = visits,
+                    VisitStatuses = visitStatuses
+                };
+
+                return View(model);
             }
             catch (Exception e)
             {
@@ -65,8 +78,8 @@ namespace MedicineHelperApp.Controllers
 
                     model.Id = Guid.NewGuid();
 
-                    var dto = _mapper.Map<VisitsDto>(model);
-                    var resule = await _visitsService.CreateVisitAsync(dto);
+                    var dto = _mapper.Map<VisitDto>(model);
+                    var resule = await _visitService.CreateVisitAsync(dto);
 
                     return RedirectToAction("Index", "Visit");
                 }
@@ -88,13 +101,13 @@ namespace MedicineHelperApp.Controllers
         {
             if (id != Guid.Empty)
             {
-                var visitDto = await _visitsService.GetVisitsByIdAsync(id);
+                var visitDto = await _visitService.GetVisitByIdAsync(id);
                 if (visitDto == null)
                 {
                     return BadRequest();
                 }
 
-                var editModel = _mapper.Map<VisitsModel>(visitDto);
+                var editModel = _mapper.Map<VisitModel>(visitDto);
 
                 return View(editModel);
             }
@@ -103,46 +116,35 @@ namespace MedicineHelperApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(VisitsModel model)
+        public async Task<IActionResult> Edit(VisitModel model)
         {
             try
             {
-                if (model != null)
+                if (ModelState.IsValid)
                 {
-                    var dto = _mapper.Map<VisitsDto>(model);
-
-                    var visitsDto = await _visitsService.GetVisitsByIdAsync(model.Id);
-
-                    //should be sure that dto property naming is the same with entity property naming
-                    var patchList = new List<PatchModel>();
-                    if (dto != null)
-                    {
-                        if (dto.Id.Equals(visitsDto.Id))
-                        {
-                            patchList.Add(new PatchModel()
-                            {
-                                PropertyName = nameof(model.Name),
-                                PropertyValue = dto.Name
-                            });
-                        }
-                    }
-
-                    await _visitsService.PatchAsync(model.Id, patchList);
-
-                    //await _articleService.CreateArticleAsync(dto);
+                    var dto = _mapper.Map<VisitDto>(model);
+                    await _visitService.UpdateAsync(model.Id, dto);
 
                     return RedirectToAction("Index", "Visit");
                 }
-                else
-                {
-                    return BadRequest();
-                }
+                return View(model);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, ex.Message);
                 return StatusCode(500);
             }
+        }
+        public async Task<IActionResult> Remove(Guid id)
+        {
+            if (id != Guid.Empty)
+            {
+                await _visitService.Remove(id);
+
+                return RedirectToAction("Index", "Visit");
+            }
+
+            return BadRequest();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
