@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Business", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Core", "MedicineHelper.Core\MedicineHelper.Core.csproj", "{5B87F059-760B-48B3-B27B-A5DCFC50C528}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicineHelper.Data.Repositories", "MedicineHelper.Data.Repositories\MedicineHelper.Data.Repositories.csproj", "{8B27B905-E735-4733-A47B-9004B38BBF33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Data.Repositories", "MedicineHelper.Data.Repositories\MedicineHelper.Data.Repositories.csproj", "{8B27B905-E735-4733-A47B-9004B38BBF33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicineHelper.Data.Abstractions", "ClassLibrary1\MedicineHelper.Data.Abstractions.csproj", "{2BD3F540-C2EE-4141-BF8C-C8144C706E76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Data.Abstractions", "ClassLibrary1\MedicineHelper.Data.Abstractions.csproj", "{2BD3F540-C2EE-4141-BF8C-C8144C706E76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

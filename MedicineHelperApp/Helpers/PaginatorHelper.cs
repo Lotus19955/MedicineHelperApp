@@ -9,12 +9,11 @@ namespace MedicineHelperApp.Helpers
     {
         public static HtmlString GeneratePaginator (this IHtmlHelper html, int[] pages)
         {
-            var sb = new StringBuilder("<div>");
+            var sb = new StringBuilder();
             foreach (var page in pages)
             {
-                sb.Append($"<p>{page}</p>");
+                sb.Append($"<li class=\"page-item\"><a class=\"page-link\" href=\"#\">{page}</a></li>");
             }
-            sb.Append("<div>");
             return new HtmlString(sb.ToString());
         }
     }
