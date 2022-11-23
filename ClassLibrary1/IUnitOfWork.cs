@@ -6,22 +6,22 @@ namespace MedicineHelper.Data.Abstractions
     public interface IUnitOfWork
     {
 
-        ICurrencyRepository Currencies { get; }
-        IRepository<Clinic> Clinics { get; }
-        IRepository<ClinicPhone> ClinicPhones { get; }
-        IRepository<DoctorPersonalData> DoctorPersonalData { get; }
+        IRepository<Conclusion> Conclusion { get; }
+        IRepository<Appointment> Appointment { get; }
+        IRepository<Disease> Disease { get; }
         IRepository<Doctor> Doctor { get; }
-        IRepository<Drug> Drug { get; }
-        IRepository<JobStatus> JobStatus { get; }
-        IRepository<Visit> Visit { get; }
-        IRepository<VaccinationStatus> VaccinationStatus { get; }
-        IRepository<Vaccine> Vaccine { get; }
+        IRepository<DoctorVisit> DoctorVisit { get; }
+        IRepository<Fluorography> Fluorography { get; }
+        IRepository<MedicineСheckup> MedicineСheckup { get; }
+        IRepository<Clinic> Clinic { get; }
+        IRepository<Medicine> Medicine { get; }
+        IRepository<MedicineProcedure> MedicineProcedure { get; }
+        IRepository<MedicinePrescription> MedicinePrescription { get; }
+        IRepository<DiseaseHistory> DiseaseHistory { get; }
         IRepository<Vaccination> Vaccination { get; }
-        IRepository<VisitResult> VisitResult { get; }
-        IRepository<DoctorSpecialization> Specialization { get; }
 
-        IRepository<User> Users { get; }
-        IRepository<Role> Roles { get; }
+        IRepository<User> User { get; }
+        IRepository<Role> Role { get; }
 
         Task<int> Commit();
     }

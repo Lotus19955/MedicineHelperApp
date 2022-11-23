@@ -5,7 +5,6 @@ using MedicineHelper.Data.Abstractions.Repositories;
 using MedicineHelper.Data.Repositories;
 using MedicineHelper.DataBase;
 using MedicineHelper.DataBase.Entities;
-using MedicineHelper.IdentityManagers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +27,14 @@ namespace MedicineHelperApp
                 .WriteTo.File(GetPathToLogFile(),
                     LogEventLevel.Information));
 
-            // Add services to the container.
-
-            builder.Services.AddControllersWithViews();
-
+            //Connection Db
             var connectionString = builder.Configuration.GetConnectionString(name: "Default");
             builder.Services.AddDbContext<MedicineHelperContext>(optionsBuilder =>
             optionsBuilder.UseSqlServer(connectionString));
+
+            // Add services to the container.
+
+            builder.Services.AddControllersWithViews();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services
@@ -52,42 +52,36 @@ namespace MedicineHelperApp
             builder.Services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             // Add business services
-            builder.Services.AddScoped<ICurrencyService, CurrencyService>();
             builder.Services.AddScoped<IClinicService, ClinicService>();
-            builder.Services.AddScoped<IClinicPhoneService, ClinicPhoneService>();
-            builder.Services.AddScoped<IDrugService, DrugService>();
-            builder.Services.AddScoped<ISpecializationService, SpecializationService>();
-            builder.Services.AddScoped<IJobStatusService, JobStatusService>();
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IRoleService, RoleService>();
-            builder.Services.AddScoped<IDoctorPersonalDataService, DoctorPersonalDataService>();
+            builder.Services.AddScoped<IConclusionService, ConclusionService>();
+            builder.Services.AddScoped<IDiseaseHistoryService, DiseaseHistoryService>();
             builder.Services.AddScoped<IDoctorService, DoctorService>();
-            builder.Services.AddScoped<IVaccinationStatusService, VaccinationStatusService>();
-            builder.Services.AddScoped<IVaccineService, VaccineService>();
+            builder.Services.AddScoped<IDoctorVisitService, DoctorVisitService>();
+            builder.Services.AddScoped<IFluorographyService, FluorographyService>();
+            builder.Services.AddScoped<IMedicinePrescriptionService, MedicinePrescriptionService>();
+            builder.Services.AddScoped<IMedicineProcedureService, MedicineProcedureService>();
+            builder.Services.AddScoped<IMedicineService, MedicineService>();
+            builder.Services.AddScoped<IMedicineÑheckupService, MedicineÑheckupService>();
+            builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVaccinationService, VaccinationService>();
-            builder.Services.AddScoped<IVisitService, VisitService>();
-            builder.Services.AddScoped<IVisitResultService, VisitResultService>();
-
-            // Add custom services
-            builder.Services.AddScoped<ISignInManager, SignInManager>();
-            builder.Services.AddScoped<IUserManager, UserManager>();
 
             // Add repositories
-            builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+            builder.Services.AddScoped<IRepository<Conclusion>, Repository<Conclusion>>();
+            builder.Services.AddScoped<IRepository<Appointment>, Repository<Appointment>>();
+            builder.Services.AddScoped<IRepository<Disease>, Repository<Disease>>();
+            builder.Services.AddScoped<IRepository<Doctor>, Repository<Doctor>>();
+            builder.Services.AddScoped<IRepository<DoctorVisit>, Repository<DoctorVisit>>();
+            builder.Services.AddScoped<IRepository<Fluorography>, Repository<Fluorography>>();
+            builder.Services.AddScoped<IRepository<MedicineÑheckup>, Repository<MedicineÑheckup>>();
             builder.Services.AddScoped<IRepository<Clinic>, Repository<Clinic>>();
-            builder.Services.AddScoped<IRepository<ClinicPhone>, Repository<ClinicPhone>>();
-            builder.Services.AddScoped<IRepository<Drug>, Repository<Drug>>();
-            builder.Services.AddScoped<IRepository<DoctorSpecialization>, Repository<DoctorSpecialization>>();
-            builder.Services.AddScoped<IRepository<JobStatus>, Repository<JobStatus>>();
+            builder.Services.AddScoped<IRepository<Medicine>, Repository<Medicine>>();
+            builder.Services.AddScoped<IRepository<MedicineProcedure>, Repository<MedicineProcedure>>();
+            builder.Services.AddScoped<IRepository<MedicinePrescription>, Repository<MedicinePrescription>>();
+            builder.Services.AddScoped<IRepository<DiseaseHistory>, Repository<DiseaseHistory>>();
+            builder.Services.AddScoped<IRepository<Vaccination>, Repository<Vaccination>>();
             builder.Services.AddScoped<IRepository<User>, Repository<User>>();
             builder.Services.AddScoped<IRepository<Role>, Repository<Role>>();
-            builder.Services.AddScoped<IRepository<DoctorPersonalData>, Repository<DoctorPersonalData>>();
-            builder.Services.AddScoped<IRepository<Doctor>, Repository<Doctor>>();
-            builder.Services.AddScoped<IRepository<VaccinationStatus>, Repository<VaccinationStatus>>();
-            builder.Services.AddScoped<IRepository<Vaccine>, Repository<Vaccine>>();
-            builder.Services.AddScoped<IRepository<Vaccination>, Repository<Vaccination>>();
-            builder.Services.AddScoped<IRepository<Visit>, Repository<Visit>>();
-            builder.Services.AddScoped<IRepository<VisitResult>, Repository<VisitResult>>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -110,6 +104,14 @@ namespace MedicineHelperApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "Login",
+                pattern: "{controller=Account}/{action=Login}/{id?}");
+
+            app.MapControllerRoute(
+                name: "admin",
+                pattern: "{controller=Admin}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",

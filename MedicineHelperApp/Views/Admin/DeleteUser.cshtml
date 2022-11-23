@@ -1,0 +1,21 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Delete user";
+    Layout = "_Adminlayout";
+}
+<div>
+    <h4>Are you sure you want to remove user?</h4>
+    <p>@Model.Email</p>
+</div>
+<form asp-controller="Admin" asp-action="DeleteUser" method="post" asp-route-id="@Model.Id">
+    <div></div>
+    <input type="submit" class="btn btn-danger m-1" value="Delete user" />
+    <a class="btn btn-primary m-1" role="button" asp-controller="Admin" asp-action="GetUser">Cancel</a>
+</form>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

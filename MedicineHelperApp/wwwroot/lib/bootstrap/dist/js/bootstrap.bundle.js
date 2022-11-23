@@ -5737,7 +5737,9 @@
             element: `.${this.constructor.NAME}-arrow`
           }
         }, {
-          name: 'onChange',
+          name: '
+
+',
           enabled: true,
           phase: 'afterWrite',
           fn: data => this._handlePopperPlacementChange(data)

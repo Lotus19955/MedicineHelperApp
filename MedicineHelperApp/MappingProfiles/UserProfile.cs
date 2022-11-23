@@ -1,27 +1,23 @@
 ﻿using AutoMapper;
-using MedicineHelper.Core.DataTransferObjects;
-using MedicineHelper.DataBase.Entities;
-using MedicineHelper.Models;
 using MedicineHelperApp.Models;
+using MedicineHelper.DataBase.Entities;
+using MedicineHelper.Core.DataTransferObjects;
 
-namespace MedicineHelperApp.MappingProfiles;
-
-public class UserProfile : Profile
+namespace MedicineHelperApp.MappingProfiles
 {
-    public UserProfile()
+    public class UserProfile : Profile
     {
-        CreateMap<User, UserDto>().ForMember(dto => dto.RoleName,
-            opt
-                => opt.MapFrom(entity => entity.Role.Name));
+        public UserProfile()
+        {
+            CreateMap<User, UserDto>()
+                .ForMember(dto => dto.RoleName, opt => opt.MapFrom(entity => entity.Role.Name))
+                .ForMember(dto => dto.Id, opt => opt.MapFrom(entity => entity.Id));
 
-        CreateMap<UserDto, User>()
-            .ForMember(ent => ent.Id, opt => opt.MapFrom(dto => Guid.NewGuid()))
-            .ForMember(ent => ent.RegistrationDate, opt => opt.MapFrom(dto => DateTime.Now));
+            CreateMap<RegisterModel, UserDto>()
+                .ForMember(dto => dto.Email, opt => opt.MapFrom(model => model.Email))
+                .ForMember(dto => dto.PasswordHash, opt => opt.MapFrom(model => model.Password));
 
-        CreateMap<RegisterModel, UserDto>();
-
-        CreateMap<LoginModel, UserDto>();
-
-        CreateMap<UserDto, UserDataModel>();
+            CreateMap<UserDto, User>();
+        }
     }
 }

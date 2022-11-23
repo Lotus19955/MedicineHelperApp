@@ -1,81 +1,29 @@
-﻿using MedicineHelperApp.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using MedicineHelper.Core.Abstractions;
-using Microsoft.AspNetCore.Identity;
 using MedicineHelper.Core.DataTransferObjects;
-using Serilog;
-using MedicineHelper.IdentityManagers;
-using Microsoft.AspNetCore.Authorization;
-using MedicineHelper.Models;
-using MedicineHelper.Business.ServicesImplementations;
+using MedicineHelperApp.Models;
 
-namespace MedicineHelperApp.Controllers
+namespace MedicineHelper.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
-        private readonly ISignInManager _signInManager;
         private readonly IRoleService _roleService;
+        private readonly IMapper _mapper;
 
-        public AccountController(IUserService userService,
-            IRoleService roleService,
-            IMapper mapper,
-            ISignInManager signInManager)
+
+
+        public AccountController(IUserService userService, 
+            IRoleService roleService, 
+            IMapper mapper)
         {
             _userService = userService;
-            _mapper = mapper;
-            _signInManager = signInManager;
             _roleService = roleService;
-        }
-
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var userRoleId = await _roleService.GetRoleIdByNameAsync("User");
-                var userDto = _mapper.Map<UserDto>(model);
-                if (userDto != null && userRoleId != null)
-                {
-                    userDto.RoleId = userRoleId;
-                    var result = await _userService.RegisterUserAsync(userDto);
-                    if (result > 0)
-                    {
-                        await Authenticate(model.Email);
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-            }
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CheckEmail(string email)
-        {
-            try
-            {
-                if (email.ToLowerInvariant().Equals(_userService.IsUserExistsAsync(email)))
-                {
-                    return Ok(false);
-                }
-                return Ok(true);
-            }
-            catch (Exception e)
-            {
-                Log.Error($"{e.Message}. {Environment.NewLine} {e.StackTrace}");
-                return StatusCode(500);
-            }
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -85,11 +33,17 @@ namespace MedicineHelperApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginModel loginModel)
         {
-            if (ModelState.IsValid)
+            var isPasswordCorrect = await _userService.CheckUserPasswordAsync(loginModel.Email, loginModel.Password);
+            if (isPasswordCorrect)
             {
-                await Authenticate(model.Email);
+                var roleName = await Authenticate(loginModel.Email);
+                if (roleName == "admin")
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -98,35 +52,52 @@ namespace MedicineHelperApp.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> CheckLoginData(string password, string email)
+        public async Task<IActionResult> CheckEmail(string email)
         {
-            try
+            var isUserExist = await _userService.IsUserExistAsync(email);
+            if (isUserExist)
             {
-                var isPasswordCorrect = await _userService.CheckUserPasswordAsync(email, password);
-                if (!isPasswordCorrect)
+                return Ok(false);
+            }
+
+            return Ok(true);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterModel registerModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var userRoleId = await _roleService.GetRoleIdByNameAsync("User");
+                var userDto = _mapper.Map<UserDto>(registerModel);
+                if (userDto != null && userRoleId != null)
                 {
-                    return Ok(false);
+                    userDto.RoleId = userRoleId.Value;
+                    var result = await _userService.RegisterUser(userDto);
+                    if (result > 0)
+                    {
+                        var roleName = await Authenticate(registerModel.Email);
+                        if (roleName == "admin")
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-                return Ok(true);
             }
-            catch (Exception e)
-            {
-                Log.Error($"{e.Message}. {Environment.NewLine} {e.StackTrace}");
-                return StatusCode(500);
-            }
+
+            return View(registerModel);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync();
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        [HttpGet]
-        private async Task Authenticate(string email)
+        private async Task<string> Authenticate(string email)
         {
             var userDto = await _userService.GetUserByEmailAsync(email);
 
@@ -136,77 +107,23 @@ namespace MedicineHelperApp.Controllers
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, userDto.RoleName)
             };
 
-            var identity = new ClaimsIdentity(claims,
+            var identity = new ClaimsIdentity(
+                claims,
                 "ApplicationCookie",
                 ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType
-            );
+                );
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity));
-        }
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
 
-        [AllowAnonymous]
-        [HttpGet]
-        public IActionResult IsLoggedIn()
-        {
-            if (User.Identities.Any(identity => identity.IsAuthenticated))
-            {
-                return Ok(true);
-            }
-
-            return Ok(false);
+            return userDto.RoleName;
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserLoginPreview()
+        public async Task<IActionResult> Exit()
         {
-            if (User.Identities.Any(identity => identity.IsAuthenticated))
-            {
-                var userEmail = User.Identity?.Name;
-                if (string.IsNullOrEmpty(userEmail))
-                {
-                    return BadRequest();
-                }
-
-                var user = _mapper.Map<UserDataModel>(await _userService.GetUserByEmailAsync(userEmail));
-                return View(user);
-            }
-
-            return View();
+            await HttpContext.SignOutAsync();
+            return RedirectToAction("Login", "Account");
         }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetUserData()
-        {
-            var userEmail = User.Identity?.Name;
-            if (string.IsNullOrEmpty(userEmail))
-            {
-                return BadRequest();
-            }
-
-            var user = _mapper.Map<UserDataModel>(await _userService.GetUserByEmailAsync(userEmail));
-            return Ok(user);
-        }
-    
-       
-
-        //[HttpPost]
-        //public async Task<IActionResult> Logout(string returnUrl = null)
-        //{
-        //    await _signInManager.SignOutAsync();
-        //    Log.Information("User logged out.");
-        //    if (returnUrl != null)
-        //    {
-        //        return LocalRedirect(returnUrl);
-        //    }
-        //    else
-        //    {
-        //        // This needs to be a redirect so that the browser performs a new
-        //        // request and the identity for the user gets updated.
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //}
     }
 }

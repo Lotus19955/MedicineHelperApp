@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.ClinicDto>
+
+@{
+    ViewData["Title"] = "Admin";
+    Layout = "_Adminlayout";
+}
+
+<h2 class="text-center">Clinic</h2>
+<p>
+    <a asp-controller="Clinic" asp-action="Create" class="m-1">Add</a>
+</p>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Operation mode
+                </th>
+                <th>
+                    Contact
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Adress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OperatingMode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contact)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "ShowEditClinic", "Admin", new {id = item.Id, nameMedicalInstitution = item.Name, adress = item.Adress, operatingMode = item.OperatingMode, contact = item.Contact})
+                        <a asp-controller="Admin" asp-action="ShowDeleteClinic" asp-route-id="@item.Id" asp-route-nameMedicalInstitution="@item.Name" class="m-1">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

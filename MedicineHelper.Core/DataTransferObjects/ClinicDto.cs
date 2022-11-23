@@ -1,13 +1,11 @@
-﻿namespace MedicineHelper.Core.DataTransferObjects;
-
-public class ClinicDto
+﻿namespace MedicineHelper.Core.DataTransferObjects
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public string Address { get; set; }
-    public Guid UserId { get; set; }
-
-    public List<ClinicPhoneDto> ClinicPhones { get; set; }
-    public List<DoctorDto> DoctorsDto { get; set; }
-    public List<VaccinationDto> VaccinationsDto { get; set; }
+    public class ClinicDto
+    {
+        public Guid Id { get; set; }
+        public string? Name { get; set; }
+        public string? Adress { get; set; }
+        public string? OperatingMode { get; set; }
+        public string? Contact { get; set; }
+    }
 }

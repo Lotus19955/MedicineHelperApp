@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.MedicineDto>
+
+@{
+    ViewData["Title"] = "Admin";
+    Layout = "_AdminLayout";
+}
+
+<h2>Medicine</h2>
+
+<p>
+    <a asp-action="AddMedicine">Add new medicine</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Instuction
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOfMedicine)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Instruction))
+                    {
+                        <a class="m-1" href="@item.Instruction">Instruction</a>
+                    }
+                    else
+                    {
+                        <p class="m-1">No instruction</p>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "ShowEditMedicine", "Admin", new {id = item.Id, nameMedicine = item.NameOfMedicine, Instruction = item.Instruction})
+                    <a asp-controller="Admin" asp-action="ShowDeleteMedicine" asp-route-id="@item.Id" asp-route-nameOfMedicine="@item.NameOfMedicine" class="m-1">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

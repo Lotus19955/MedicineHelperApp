@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.DiseaseHistoryDto>
+
+@{
+    ViewData["Title"] = "Disease history";
+    Layout = "_layout";
+}
+
+<h2>Disease history</h2>
+
+<p>
+    <a asp-action="Create">Add disease</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name of disease
+            </th>
+            <th>
+                Date of disease
+            </th>
+            <th>
+                Date od recovery
+            </th>
+            <th>
+                Type of treatment
+            </th>
+            <th>
+                Severity of the illness
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOfDisease)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfDisease)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfRecovery)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeOfTreatment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=> item.SeverityOfTheIllness)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

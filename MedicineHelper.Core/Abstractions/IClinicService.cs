@@ -1,21 +1,14 @@
-﻿using MedicineHelper.Core.DataTransferObjects;
+﻿using System.Reflection;
+using MedicineHelper.Core.DataTransferObjects;
 
-namespace MedicineHelper.Core.Abstractions;
-
-public interface IClinicService
+namespace MedicineHelper.Core.Abstractions
 {
-    //READ
-    Task<ClinicDto> GetClinicByIdAsync(Guid id);
-    Task<bool> IsClinicExistAsync(string name, string address, Guid userId);
-    Task<bool> IsClinicExistAsync(Guid id);
-    Task<List<ClinicDto>> GetAllClinicsAsync();
-    Task<List<ClinicDto>> GetAllClinicsByUserIdAsync(Guid userId);
-    Task<List<ClinicDto>> GetAvailableClinicsAsync();
-    Task<(string, string)> GetClinicSummaryByIdAsync(Guid id);
-
-    //CREATE
-    Task<int> CreateClinicAsync(ClinicDto dto);
-
-    //UPDATE
-    Task<int> UpdateAsync(Guid id, ClinicDto dto);
+    public interface IClinicService
+    {
+        Task<List<ClinicDto>> GetClinicAsync();
+        Task<ClinicDto> GetByIdClinicAsync(Guid id);
+        Task<int> CreateClinicAsync(ClinicDto dto);
+        Task<int> UpdateClinicAsync(ClinicDto dto, Guid id);
+        Task DeleteClinicAsync(Guid id);
+    }
 }

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.MedicineProcedureDto>
+
+@{
+    ViewData["Title"] = "Medicine procedure";
+    Layout = "_layout";
+}
+
+<h2>Medicine procedure</h2>
+
+<p>
+    <a asp-action="Create">Add medicine procedure</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name of medicine procedure
+            </th>
+            <th>
+                Start date of medicine procedure
+            </th>
+            <th>
+                End date of medicine procedure
+            </th>
+            <th>
+                Clinic
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOfProcedure)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartProcedure)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndProcedure)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=> item.ClinicDto.Name)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

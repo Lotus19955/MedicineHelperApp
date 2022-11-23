@@ -1,0 +1,56 @@
+﻿@model VaccinationModel
+
+@{
+    ViewData["Title"] = "Add vaccination";
+    Layout = "_Layout";
+}
+
+<div>
+    <h2>Add vaccination</h2>
+
+    <form asp-controller="Vaccination" asp-action="Create" method="post">
+        <div class="mb-3">
+            <label for="ApplicationOfVaccine" class="form-label">Application of vaccine:</label>
+            <input asp-for="ApplicationOfVaccine" type="text" class="form-control" id="ApplicationOfVaccine" required />
+            <span asp-validation-for="ApplicationOfVaccine" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="NameOfVaccine" class="form-label">Vaccine name:</label>
+            <input asp-for="NameOfVaccine" type="text" class="form-control" id="NameOfVaccine" required />
+            <span asp-validation-for="NameOfVaccine" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="VaccineSeria" class="form-label">Vaccise seria:</label>
+            <input asp-for="VaccineSeria" type="text" class="form-control" id="VaccineSeria" />
+        </div>
+        <div class="mb-3">
+            <label for="VaccineDose" class="form-label">Vaccine dose:</label>
+            <input asp-for="VaccineDose" type="text" class="form-control" id="VaccineDose" required />
+            <span asp-validation-for="VaccineDose" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="DateOfVaccination" class="form-label">Date of vaccine:</label>
+            <input asp-for="DateOfVaccination" type="date" class="form-control" id="DateOfVaccination" required />
+            <span asp-validation-for="DateOfVaccination" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="VaccinationExpirationDate" class="form-label">End date of vaccine:</label>
+            <input asp-for="VaccinationExpirationDate" type="date" class="form-control" id="VaccinationExpirationDate" />
+        </div>
+        <div class="mb-3">
+            <label for="ClinicId" class="form-label">Clinic:</label>
+            <select asp-for="ClinicId" asp-items="@Model.ClinicList"></select>
+            <a asp-controller="Clinic" asp-action="Create">Clinic</a>
+        </div>
+        <div>
+            <input asp-for="ReturnUrl" type="hidden" />
+        </div>
+        <input type="submit" class="btn btn-primary m-1" value="Add" />
+    </form>
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

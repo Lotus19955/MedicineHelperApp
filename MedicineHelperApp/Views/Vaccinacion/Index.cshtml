@@ -1,0 +1,67 @@
+﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.VaccinationDto>
+
+@{
+    ViewData["Title"] = "Vaccination";
+    Layout = "_layout";
+}
+
+<h2>Vaccination</h2>
+
+<p>
+    <a asp-action="Create">Add vaccination</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name of vaccine
+            </th>
+            <th>
+                Appointment of vaccine
+            </th>
+            <th>
+                Vaccine dose
+            </th>
+            <th>
+                Vaccine seria
+            </th>
+            <th>
+                Date of vaccine
+            </th>
+            <th>
+                End date of vaccine
+            </th>
+            <th>
+                Clinic
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationOfVaccine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOfVaccine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VacineDose)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VacineSeria)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfVaccination)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VaccinationExpirationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClinicDto.Name)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

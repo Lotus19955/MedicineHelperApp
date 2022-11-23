@@ -1,20 +1,15 @@
 ﻿using MedicineHelper.Core.DataTransferObjects;
 
-namespace MedicineHelper.Core.Abstractions;
-
-public interface IUserService
+namespace MedicineHelper.Core.Abstractions
 {
-    //READ
-    Task<UserDto> GetUserByEmailAsync(string email);
-    Task<bool> IsUserExistsAsync(Guid userId);
-    Task<bool> IsUserExistsAsync(string email);
-    Task<bool> CheckUserPasswordAsync(string email, string password);
-    Task<bool> CheckUserPasswordAsync(Guid userId, string password);
-    
-    //CREATE
-    Task<int> RegisterUserAsync(UserDto dto);
-    
-    //UPDATE
-    
-    //REMOVE
+    public interface IUserService
+    {
+        Task<bool> CheckUserPasswordAsync(string email, string password);
+        Task<bool> IsUserExistAsync(string email);
+        Task<UserDto> GetUserByEmailAsync(string email);
+        Task<int> RegisterUser(UserDto user);
+        Task<List<UserDto>> GetAllUserAsync();
+        Task DeleteUserAsync(Guid id);
+        Task<int> UpdateUserAsync(UserDto user, Guid id);
+    }
 }
