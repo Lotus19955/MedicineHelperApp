@@ -1,21 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace TheHypochondriac.Models;
-
-public class LoginModel
+namespace MedicineHelperApp.Models
 {
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
-
-
-    [Required]
-    [DataType(DataType.Password)]
-    [Remote("CheckLoginData", "Account",
-        AdditionalFields = "Email",
-        HttpMethod = WebRequestMethods.Http.Post,
-        ErrorMessage = "Wrong login or password. Try again or click Forgot password to reset it.")]
-    public string Password { get; set; }
+    public class LoginModel
+    {
+        [Required(ErrorMessage ="Empty Email")]
+        [EmailAddress(ErrorMessage = "Incorrect email format")]
+        public string Email { get; set; }
+        [Required(ErrorMessage = "Empty password")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+    }
 }

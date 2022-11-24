@@ -1,0 +1,80 @@
+﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.DoctorVisitDto>
+
+@{
+    ViewData["Title"] = "Doctor visit";
+    Layout = "_layout";
+}
+
+<h2>Visits</h2>
+
+<p>
+    <a asp-action="Create">Add new visit</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Date of visit
+            </th>
+            <th>
+                Clinic
+            </th>
+            <th>
+                Doctor name
+            </th>
+            <th>
+                Disease history
+            </th>
+            <th>
+                Visit price
+            </th>
+            <th>
+                Appointment
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateVisit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClinicDto.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DoctorDto.Name)
+                </td>
+                <td>
+                    @if(item.NameOfDisease != null)
+                    {
+                        @Html.DisplayFor(modelItem => item.NameOfDisease)
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Add disease", "Create", "DDiseaseHistory", new {id = item.Id})
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=> item.PriceVisit)
+                </td>
+                <td>
+                    @if(item.AppointmentDto!=null)
+                    {
+                        @Html.ActionLink("Check appointment", "Appointment", "DoctorVisit", new {id = item.Id, nameOfDisease = item.NameOfDisease})
+@*                        <a class="link-primary" href="~/DoctorVisit/Appointment/@item.Id?nameOfDisease=@item.NameOfDisease">Смотреть назначение</a>
+*@                    }
+                    else
+                    {
+                        @Html.ActionLink("Add appointment", "CreateAppointment", "DoctorVisit", new {id = item.Id, nameOfDisease = item.NameOfDisease})
+@*                        <a class="link-primary" href="~/DoctorVisit/CreateAppointment/@item.Id">Добавить назначение</a>
+*@                    }
+                </td>
+                <td>
+                    <a asp-controller="DoctorVisit" asp-action="Edit" asp-route-id="@item.Id" >Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

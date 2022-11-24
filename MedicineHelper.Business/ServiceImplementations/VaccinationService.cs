@@ -1,126 +1,54 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using MedicineHelper.Core;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.Data.Abstractions;
 using MedicineHelper.DataBase.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace MedicineHelper.Business.ServicesImplementations;
-
-public class VaccinationService : IVaccinationService
+namespace MedicineHelper.Business.ServicesImplementations
 {
-    private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public VaccinationService(IMapper mapper, 
-        IUnitOfWork unitOfWork)
+    public class VaccinationService : IVaccinationService
     {
-        _mapper = mapper;
-        _unitOfWork = unitOfWork;
-    }
-
-    public async Task<VaccinationDto> GetVaccinationByIdAsync(Guid id)
-    {
-        var entity = await _unitOfWork.Vaccination.GetByIdAsync(id);
-
-        if (entity != null)
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        public VaccinationService(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            var dto = _mapper.Map<VaccinationDto>(entity);
-            return dto;
-        }
-        else
-        {
-            throw new ArgumentException("No record of the vaccination was found in the database.", nameof(id));
-        }
-    }
-
-    public async Task<bool> IsVaccinationExistAsync(Guid clinicId, 
-        Guid vaccineId, 
-        Guid userId,
-        DateTime dateOfVaccination)
-    {
-        var entity = await _unitOfWork.Vaccination
-            .Get()
-            .AsNoTracking()
-            .FirstOrDefaultAsync(entity =>
-                entity.DateOfVaccination.Equals(dateOfVaccination)
-                && entity.ClinicId.Equals(clinicId)
-                && entity.VaccineId.Equals(vaccineId)
-                && entity.UserId.Equals(userId));
-        return entity != null;
-    }
-
-    public async Task<List<VaccinationDto>> GetAllVaccinationsByUserIdAsync(Guid userId)
-    {
-        var list = await _unitOfWork.Vaccination
-            .FindBy(vaccination => vaccination.UserId.Equals(userId),
-                vaccination => vaccination.Clinic,
-                vaccination => vaccination.Vaccine)
-            .AsNoTracking()
-            .Select(entity => _mapper.Map<VaccinationDto>(entity))
-            .ToListAsync();
-
-        return list;
-    }
-
-    public async Task<int> CreateVaccinationAsync(VaccinationDto dto)
-    {
-        var entity = _mapper.Map<Vaccination>(dto);
-
-        if (entity != null)
-        {
-            await _unitOfWork.Vaccination.AddAsync(entity);
-            var addingResult = await _unitOfWork.Commit();
-            return addingResult;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
-        throw new ArgumentException("Mapping VaccinationDto to Vaccinate was not possible.", nameof(dto));
-    }
-
-    public async Task<int> UpdateAsync(Guid id, VaccinationDto dto)
-    {
-        var sourceDto = await GetVaccinationByIdAsync(id);
-
-        var patchList = new List<PatchModel>();
-
-        if (!dto.DateOfVaccination.Equals(sourceDto.DateOfVaccination))
+        public async Task<int> CreateVaccinationAsync(VaccinationDto dto)
         {
-            patchList.Add(new PatchModel()
+            try
             {
-                PropertyName = nameof(dto.DateOfVaccination),
-                PropertyValue = dto.DateOfVaccination
-            });
-        }
+                var entity = _mapper.Map<Vaccination>(dto);
+                await _unitOfWork.Vaccination.AddAsync(entity);
+                var result = await _unitOfWork.Commit();
 
-        if (!dto.VaccinationStatusId.Equals(sourceDto.VaccinationStatusId))
-        {
-            patchList.Add(new PatchModel()
+                return result;
+            }
+            catch (Exception)
             {
-                PropertyName = nameof(dto.VaccinationStatusId),
-                PropertyValue = dto.VaccinationStatusId
-            });
+                throw new ArgumentException();
+            }
         }
 
-        if (!dto.ClinicId.Equals(sourceDto.ClinicId))
+        public async Task<List<VaccinationDto>> GetAllVaccinationsAsync(Guid id)
         {
-            patchList.Add(new PatchModel()
+            try
             {
-                PropertyName = nameof(dto.ClinicId),
-                PropertyValue = dto.ClinicId
-            });
-        }
-
-        if (!dto.VaccineId.Equals(sourceDto.VaccineId))
-        {
-            patchList.Add(new PatchModel()
+                var listVaccination = await _unitOfWork.Vaccination
+                    .FindBy(entity=>entity.UserId.Equals(id))
+                    .Include(dto => dto.Clinic)
+                    .Select(vaccination => _mapper.Map<VaccinationDto>(vaccination))
+                    .ToListAsync();
+                return listVaccination;
+            }
+            catch (Exception)
             {
-                PropertyName = nameof(dto.VaccineId),
-                PropertyValue = dto.VaccineId
-            });
-        }
 
-        await _unitOfWork.Vaccination.PatchAsync(id, patchList);
-        return await _unitOfWork.Commit();
+                throw;
+            }
+        }
     }
 }

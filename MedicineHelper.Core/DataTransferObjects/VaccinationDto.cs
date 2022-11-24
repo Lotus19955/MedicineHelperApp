@@ -1,19 +1,17 @@
-﻿namespace MedicineHelper.Core.DataTransferObjects;
-
-public class VaccinationDto
+﻿namespace MedicineHelper.Core.DataTransferObjects
 {
-    public Guid Id { get; set; }
-    public DateTime DateOfVaccination { get; set; }
+    public class VaccinationDto
+    {
+        public Guid Id { get; set; }
+        public string? ApplicationOfVaccine { get; set; }
+        public string? NameOfVaccine { get; set; }
+        public string? VacineDose { get; set; }
+        public string? VacineSeria { get; set; }
+        public DateTime DateOfVaccination { get; set; }
+        public DateTime? VaccinationExpirationDate { get; set; }
 
-    public Guid VaccinationStatusId { get; set; }
-    public VaccinationStatusDto VaccinationStatus { get; set; }
-
-    public Guid ClinicId { get; set; }
-    public ClinicDto Clinic { get; set; }
-
-    public Guid VaccineId { get; set; }
-    public VaccineDto Vaccine { get; set; }
-
-    public Guid UserId { get; set; }
-    public UserDto User { get; set; }
+        public Guid UserId { get; set; }
+        public Guid ClinicId { get; set; }
+        public ClinicDto? ClinicDto { get; set; }
+    }
 }

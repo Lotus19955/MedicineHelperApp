@@ -1,0 +1,41 @@
+﻿@model ClinicModel
+
+@{
+    ViewData["Title"] = "Add clinic";
+    Layout = "_Layout";
+}
+
+<div>
+    <h2>Add clinic</h2>
+
+    <form asp-controller="Clinic" asp-action="Create" method="post">
+        <div class="mb-3">
+            <label for="NameClinic" class="form-label">Name of clinic:</label>
+            <input asp-for="NameClinic" type="text" class="form-control" id="NameClinic" required />
+            <span asp-validation-for="NameClinic" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Adress" class="form-label">Address:</label>
+            <textarea asp-for="Adress" class="form-control" id="Adress" rows="2" required></textarea>
+            <span asp-validation-for="Adress" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="OperatingMode" class="form-label">Operating mode:</label>
+            <textarea asp-for="OperatingMode" class="form-control" id="OperatingMode" rows="2"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="Contact" class="form-label">Contact:</label>
+            <textarea asp-for="Contact" class="form-control" id="Contact" rows="3"></textarea>
+        </div>
+        <div>
+            <input asp-for="ReturnUrl" type="hidden" />
+        </div>
+        <input type="submit" class="btn btn-primary m-1" value="Add"/>
+    </form>
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

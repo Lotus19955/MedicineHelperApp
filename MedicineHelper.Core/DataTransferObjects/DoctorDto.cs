@@ -1,22 +1,12 @@
-﻿namespace MedicineHelper.Core.DataTransferObjects;
-
-public class DoctorDto
+﻿namespace MedicineHelper.Core.DataTransferObjects
 {
-    public Guid Id { get; set; }
+    public class DoctorDto
+    {
+        public int Id { get; set; }
+        public string Name{ get; set; }
+        public string Specializacion { get; set; }
+        public float? Rating { get; set; }
 
-    public Guid DoctorPersonalDataId { get; set; }
-    public DoctorPersonalDataDto DoctorPersonalData { get; set; }
-
-    public Guid SpecializationId { get; set; }
-    public SpecializationDto Specialization { get; set; }
-
-    public Guid ClinicId { get; set; }
-    public ClinicDto Clinic { get; set; }
-
-    public Guid JobStatusId { get; set; }
-    public JobStatusDto JobStatus { get; set; }
-
-    public Guid UserId { get; set; }
-
-    public List<VisitDto> Visits { get; set; }
+        public List<DoctorVisitDto> DoctorVisitsDto { get; set; }
+    }
 }

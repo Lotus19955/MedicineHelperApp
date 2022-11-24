@@ -1,14 +1,15 @@
-﻿namespace MedicineHelper.Core.DataTransferObjects;
-
-public class UserDto
+﻿namespace MedicineHelper.Core.DataTransferObjects
 {
-    public Guid Id { get; set; }
-
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public DateTime RegistrationDate { get; set; }
-
-    public Guid RoleId { get; set; }
-    public string RoleName { get; set; }
-
+    public class UserDto
+    {
+        public Guid Id { get; set; }
+        public string? LastName { get; set; }
+        public string? FirstName { get; set; }
+        public DateTime? Birthday { get; set; }
+        public byte[]? Avatar { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
+        public string RoleName { get; set; }
+        public Guid RoleId { get; set; }
+    }
 }

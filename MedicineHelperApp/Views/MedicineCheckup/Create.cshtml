@@ -1,0 +1,44 @@
+﻿@model MedicineСheckupModel
+
+@{
+    ViewData["Title"] = "Add medicine checkup";
+    Layout = "_Layout";
+}
+
+<div>
+    <h2>Add medicine checkup</h2>
+
+    <form asp-controller="MedicineСheckup" asp-action="Create" method="post">
+        <div class="mb-3">
+            <label for="NameOfMedicalCheckUpСheckup" class="form-label">Name medicine checkup:</label>
+            <input asp-for="NameOfMedicalCheckUp" type="text" class="form-control" id="NameOfMedicalCheckUp" required />
+            <span asp-validation-for="NameOfMedicalCheckUp" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="DateOfMedicalCheckUp" class="form-label">Date of medicine checkup:</label>
+            <input asp-for="DateOfMedicalCheckUp" type="date" class="form-control" id="DateOfMedicalCheckUp" required />
+            <span asp-validation-for="DateOfMedicalCheckUp" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="PriceOfMedicalCheckUp" class="form-label">Price of medicine checkup:</label>
+            <input asp-for="PriceOfMedicalCheckUp" type="number" class="form-control" id="PriceOfMedicalCheckUp" />
+        </div>
+        <div class="mb-3">
+            <label for="ClinicId" class="form-label">Clinic:</label>
+            <select asp-for="ClinicId" asp-items="@Model.ClinicList"></select>
+            <a asp-controller="Clinic" asp-action="Create">Add clinic</a>
+        </div>
+        <div>
+            <input asp-for="AppointmentId" type="hidden" />
+            <input asp-for="ReturnUrl" type="hidden" />
+        </div>
+        <input type="submit" class="btn btn-primary m-1" value="Add" />
+    </form>
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+

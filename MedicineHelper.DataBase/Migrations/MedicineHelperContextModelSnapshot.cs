@@ -17,10 +17,28 @@ namespace MedicineHelper.DataBase.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Appointment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DescriptionOfDestination")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("DiseaseHistoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiseaseHistoryId");
+
+                    b.ToTable("Appointments");
+                });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Clinic", b =>
                 {
@@ -28,64 +46,114 @@ namespace MedicineHelper.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
+                    b.Property<string>("Adress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Contact")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OperatingMode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name", "Address", "UserId")
-                        .IsUnique();
-
                     b.ToTable("Clinics");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.ClinicPhone", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Conclusion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClinicId")
+                    b.Property<Guid?>("AppointmentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Number")
+                    b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateOfAnalysis")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NameOfAnalysis")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ScanOfAnalysisDocument")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
 
                     b.HasIndex("ClinicId");
 
-                    b.HasIndex("Number", "ClinicId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
-                    b.ToTable("ClinicPhones");
+                    b.ToTable("Conclusions");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Currency", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Disease", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
+                    b.ToTable("Diseases");
+                });
 
-                    b.ToTable("Currencies");
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DiseaseHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateOfDisease")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateOfRecovery")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("DiseaseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SeverityOfTheIllness")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("TypeOfTreatment")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiseaseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DiseaseHistores");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Doctor", b =>
@@ -94,14 +162,42 @@ namespace MedicineHelper.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ClinicId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float?>("Rating")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DoctorVisit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DoctorPersonalDataId")
+                    b.Property<Guid?>("ClinicId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SpecializationId")
+                    b.Property<DateTime>("DateVisit")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DiseaseHistoryId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DoctorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("PriceVisit")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -110,159 +206,184 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("ClinicId");
 
-                    b.HasIndex("DoctorPersonalDataId");
+                    b.HasIndex("DiseaseHistoryId");
 
-                    b.HasIndex("SpecializationId", "DoctorPersonalDataId", "ClinicId", "UserId")
-                        .IsUnique();
+                    b.HasIndex("DoctorId");
 
-                    b.ToTable("Doctors");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DoctorVisits");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DoctorPersonalData", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Fluorography", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("FullName")
+                    b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DataOfFluorography")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EndDateOfFluorography")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NumberFluorography")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Result")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DoctorPersonalDatas");
+                    b.HasIndex("ClinicId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Fluorographies");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DoctorSpecialization", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Medicine", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsEnable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Specializations");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Drug", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
+                    b.Property<string>("Instructions")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsGlobal")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("NameOfMedicine")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Producer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Unit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name", "Unit", "Producer", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("Drugs");
+                    b.ToTable("Medicines");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Prescription", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.MedicinePrescription", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("VisitId")
+                    b.Property<Guid?>("AppointmentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("VisitId");
-
-                    b.ToTable("Prescriptions");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.PrescriptionDrug", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid?>("ClinicId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Dose")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("EndOfAdmission")
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DrugId")
+                    b.Property<string>("MedicineDose")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("MedicineId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("NumberOfDosesPerDay")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfTreatmentDays")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PrescriptionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DrugId");
-
-                    b.HasIndex("PrescriptionId");
-
-                    b.ToTable("PrescriptionDrugs");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.PrescriptionDrugCost", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Cost")
+                    b.Property<decimal?>("MedicinePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("CurrencyId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("StartOfAdmission")
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid>("PrescriptionDrugId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId");
+                    b.HasIndex("AppointmentId");
 
-                    b.HasIndex("PrescriptionDrugId");
+                    b.HasIndex("ClinicId");
 
-                    b.ToTable("PrescriptionDrugCosts");
+                    b.HasIndex("MedicineId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MedicinePrescriptions");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.MedicineProcedure", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("EndProcedure")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NameOfProcedure")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartProcedure")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("ClinicId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MedicineProcedures");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.MedicineСheckup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateOfMedicineСheckup")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("FilesOfMedicineСheckup")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("PriceOfMedicineСheckup")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId");
+
+                    b.HasIndex("ClinicId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MedicineСheckups");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Role", b =>
@@ -273,12 +394,9 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
@@ -289,14 +407,20 @@ namespace MedicineHelper.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FulFirst")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
@@ -310,9 +434,6 @@ namespace MedicineHelper.DataBase.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
@@ -331,14 +452,26 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<DateTime>("DateOfVaccination")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NameOfVaccine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoteOfVaccine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("VaccinationStatusId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime?>("VaccinationExpirationDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid>("VaccineId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("VaccineProducingCountry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VacineSeria")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -346,247 +479,189 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("VaccinationStatusId");
-
-                    b.HasIndex("VaccineId");
-
-                    b.HasIndex("DateOfVaccination", "ClinicId", "VaccineId", "UserId")
-                        .IsUnique();
-
                     b.ToTable("Vaccinations");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VaccinationCost", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Appointment", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("MedicineHelper.DataBase.Entities.DiseaseHistory", "DiseaseHistory")
+                        .WithMany("Appointments")
+                        .HasForeignKey("DiseaseHistoryId");
 
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
+                    b.HasOne("MedicineHelper.DataBase.Entities.DoctorVisit", "DoctorVisit")
+                        .WithOne("Appointment")
+                        .HasForeignKey("MedicineHelper.DataBase.Entities.Appointment", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<Guid>("CurrencyId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Navigation("DiseaseHistory");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.ToTable("VaccinationCosts");
+                    b.Navigation("DoctorVisit");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VaccinationStatus", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Conclusion", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.HasOne("MedicineHelper.DataBase.Entities.Appointment", "Appointment")
+                        .WithMany("Conclusion")
+                        .HasForeignKey("AppointmentId");
 
-                    b.Property<bool>("IsEnable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("VaccinationStatuses");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Vaccine", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("EffectiveTermInDays")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsEnable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsGlobal")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PharmName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PharmName")
-                        .IsUnique();
-
-                    b.ToTable("Vaccines");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Visit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("DoctorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("VisitDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("VisitDate", "DoctorId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("Visits");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VisitCost", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("CurrencyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VisitId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CurrencyId");
-
-                    b.HasIndex("VisitId");
-
-                    b.ToTable("VisitCosts");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VisitResult", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("VisitId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VisitsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VisitId");
-
-                    b.ToTable("VisitResults");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.ClinicPhone", b =>
-                {
                     b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
-                        .WithMany("ClinicPhones")
-                        .HasForeignKey("ClinicId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany("Analyses")
+                        .HasForeignKey("ClinicId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
+                        .WithMany("Conclusion")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Clinic");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Doctor", b =>
-                {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
-                        .WithMany("Doctors")
-                        .HasForeignKey("ClinicId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MedicineHelper.DataBase.Entities.DoctorPersonalData", "DoctorPersonalData")
-                        .WithMany("Doctors")
-                        .HasForeignKey("DoctorPersonalDataId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MedicineHelper.DataBase.Entities.DoctorSpecialization", "Specialization")
-                        .WithMany("Doctors")
-                        .HasForeignKey("SpecializationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Appointment");
 
                     b.Navigation("Clinic");
 
-                    b.Navigation("DoctorPersonalData");
-
-                    b.Navigation("Specialization");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Prescription", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DiseaseHistory", b =>
                 {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Visit", "Visit")
-                        .WithMany("Prescriptions")
-                        .HasForeignKey("VisitId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("MedicineHelper.DataBase.Entities.Disease", "Disease")
+                        .WithMany("DiseaseHistory")
+                        .HasForeignKey("DiseaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Visit");
+                    b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
+                        .WithMany("DiseaseHistory")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Disease");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.PrescriptionDrug", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DoctorVisit", b =>
                 {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Drug", "Drug")
-                        .WithMany("PrescriptionDrugs")
-                        .HasForeignKey("DrugId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
+                        .WithMany("DoctorVisits")
+                        .HasForeignKey("ClinicId");
 
-                    b.HasOne("MedicineHelper.DataBase.Entities.Prescription", "Prescription")
-                        .WithMany("PrecPrescriptionDrugs")
-                        .HasForeignKey("PrescriptionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Drug");
-
-                    b.Navigation("Prescription");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.PrescriptionDrugCost", b =>
-                {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Currency", "Currency")
+                    b.HasOne("MedicineHelper.DataBase.Entities.DiseaseHistory", "DiseaseHistory")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("DiseaseHistoryId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.Doctor", "Doctor")
+                        .WithMany("DoctorVisits")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MedicineHelper.DataBase.Entities.PrescriptionDrug", "PrescriptionDrug")
-                        .WithMany("PrescriptionDrugCosts")
-                        .HasForeignKey("PrescriptionDrugId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
+                        .WithMany("DoctorVisits")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Currency");
+                    b.Navigation("Clinic");
 
-                    b.Navigation("PrescriptionDrug");
+                    b.Navigation("DiseaseHistory");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Fluorography", b =>
+                {
+                    b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
+                        .WithMany("Fluorographys")
+                        .HasForeignKey("ClinicId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
+                        .WithMany("Fluorographies")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Clinic");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.MedicinePrescription", b =>
+                {
+                    b.HasOne("MedicineHelper.DataBase.Entities.Appointment", "Appointment")
+                        .WithMany("MedicinePrescription")
+                        .HasForeignKey("AppointmentId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.Clinic", null)
+                        .WithMany("MedicinePrescription")
+                        .HasForeignKey("ClinicId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.Medicine", "Medicine")
+                        .WithMany("MedicinePrescription")
+                        .HasForeignKey("MedicineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
+                        .WithMany("MedicinePrescription")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Medicine");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.MedicineProcedure", b =>
+                {
+                    b.HasOne("MedicineHelper.DataBase.Entities.Appointment", "Appointment")
+                        .WithMany("MedicineProcedure")
+                        .HasForeignKey("AppointmentId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
+                        .WithMany("MedicineProcedure")
+                        .HasForeignKey("ClinicId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
+                        .WithMany("MedicineProcedure")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Clinic");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.MedicineСheckup", b =>
+                {
+                    b.HasOne("MedicineHelper.DataBase.Entities.Appointment", "Appointment")
+                        .WithMany("MedicineСheckup")
+                        .HasForeignKey("AppointmentId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
+                        .WithMany()
+                        .HasForeignKey("ClinicId");
+
+                    b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
+                        .WithMany("MedicineСheckup")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Appointment");
+
+                    b.Navigation("Clinic");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.User", b =>
@@ -594,7 +669,7 @@ namespace MedicineHelper.DataBase.Migrations
                     b.HasOne("MedicineHelper.DataBase.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -605,131 +680,70 @@ namespace MedicineHelper.DataBase.Migrations
                     b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
                         .WithMany("Vaccinations")
                         .HasForeignKey("ClinicId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
                         .WithMany("Vaccinations")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MedicineHelper.DataBase.Entities.VaccinationStatus", "VaccinationStatus")
-                        .WithMany("Vaccinations")
-                        .HasForeignKey("VaccinationStatusId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MedicineHelper.DataBase.Entities.Vaccine", "Vaccine")
-                        .WithMany("Vaccinations")
-                        .HasForeignKey("VaccineId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Clinic");
 
                     b.Navigation("User");
-
-                    b.Navigation("VaccinationStatus");
-
-                    b.Navigation("Vaccine");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VaccinationCost", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Appointment", b =>
                 {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Conclusion");
 
-                    b.Navigation("Currency");
-                });
+                    b.Navigation("MedicinePrescription");
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Visit", b =>
-                {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Doctor", "Doctor")
-                        .WithMany("Visits")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("MedicineProcedure");
 
-                    b.HasOne("MedicineHelper.DataBase.Entities.User", null)
-                        .WithMany("Visits")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VisitCost", b =>
-                {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("MedicineHelper.DataBase.Entities.Visit", "Visit")
-                        .WithMany("VisitCosts")
-                        .HasForeignKey("VisitId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Currency");
-
-                    b.Navigation("Visit");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VisitResult", b =>
-                {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Visit", "Visit")
-                        .WithMany("VisitConclusions")
-                        .HasForeignKey("VisitId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Visit");
+                    b.Navigation("MedicineСheckup");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Clinic", b =>
                 {
-                    b.Navigation("ClinicPhones");
+                    b.Navigation("Analyses");
 
-                    b.Navigation("Doctors");
+                    b.Navigation("DoctorVisits");
+
+                    b.Navigation("Fluorographys");
+
+                    b.Navigation("MedicinePrescription");
+
+                    b.Navigation("MedicineProcedure");
 
                     b.Navigation("Vaccinations");
                 });
 
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Disease", b =>
+                {
+                    b.Navigation("DiseaseHistory");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DiseaseHistory", b =>
+                {
+                    b.Navigation("Appointments");
+                });
+
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Doctor", b =>
                 {
-                    b.Navigation("Visits");
+                    b.Navigation("DoctorVisits");
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DoctorPersonalData", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DoctorVisit", b =>
                 {
-                    b.Navigation("Doctors");
+                    b.Navigation("Appointment")
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.DoctorSpecialization", b =>
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Medicine", b =>
                 {
-                    b.Navigation("Doctors");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Drug", b =>
-                {
-                    b.Navigation("PrescriptionDrugs");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Prescription", b =>
-                {
-                    b.Navigation("PrecPrescriptionDrugs");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.PrescriptionDrug", b =>
-                {
-                    b.Navigation("PrescriptionDrugCosts");
+                    b.Navigation("MedicinePrescription");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Role", b =>
@@ -739,28 +753,21 @@ namespace MedicineHelper.DataBase.Migrations
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.User", b =>
                 {
+                    b.Navigation("Conclusion");
+
+                    b.Navigation("DiseaseHistory");
+
+                    b.Navigation("DoctorVisits");
+
+                    b.Navigation("Fluorographies");
+
+                    b.Navigation("MedicinePrescription");
+
+                    b.Navigation("MedicineProcedure");
+
+                    b.Navigation("MedicineСheckup");
+
                     b.Navigation("Vaccinations");
-
-                    b.Navigation("Visits");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.VaccinationStatus", b =>
-                {
-                    b.Navigation("Vaccinations");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Vaccine", b =>
-                {
-                    b.Navigation("Vaccinations");
-                });
-
-            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Visit", b =>
-                {
-                    b.Navigation("Prescriptions");
-
-                    b.Navigation("VisitConclusions");
-
-                    b.Navigation("VisitCosts");
                 });
 #pragma warning restore 612, 618
         }

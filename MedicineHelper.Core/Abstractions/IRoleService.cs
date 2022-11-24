@@ -1,20 +1,7 @@
-﻿using MedicineHelper.Core.DataTransferObjects;
-
-namespace MedicineHelper.Core.Abstractions;
-
-public interface IRoleService
+﻿namespace MedicineHelper.Core.Abstractions
 {
-    //READ
-    Task<string> GetRoleNameByIdAsync(Guid id);
-    Task<Guid> GetRoleIdByNameAsync(string name);
-    Task<bool> IsRoleExistAsync(Guid id);
-    Task<Guid> GetRoleIdForDefaultRoleAsync();
-    string GetDefaultRoleNameForUser();
-    string GetDefaultRoleNameForAdmin();
-
-    //CREATE
-
-    //UPDATE
-
-    //REMOVE
+    public interface IRoleService
+    {
+        Task<Guid?> GetRoleIdByNameAsync(string roleName);
+    }
 }

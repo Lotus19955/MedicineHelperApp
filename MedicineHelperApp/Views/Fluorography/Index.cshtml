@@ -1,0 +1,57 @@
+﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.FluorographyDto>
+
+@{
+    ViewData["Title"] = "Fluorography";
+    Layout = "_layout";
+}
+
+<h2>Fluorography</h2>
+
+<p>
+    <a asp-action="Create">Add fluorography</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Date of fluorography
+            </th>
+            <th>
+                Date of end of fluorography
+            </th>
+            <th>
+                Number fluorography
+            </th>
+            <th>
+                Result
+            </th>
+            <th>
+                Clinic
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataOfFluorography)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDateOfFluorography)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberFluorography)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Result)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem=> item.ClinicDto.Name)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+

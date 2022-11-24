@@ -1,0 +1,109 @@
+﻿@model MedicineHelper.Core.DataTransferObjects.AppointmentDto
+
+@{
+    ViewData["Title"] = "Appointment";
+    Layout = "_layout";
+}
+
+
+<div class="container">
+    <h2 class="m-1">Appointment</h2>
+
+    <div class="row">
+        <div class="col border border-secondary rounded-3 m-1 p-1">
+            @if (ViewBag.NameOfDisease != null)
+            {
+                <h5>diagnosis: @ViewBag.NameOfDisease</h5>
+            }
+            else
+            {
+                <h5>No diagnosis</h5>
+            }
+            @if (Model.DescriptionOfDestination != null)
+            {
+                <p class=" mb-1">Edit: @Model.DescriptionOfDestination</p>
+                @Html.ActionLink("Edit", "AddOrEditDescriptionAppointment", "DoctorVisit", new {id = Model.Id})
+            }
+            else
+            {
+                <p class=" mb-1">Note: none</p>
+                @Html.ActionLink("Add", "AddOrEditDescriptionAppointment", "DoctorVisit", new {id = Model.Id})
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col border border-secondary rounded-3 m-1 p-1">
+            <h5>Conclusion:</h5>
+            @if (Model.ConclusionDto.Count() != 0)
+            {
+                <ul>
+                    @foreach (var item in Model.ConclusionDto)
+                    {
+                        <li>@item.NameOfConclusion</li>
+                    }
+                    @Html.ActionLink("Add", "Create", "Analysis", new {id = Model.Id})
+                </ul>
+            }
+            else
+            {
+                <p>None conclusion</p>
+                @Html.ActionLink("Add", "Create", "Analysis", new {id = Model.Id})
+            }
+        </div>
+        <div class="col border border-secondary rounded-3 m-1 p-1">
+            <h5>Medicine</h5>
+            @if (Model.MedicinePrescriptionDto.Count() != 0)
+            {
+                <ul>
+                    @foreach (var item in Model.MedicinePrescriptionDto)
+                    {
+                        <li>@item.MedicinesDto.NameOfMedicine</li>
+                    }
+                    @Html.ActionLink("Add", "Create", "PrescribedMedication", new {id = Model.Id})
+                </ul> 
+            }
+            else
+            {
+                <p>None medicine</p>
+                @Html.ActionLink("Add", "Create", "PrescribedMedication", new {id = Model.Id})
+            }
+        </div>
+        <div class="col border border-secondary rounded-3 m-1 p-1">
+            <h5>Medicine Checkup</h5>
+            @if (Model.MedicineСheckupDto.Count() != 0)
+            {
+                <ul>
+                    @foreach (var item in Model.MedicineСheckupDto)
+                    {
+                        <li>@item.Name</li>
+                    }
+                    @Html.ActionLink("Add", "Create", "MedicalExamination", new {id = Model.Id})
+                </ul>
+            }
+            else
+            {
+                <p>None medicine checkup</p>
+                @Html.ActionLink("Add", "Create", "MedicalExamination", new {id = Model.Id})
+            }
+        </div>
+        <div class="col border border-secondary rounded-3 m-1 p-1">
+            <h4>Medicine procedure</h4>
+            @if (Model.MedicineProcedureDto.Count() != 0)
+            {
+                <ul>
+                    @foreach (var item in Model.MedicineProcedureDto)
+                    {
+                        <li>@item.NameOfProcedure</li>
+                    }
+                    @Html.ActionLink("Add", "Create", "PhysicalTherapy", new {id = Model.Id})
+                </ul>
+            }
+            else
+            {
+                <p>None medicine procedure</p>
+                @Html.ActionLink("Add", "Create", "PhysicalTherapy", new {id = Model.Id})
+            }
+        </div>
+    </div>
+</div>
+
