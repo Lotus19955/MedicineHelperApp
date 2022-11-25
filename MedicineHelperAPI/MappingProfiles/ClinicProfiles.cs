@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.DataBase.Entities;
-using MedicineHelperApp.Models;
+using MedicineHelperWebAPI.Models.Requests;
 
 namespace MedicineHelperApp.MappingProfiles
 {
@@ -16,10 +16,9 @@ namespace MedicineHelperApp.MappingProfiles
                 .ForMember(dto => dto.OperatingMode, opt => opt.MapFrom(clin => clin.OperatingMode))
                 .ForMember(dto => dto.Contact, opt => opt.MapFrom(clin => clin.Contact));
 
-            CreateMap<ClinicModel, ClinicDto>()
-                .ForMember(dto => dto.Name, opt => opt.MapFrom(clin => clin.NameClinic));
-            CreateMap<ClinicDto, ClinicModel>()
-                .ForMember(model => model.NameClinic, opt => opt.MapFrom(clin => clin.Name));
+            CreateMap<AddOrUpdateClinicRequestModel, ClinicDto>()
+                .ForMember(dto => dto.Id, opt => opt.MapFrom(clin => clin.ClinicId))
+                .ForMember(dto => dto.Name, opt => opt.MapFrom(clin => clin.ClinicName));
 
             CreateMap<ClinicDto, Clinic>();
         }

@@ -55,7 +55,7 @@ namespace MedicineHelper.Business.ServicesImplementations
 
             catch (Exception)
             {
-                throw new ArgumentException("", nameof(id));
+                throw new ArgumentException("Clinic doen't exist", nameof(id));
             }
         }
 
