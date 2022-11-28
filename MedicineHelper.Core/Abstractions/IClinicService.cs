@@ -10,5 +10,6 @@ namespace MedicineHelper.Core.Abstractions
         Task<int> CreateClinicAsync(ClinicDto dto);
         Task<int> UpdateClinicAsync(ClinicDto dto, Guid id);
         Task DeleteClinicAsync(Guid id);
+        Task AddClinicInfoSite103ByAsync(ClinicDto clinicDto);
     }
 }
