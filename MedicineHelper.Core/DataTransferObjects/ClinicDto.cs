@@ -7,5 +7,6 @@
         public string? Adress { get; set; }
         public string? OperatingMode { get; set; }
         public string? Contact { get; set; }
+        public string? SourceClinicUrl { get; set; }
     }
 }

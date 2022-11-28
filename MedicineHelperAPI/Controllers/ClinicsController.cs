@@ -76,45 +76,25 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="id"></param>
         /// <param name="model"></param>
         /// <returns></returns>
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateClinic(Guid id, [FromBody] AddOrUpdateClinicRequestModel? model)
-        //{
-        //    if (model != null)
-        //    {
-        //        var oldValue = _clinicService.GetByIdClinicAsync(id);
+        [HttpPost]
+        public IActionResult UpdateClinic(Guid id, [FromBody] AddOrUpdateClinicRequestModel? model)
+        {
+            if (model != null)
+            {
+                var oldValue = _clinicService.GetByIdClinicAsync(id);
 
-        //        if (oldValue == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        var dto = _mapper.Map<ClinicDto>(oldValue);
-        //        _clinicService.UpdateClinicAsync(dto, id);
+                if (oldValue == null)
+                {
+                    return NotFound();
+                }
+                var dto = _mapper.Map<ClinicDto>(oldValue);
+                _clinicService.UpdateClinicAsync(dto, id);
 
-        //        return Ok();
-        //    }
+                return Ok();
+            }
 
-        //    return BadRequest();
-        //}
-
-        //[HttpPatch("{id}")]
-        //public IActionResult UpdateArticles(Guid id, [FromBody] PatchRequestModel? model)
-        //{
-        //    //if (model != null)
-        //    //{
-        //    //    var oldValue = Articles.FirstOrDefault(dto => dto.Id.Equals(id));
-
-        //    //    if (oldValue == null)
-        //    //    {
-        //    //        return NotFound();
-        //    //    }
-
-        //    //    //todo add patch implementation(change only fields from request
-
-        //    //    return Ok();
-        //    //}
-
-        //    return BadRequest();
-        //}
+            return BadRequest();
+        }
 
         /// <summary>
         /// Delete clinic

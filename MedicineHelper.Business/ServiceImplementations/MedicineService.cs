@@ -7,6 +7,7 @@ using MedicineHelper.Data.Abstractions;
 using MedicineHelper.DataBase.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 
 namespace MedicineHelper.Business.ServicesImplementations
 {
@@ -181,6 +182,31 @@ namespace MedicineHelper.Business.ServicesImplementations
             }
 
             catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task AddMedicineInfoTablekraByAsync()
+        {
+            try
+            {
+                //TODO NEED REFACTOR
+                var web = new HtmlWeb();
+                var htmlDoc = web.Load("https://tabletka.by/drugs");
+                var alphabetSearch = htmlDoc.DocumentNode.SelectNodes("//div[@class='box inner-page']/div/a/div");
+                foreach (var letter in alphabetSearch)
+                {
+                    var htmlMedicine = web.Load($"https://tabletka.by/drugs?search={letter.InnerText.Trim()}");
+                    var medNod = htmlMedicine.DocumentNode.SelectNodes("//li[@class='search-result__item']");
+                    foreach (var medicine in medNod)
+                    {
+                        var medicineName = medicine.InnerText;
+                        var medicineLink = medicine.SelectNodes("//a[@href]");
+                        var medicineLink1 = medicine.Attributes["@href"];
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 throw;
             }

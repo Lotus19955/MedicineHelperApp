@@ -11,5 +11,6 @@ namespace MedicineHelper.Core.Abstractions
         Task<MedicineDto> GetByIdMedicineAsync(Guid id);
         Task<int> UpdateMedicineAsync(MedicineDto dto, Guid id);
         Task DeleteMedicineAsync(Guid id);
+        Task AddMedicineInfoTablekraByAsync();
     }
 }

@@ -7,6 +7,7 @@
         public string Adress { get; set; }
         public string? OperatingMode { get; set; }
         public string? Contact { get; set; }
+        public string? SourceClinicUrl { get; set; }
         public Guid UserId { get; set; }
 
         public List<DoctorVisit> DoctorVisits { get; set; }
