@@ -71,13 +71,13 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update clinic infornation
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult UpdateClinic(Guid id, [FromBody] AddOrUpdateClinicRequestModel? model)
+        public IActionResult UpdateClinic(Guid id, [FromBody] AddOrUpdateMedicineRequestModel? model)
         {
             if (model != null)
             {

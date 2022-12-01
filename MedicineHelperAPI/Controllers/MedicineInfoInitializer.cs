@@ -32,8 +32,9 @@ namespace MedicineHelperWebAPI.Controllers
         {
             try
             {
+                //RecurringJob.AddOrUpdate(() => _medicineService.AddMedicineInfoTablekaByAsync(),Cron.Weekly());
                 //RecurringJob.RemoveIfExists(nameof(_articleService.AggregateArticlesFromExternalSourcesAsync));
-                var result = _medicineService.AddMedicineInfoTablekraByAsync();
+                var result = _medicineService.AddMedicineInfoTablekaByAsync();
                 //RecurringJob.AddOrUpdate(() => _clinicService.AddClinicInfoSite103ByAsync(dto),
                 //    "*/30 * * * *");
 

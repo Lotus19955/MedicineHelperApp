@@ -228,7 +228,7 @@ namespace MedicineHelper.Controllers
             {
                 var dto = await _medicineService.GetByIdMedicineAsync(model.Id);
                 dto.NameOfMedicine = model.NameOfMedicine;
-                dto.Instruction = model.LinkToInstructions;
+                dto.Instructions = model.LinkToInstructions;
 
                 await _medicineService.UpdateMedicineAsync(dto, dto.Id);
 

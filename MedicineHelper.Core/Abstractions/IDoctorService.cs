@@ -6,5 +6,8 @@ namespace MedicineHelper.Core.Abstractions
     {
         Task<List<DoctorDto>> GetAllDoctorAsync();
         Task<int> CreateDoctorAsync(DoctorDto dto);
+        Task DeleteDoctorAsync(Guid id);
+        Task<DoctorDto> GetByIdDoctorAsync(Guid id);
+        Task<int> UpdateDoctorAsync(DoctorDto dto, Guid id);
     }
 }

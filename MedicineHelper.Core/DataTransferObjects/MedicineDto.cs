@@ -4,6 +4,7 @@
     {
         public Guid Id { get; set; }
         public string NameOfMedicine { get; set; }
-        public string Instruction { get; set; }
+        public string Instructions { get; set; }
+        public List<MedicinePrescriptionDto> MedicinePrescriptionDto { get; set; }
     }
 }

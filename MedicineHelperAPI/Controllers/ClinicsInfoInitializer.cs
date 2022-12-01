@@ -31,6 +31,7 @@ namespace MedicineHelperWebAPI.Controllers
         {
             try
             {
+                //TODO impliment
                 var dto = new ClinicDto();
                 //RecurringJob.RemoveIfExists(nameof(_articleService.AggregateArticlesFromExternalSourcesAsync));
                 var result = _clinicService.AddClinicInfoSite103ByAsync(dto);

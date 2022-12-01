@@ -6,8 +6,10 @@ using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.Data.Abstractions;
 using MedicineHelper.DataBase.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Runtime.CompilerServices;
 
 namespace MedicineHelper.Business.ServicesImplementations
 {
@@ -74,7 +76,7 @@ namespace MedicineHelper.Business.ServicesImplementations
                     var medicineDto = new MedicineDto()
                     {
                         NameOfMedicine = nameMedicine,
-                        Instruction = urlTabletkaBy + linkToInstruction
+                        Instructions = urlTabletkaBy + linkToInstruction
                     };
 
                     listMedicineDto.Add(medicineDto);
@@ -149,12 +151,12 @@ namespace MedicineHelper.Business.ServicesImplementations
                         PropertyValue = dto.NameOfMedicine
                     });
                 }
-                if (dto.Instruction != sourceDto.Instruction)
+                if (dto.Instructions != sourceDto.Instructions)
                 {
                     patchList.Add(new PatchModel()
                     {
-                        PropertyName = nameof(dto.Instruction),
-                        PropertyValue = dto.Instruction
+                        PropertyName = nameof(dto.Instructions),
+                        PropertyValue = dto.Instructions
                     });
                 }
 
@@ -174,7 +176,6 @@ namespace MedicineHelper.Business.ServicesImplementations
             {
                 var entity = await _unitOfWork.Medicine
                     .FindBy(entity => entity.Id.Equals(id))
-                    .Include(include => include.MedicinePrescription)
                     .FirstOrDefaultAsync();
 
                 _unitOfWork.Medicine.Remove(entity);
@@ -186,30 +187,33 @@ namespace MedicineHelper.Business.ServicesImplementations
                 throw;
             }
         }
-        public async Task AddMedicineInfoTablekraByAsync()
+        public async Task AddMedicineInfoTablekaByAsync()
         {
-            try
+            List<MedicineDto> dtoList = new List<MedicineDto>();
+            var web = new HtmlWeb();
+            var htmlDoc = web.Load("https://tabletka.by/drugs");
+            var alphabetSearch = htmlDoc.DocumentNode.SelectNodes("//div[@class='box inner-page']/div/a/div");
+            foreach (var letter in alphabetSearch)
             {
-                //TODO NEED REFACTOR
-                var web = new HtmlWeb();
-                var htmlDoc = web.Load("https://tabletka.by/drugs");
-                var alphabetSearch = htmlDoc.DocumentNode.SelectNodes("//div[@class='box inner-page']/div/a/div");
-                foreach (var letter in alphabetSearch)
+                var htmlMedicine = web.Load($"https://tabletka.by/drugs?search={letter.InnerText.Trim()}");
+                var medNod = htmlMedicine.DocumentNode.SelectNodes("//li[@class='search-result__item']");
+                if (medNod != null)
                 {
-                    var htmlMedicine = web.Load($"https://tabletka.by/drugs?search={letter.InnerText.Trim()}");
-                    var medNod = htmlMedicine.DocumentNode.SelectNodes("//li[@class='search-result__item']");
                     foreach (var medicine in medNod)
                     {
-                        var medicineName = medicine.InnerText;
-                        var medicineLink = medicine.SelectNodes("//a[@href]");
-                        var medicineLink1 = medicine.Attributes["@href"];
+                        dtoList.Add(
+                        new MedicineDto
+                        {
+                            Id = Guid.NewGuid(),
+                            NameOfMedicine = medicine.InnerText.Trim(),
+                            Instructions = "https://tabletka.by" + medicine.ChildNodes[0].GetAttributeValue("href", string.Empty)
+                        });
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
+            var entities = dtoList.Select(dto => _mapper.Map<Medicine>(dto));
+            await _unitOfWork.Medicine.AddRangeAsync(entities);
+            await _unitOfWork.Commit();
         }
     }
 }

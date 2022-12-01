@@ -31,9 +31,9 @@
                     @Html.DisplayFor(modelItem => item.NameOfMedicine)
                 </td>
                 <td>
-                    @if (!string.IsNullOrEmpty(item.Instruction))
+                    @if (!string.IsNullOrEmpty(item.Instructions))
                     {
-                        <a class="m-1" href="@item.Instruction">Instruction</a>
+                        <a class="m-1" href="@item.Instructions">Instruction</a>
                     }
                     else
                     {
@@ -41,7 +41,7 @@
                     }
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "ShowEditMedicine", "Admin", new {id = item.Id, nameMedicine = item.NameOfMedicine, Instruction = item.Instruction})
+                    @Html.ActionLink("Edit", "ShowEditMedicine", "Admin", new {id = item.Id, nameMedicine = item.NameOfMedicine, Instruction = item.Instructions})
                     <a asp-controller="Admin" asp-action="ShowDeleteMedicine" asp-route-id="@item.Id" asp-route-nameOfMedicine="@item.NameOfMedicine" class="m-1">Delete</a>
                 </td>
             </tr>
