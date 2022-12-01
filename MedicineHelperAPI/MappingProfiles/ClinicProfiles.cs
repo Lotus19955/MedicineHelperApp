@@ -3,7 +3,7 @@ using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.DataBase.Entities;
 using MedicineHelperWebAPI.Models.Requests;
 
-namespace MedicineHelperApp.MappingProfiles
+namespace MedicineHelperWebAPI.MappingProfiles
 {
     public class ClinicProfiles : Profile
     {

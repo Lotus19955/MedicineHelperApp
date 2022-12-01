@@ -51,7 +51,6 @@ namespace MedicineHelper.Data.Repositories
             Role = role;
         }
 
-
         public async Task<int> Commit()
         {
             return await _dbContext.SaveChangesAsync();

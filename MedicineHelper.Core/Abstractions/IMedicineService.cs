@@ -7,10 +7,10 @@ namespace MedicineHelper.Core.Abstractions
     {
         Task<List<MedicineDto>> GetAllMedicineAsync();
         List<string>? SearchMedicineInTabletkaBy(string nameOfMedicine);
-        Task<int> AddMedicineAsync(List<string>? listLinkMedicine);
+        //Task<int> AddMedicineAsync(List<string>? listLinkMedicine);
         Task<MedicineDto> GetByIdMedicineAsync(Guid id);
         Task<int> UpdateMedicineAsync(MedicineDto dto, Guid id);
         Task DeleteMedicineAsync(Guid id);
-        Task AddMedicineInfoTablekraByAsync();
+        Task AddMedicineInfoTablekaByAsync();
     }
 }

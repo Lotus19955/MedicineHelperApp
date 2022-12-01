@@ -54,6 +54,31 @@ namespace MedicineHelper.Business.ServicesImplementations
                 throw new ArgumentException("User for removing doesn't exist", nameof(id));
             }
         }
+        //TODO need test
+        public async Task DeleteUserAsync(string email)
+        {
+            try
+            {
+                var entity = await _unitOfWork.User.FindBy(entity => entity.Email.Equals(email))
+                    .Include(include => include.DoctorVisits)
+                    .Include(include => include.DiseaseHistory)
+                    .Include(include => include.Conclusion)
+                    .Include(include => include.Vaccinations)
+                    .Include(include => include.MedicineСheckup)
+                    .Include(include => include.MedicinePrescription)
+                    .Include(include => include.Fluorographies)
+                    .Include(include => include.MedicineProcedure)
+                    .FirstOrDefaultAsync();
+
+                _unitOfWork.User.Remove(entity);
+                await _unitOfWork.Commit();
+            }
+
+            catch (Exception)
+            {
+                throw new ArgumentException("User for removing doesn't exist", nameof(email));
+            }
+        }
 
         public async Task<List<UserDto>> GetAllUserAsync()
         {
@@ -150,6 +175,64 @@ namespace MedicineHelper.Business.ServicesImplementations
                 }
 
                 await _unitOfWork.User.PatchAsync(id, patchList);
+
+                return await _unitOfWork.Commit();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<int> UpdateUserAsync(UserDto dto, string email)
+        {
+            try
+            {
+                var sourceDto = await GetUserByEmailAsync(dto.Email);
+                var patchList = new List<PatchModel>();
+
+                if (dto.LastName != sourceDto.LastName)
+                {
+                    patchList.Add(new PatchModel()
+                    {
+                        PropertyName = nameof(dto.LastName),
+                        PropertyValue = dto.LastName
+                    });
+                }
+                if (dto.FirstName != sourceDto.FirstName)
+                {
+                    patchList.Add(new PatchModel()
+                    {
+                        PropertyName = nameof(dto.FirstName),
+                        PropertyValue = dto.FirstName
+                    });
+                }
+                if (dto.Birthday != sourceDto.Birthday)
+                {
+                    patchList.Add(new PatchModel()
+                    {
+                        PropertyName = nameof(dto.Birthday),
+                        PropertyValue = dto.Birthday
+                    });
+                }
+                if (dto.Email != sourceDto.Email)
+                {
+                    patchList.Add(new PatchModel()
+                    {
+                        PropertyName = nameof(dto.Email),
+                        PropertyValue = dto.Email
+                    });
+                }
+                if (dto.Avatar != sourceDto.Avatar)
+                {
+                    patchList.Add(new PatchModel()
+                    {
+                        PropertyName = nameof(dto.Avatar),
+                        PropertyValue = dto.Avatar
+                    });
+                }
+
+                await _unitOfWork.User.PatchAsync(sourceDto.Id, patchList);
 
                 return await _unitOfWork.Commit();
             }

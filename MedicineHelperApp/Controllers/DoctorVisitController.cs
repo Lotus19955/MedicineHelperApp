@@ -56,7 +56,7 @@ namespace MedicineHelper.Controllers
                 var model = new DoctorVisitModel();
                 model.ClinicList = new SelectList(clinicDto, "Id", "NameClinic");
                 model.DoctorList = new SelectList(doctorsDto, "Id", "FullNameDoctor");
-                //TODO fix
+
                 if (model.ReturnUrl == "https://localhost:7226/DoctorVisit/CreateDoctor")
                 {
                     model.ReturnUrl = "https://localhost:7226/DoctorVisit/Index";

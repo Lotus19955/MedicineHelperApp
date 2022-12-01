@@ -2,7 +2,7 @@
 using MedicineHelper.DataBase.Entities;
 using MedicineHelper.Core.DataTransferObjects;
 
-namespace MedicineHelperApp.MappingProfiles
+namespace MedicineHelperWebAPI.MappingProfiles
 {
     public class UserProfile : Profile
     {

@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>C:\Users\lotus\source\repos\MedicineHelperApp\MedicineHelperAPI\Comments.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\lotus\source\repos\MedicineHelperWebAPI\MedicineHelperAPI\Comments.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
