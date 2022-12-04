@@ -211,6 +211,7 @@ namespace MedicineHelper.Business.ServicesImplementations
                     }
                 }
             }
+            //TODO _mediator
             var entities = dtoList.Select(dto => _mapper.Map<Medicine>(dto));
             await _unitOfWork.Medicine.AddRangeAsync(entities);
             await _unitOfWork.Commit();

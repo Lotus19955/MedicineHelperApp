@@ -32,7 +32,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var emailUser = HttpContext.User.Identity.Name;
-                var userDto = await _userService.GetUserByEmailAsync(emailUser);
+                var userDto = _userService.GetUserByEmailAsync(emailUser);
                 var listDiseaseHistory = await _diseaseHistoryService.GetAllDiseaseHistoryAsync(userDto.Id);
 
                 return View(listDiseaseHistory);
@@ -81,7 +81,7 @@ namespace MedicineHelper.Controllers
                 if (!ModelState.IsValid)
                 {
                     var emailUser = HttpContext.User.Identity.Name;
-                    var userDto = await _userService.GetUserByEmailAsync(emailUser);
+                    var userDto =  _userService.GetUserByEmailAsync(emailUser);
                     model.UserId = userDto.Id;
 
                     var dto = _mapper.Map<DiseaseHistoryDto>(model);

@@ -97,14 +97,11 @@ namespace MedicineHelper.Business.ServicesImplementations
             }
         }
 
-        public async Task<UserDto> GetUserByEmailAsync(string email)
+        public UserDto? GetUserByEmailAsync(string email)
         {
-            var user = await _unitOfWork.User
-                .FindBy(user => user.Email.Equals(email), user => user.Role)
-                .FirstOrDefaultAsync();
-            var userDto = _mapper.Map<UserDto>(user);
-
-            return userDto; 
+            var user = _unitOfWork.User.FindBy(user => user.Email.Equals(email), user => user.Role).FirstOrDefault();
+            return user != null ?
+            _mapper.Map<UserDto>(user) : null;
         }
 
         public async Task<bool> IsUserExistAsync(string email)
@@ -114,11 +111,11 @@ namespace MedicineHelper.Business.ServicesImplementations
             return isExit != null;
         }
 
-        public async Task<int> RegisterUser(UserDto userDto)
+        public async Task<int> RegisterUser(UserDto userDto, string password)
         {
             var user = _mapper.Map<User>(userDto);
             user.RegistrationDate = DateTime.Now;
-            user.PasswordHash = CreateMd5(userDto.PasswordHash);
+            user.PasswordHash = CreateMd5($"{password}.{_configuration["Secret:PasswordSalt"]}");
             user.Email = user.Email.ToLower();
 
             await _unitOfWork.User.AddAsync(user);
@@ -130,7 +127,7 @@ namespace MedicineHelper.Business.ServicesImplementations
         {
             try
             {
-                var sourceDto = await GetUserByEmailAsync(dto.Email);
+                var sourceDto = GetUserByEmailAsync(dto.Email);
                 var patchList = new List<PatchModel>();
 
                 if (dto.LastName != sourceDto.LastName)
@@ -188,7 +185,7 @@ namespace MedicineHelper.Business.ServicesImplementations
         {
             try
             {
-                var sourceDto = await GetUserByEmailAsync(dto.Email);
+                var sourceDto = GetUserByEmailAsync(dto.Email);
                 var patchList = new List<PatchModel>();
 
                 if (dto.LastName != sourceDto.LastName)

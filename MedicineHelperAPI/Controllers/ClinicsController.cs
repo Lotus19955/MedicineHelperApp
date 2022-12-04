@@ -7,13 +7,14 @@ using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.DataBase.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.Design;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MedicineHelperWebAPI.Controllers
 {
     /// <summary>
     /// Controller for work with clinic
     /// </summary>
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ClinicsController : ControllerBase
     {
@@ -77,6 +78,7 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
         public IActionResult UpdateClinic(Guid id, [FromBody] AddOrUpdateMedicineRequestModel? model)
         {
             if (model != null)
@@ -102,6 +104,7 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="id">Id of clinic</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteClinic(Guid id)

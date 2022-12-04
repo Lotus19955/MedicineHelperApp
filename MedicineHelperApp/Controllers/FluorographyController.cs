@@ -30,7 +30,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var emailUser = HttpContext.User.Identity?.Name;
-                var dtoUser = await _userService.GetUserByEmailAsync(emailUser);
+                var dtoUser = _userService.GetUserByEmailAsync(emailUser);
                 var fluorographies = await _fluorographyService.GetAllFluorographiesAsync(dtoUser.Id);
 
                 return View(fluorographies);
@@ -67,7 +67,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var userEmail = HttpContext.User.Identity.Name;
-                var dtoUser = await _userService.GetUserByEmailAsync(userEmail);
+                var dtoUser = _userService.GetUserByEmailAsync(userEmail);
                 fluorographyModel.UserId = dtoUser.Id;
                 var fluorographyDto = _mapper.Map<FluorographyDto>(fluorographyModel);
                 await _fluorographyService.CreateFluorographyAsync(fluorographyDto);

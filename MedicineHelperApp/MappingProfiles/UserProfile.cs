@@ -15,7 +15,7 @@ namespace MedicineHelperApp.MappingProfiles
 
             CreateMap<RegisterModel, UserDto>()
                 .ForMember(dto => dto.Email, opt => opt.MapFrom(model => model.Email))
-                .ForMember(dto => dto.PasswordHash, opt => opt.MapFrom(model => model.Password));
+                .ForMember(dto => dto.Password, opt => opt.MapFrom(model => model.Password));
 
             CreateMap<UserDto, User>();
         }

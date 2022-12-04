@@ -3,6 +3,7 @@ using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperWebAPI.Models.Requests;
 using MedicineHelperWebAPI.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicineHelperWebAPI.Controllers
@@ -11,7 +12,7 @@ namespace MedicineHelperWebAPI.Controllers
     /// <summary>
     /// Controller for work with doctor
     /// </summary>
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class DoctorController : ControllerBase
     {
@@ -69,6 +70,7 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
         public IActionResult UpdateDocotor(Guid id, [FromBody] AddOrUpdateDoctorRequestModel? model)
         {
             if (model != null)
@@ -94,6 +96,7 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="id">Id of doctor</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteClinic(Guid id)

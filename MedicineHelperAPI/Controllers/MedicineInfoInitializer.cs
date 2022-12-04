@@ -4,11 +4,12 @@ using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperWebAPI.Models.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedicineHelperWebAPI.Controllers
 {
-    [Route ("[controller]")]
+    [Route ("api/[controller]")]
     [ApiController]
     public class MedicineInfoInitializer : ControllerBase
     {
@@ -28,15 +29,13 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddMedicineInfo()
         {
             try
             {
-                //RecurringJob.AddOrUpdate(() => _medicineService.AddMedicineInfoTablekaByAsync(),Cron.Weekly());
-                //RecurringJob.RemoveIfExists(nameof(_articleService.AggregateArticlesFromExternalSourcesAsync));
+                //can be used cron calculator
                 var result = _medicineService.AddMedicineInfoTablekaByAsync();
-                //RecurringJob.AddOrUpdate(() => _clinicService.AddClinicInfoSite103ByAsync(dto),
-                //    "*/30 * * * *");
 
                 return Ok();
             }
