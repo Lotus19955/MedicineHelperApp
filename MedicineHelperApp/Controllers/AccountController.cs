@@ -80,7 +80,7 @@ namespace MedicineHelper.Controllers
                 if (userDto != null && userRoleId != null)
                 {
                     userDto.RoleId = userRoleId.Value;
-                    var result = await _userService.RegisterUser(userDto);
+                    var result = await _userService.RegisterUser(userDto, userDto.Password);
                     if (result > 0)
                     {
                         var roleName = await Authenticate(registerModel.Email);
@@ -99,7 +99,7 @@ namespace MedicineHelper.Controllers
 
         private async Task<string> Authenticate(string email)
         {
-            var userDto = await _userService.GetUserByEmailAsync(email);
+            var userDto = _userService.GetUserByEmailAsync(email);
 
             var claims = new List<Claim>()
             {

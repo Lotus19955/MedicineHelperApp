@@ -29,7 +29,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var userEmail = HttpContext.User.Identity?.Name;
-                var userDto = await _userService.GetUserByEmailAsync(userEmail);
+                var userDto = _userService.GetUserByEmailAsync(userEmail);
                 var model = new UserModel()
                 {
                     LastName = userDto.LastName,
@@ -55,7 +55,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var userEmail = HttpContext.User.Identity?.Name;
-                var userDto = await _userService.GetUserByEmailAsync(userEmail);
+                var userDto = _userService.GetUserByEmailAsync(userEmail);
                 var model = new UserModel()
                 {
                     Email = userDto.Email,
@@ -78,7 +78,7 @@ namespace MedicineHelper.Controllers
             {
                 if(model.Avatar !=null)
                 {
-                    var dto = await _userService.GetUserByEmailAsync(model.Email);
+                    var dto = _userService.GetUserByEmailAsync(model.Email);
                     byte[] imageData = null;
                     using (BinaryReader binaryReader = new BinaryReader(model.Avatar.OpenReadStream()))
                     {
@@ -102,7 +102,7 @@ namespace MedicineHelper.Controllers
         {
             try
             {
-                var dto = await _userService.GetUserByEmailAsync(model.Email);
+                var dto = _userService.GetUserByEmailAsync(model.Email);
                 dto.LastName = model.LastName;
                 dto.FirstName = model.FirstName;
                 dto.Birthday = model.Birthday;

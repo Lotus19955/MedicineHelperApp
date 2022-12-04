@@ -31,7 +31,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var emailUser = HttpContext.User.Identity.Name;
-                var userDto = await _userService.GetUserByEmailAsync(emailUser);
+                var userDto = _userService.GetUserByEmailAsync(emailUser);
                 var listMedicineCheckup = await _medicineСheckupService.GetAllMedicineСheckupAsync(userDto.Id);
 
                 return View(listMedicineCheckup);
@@ -73,7 +73,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var userEmail = HttpContext.User.Identity.Name;
-                var userDto = await _userService.GetUserByEmailAsync(userEmail);
+                var userDto = _userService.GetUserByEmailAsync(userEmail);
                 model.UserId = userDto.Id;
                 var dto = _mapper.Map<MedicineСheckupDto>(model);
                 await _medicineСheckupService.CreateMedicineСheckupAsync(dto);

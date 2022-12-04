@@ -33,7 +33,7 @@ namespace MedicineHelper.Controllers
             try
             {
                 var emailUser = HttpContext.User.Identity?.Name;
-                var userDto = await _userService.GetUserByEmailAsync(emailUser);
+                var userDto = _userService.GetUserByEmailAsync(emailUser);
 
                 if (!AllDates)
                 {
@@ -92,7 +92,7 @@ namespace MedicineHelper.Controllers
                 if(!ModelState.IsValid)
                 {
                     var emailUser = HttpContext.User.Identity.Name;
-                    var userDto = await _userService.GetUserByEmailAsync(emailUser);
+                    var userDto = _userService.GetUserByEmailAsync(emailUser);
                     conclusionModel.UserId = userDto.Id;
                      
                     var analysisDto = _mapper.Map<ConclusionDto>(conclusionModel);

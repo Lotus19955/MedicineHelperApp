@@ -6,8 +6,8 @@ namespace MedicineHelper.Core.Abstractions
     {
         Task<bool> CheckUserPasswordAsync(string email, string password);
         Task<bool> IsUserExistAsync(string email);
-        Task<UserDto> GetUserByEmailAsync(string email);
-        Task<int> RegisterUser(UserDto user);
+        UserDto? GetUserByEmailAsync(string email);
+        Task<int> RegisterUser(UserDto user, string password);
         Task<List<UserDto>> GetAllUserAsync();
         Task DeleteUserAsync(Guid id); 
         Task DeleteUserAsync(string email);

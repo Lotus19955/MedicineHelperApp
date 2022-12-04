@@ -7,24 +7,20 @@ using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.DataBase.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.Design;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MedicineHelperWebAPI.Controllers
 {
     /// <summary>
     /// Controller for work with clinic
     /// </summary>
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MedicineController : ControllerBase
     {
         private readonly IMedicineService _medicineService;
         private readonly IMapper _mapper;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="clinicService"></param>
-        /// <param name="mapper"></param>
         public MedicineController(IMedicineService medicineService,
             IMapper mapper)
         {
@@ -61,11 +57,6 @@ namespace MedicineHelperWebAPI.Controllers
         {
             IEnumerable<MedicineDto> medicines = await _medicineService.GetAllMedicineAsync();
 
-            //var jobId = BackgroundJob.Enqueue(() => Console.WriteLine(HttpContext.Request.Method));
-            //var jobId2 = BackgroundJob.Schedule(() => Console.WriteLine(HttpContext.Request.Method),
-            //    TimeSpan.FromMinutes(1));
-
-
             return Ok(medicines.ToList());
         }
 
@@ -76,6 +67,7 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
         public IActionResult UpdateMedicine(Guid id, [FromBody] AddOrUpdateClinicRequestModel? model)
         {
             if (model != null)
@@ -101,6 +93,7 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="id">Id of medicine</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteMedicine(Guid id)

@@ -13,6 +13,9 @@ using System.Text;
 using Serilog.Events;
 using Hangfire;
 using Hangfire.SqlServer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using MedicineHelperWebAPI.Utils;
 
 namespace MedicineHelperWebAPI
 {
@@ -69,6 +72,7 @@ namespace MedicineHelperWebAPI
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVaccinationService, VaccinationService>();
+            builder.Services.AddScoped<IJwtUtil, JwtUtilSha256>();
 
             // Add repositories
             builder.Services.AddScoped<IRepository<Conclusion>, Repository<Conclusion>>();
@@ -98,21 +102,41 @@ namespace MedicineHelperWebAPI
                 option.IncludeXmlComments(builder.Configuration["XmlComments"]);
             });
 
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(opt =>
+                {
+                    opt.RequireHttpsMetadata = false;
+                    opt.SaveToken = true;
+                    opt.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = builder.Configuration["Token:Issuer"],
+                        ValidAudience = builder.Configuration["Token:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:JwtSecret"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
             var app = builder.Build();
 
             app.UseStaticFiles();
             app.UseHangfireDashboard();
             app.UseRouting();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            app.MapHangfireDashboard();
+
+            //app.UseCors(myCorsPolicyName);
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
