@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MedicineHelper.Core.DataTransferObjects;
+using MedicineHelper.Data.CQS.Commands;
 using MedicineHelperWebAPI.Models.Responses;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,10 +12,12 @@ namespace MedicineHelperWebAPI.Utils
     public class JwtUtilSha256 : IJwtUtil
     {
         private readonly IConfiguration _configuration;
+        private readonly IMediator _mediator;
 
-        public JwtUtilSha256(IConfiguration configuration)
+        public JwtUtilSha256(IConfiguration configuration, IMediator mediator)
         {
             _configuration = configuration;
+            _mediator = mediator;
         }
 
         public async Task<TokenResponse> GenerateTokenAsync(UserDto dto)
@@ -43,11 +46,11 @@ namespace MedicineHelperWebAPI.Utils
 
             var refreshTokenValue = Guid.NewGuid();
 
-            //await _mediator.Send(new AddRefreshTokenCommand()
-            //{
-            //    UserId = dto.Id,
-            //    TokenValue = refreshTokenValue
-            //});
+            await _mediator.Send(new AddRefreshTokenCommand()
+            {
+                UserId = dto.Id,
+                TokenValue = refreshTokenValue
+            });
 
             return new TokenResponse()
             {
@@ -55,7 +58,7 @@ namespace MedicineHelperWebAPI.Utils
                 Role = dto.RoleName,
                 TokenExpiration = jwtToken.ValidTo,
                 UserId = dto.Id,
-                //RefreshToken = refreshTokenValue
+                RefreshToken = refreshTokenValue
             };
         }
 

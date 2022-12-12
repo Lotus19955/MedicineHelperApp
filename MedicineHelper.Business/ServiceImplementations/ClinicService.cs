@@ -27,6 +27,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var entity = _mapper.Map<Clinic>(dto);
+                entity.Id = Guid.NewGuid();
                 await _unitOfWork.Clinic.AddAsync(entity);
                 var result = await _unitOfWork.Commit();
 

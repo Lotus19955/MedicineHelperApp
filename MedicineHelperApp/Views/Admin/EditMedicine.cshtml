@@ -1,7 +1,7 @@
 ﻿@model MedicineModel
 
 @{
-    ViewData["Title"] = "Админ";
+    ViewData["Title"] = "Admin";
     Layout = "_AdminLayout";
 }
 <div>
@@ -18,10 +18,10 @@
         <label for="LinkToInstructions" class="form-label">Link to instruction:</label>
         <input asp-for="LinkToInstructions" type="text" class="form-control" id="LinkToInstructions" value="@Model.LinkToInstructions" />
     </div>
-    <div>
+    @*<div>
         <input asp-for="ReturnUrl" type="hidden" />
         <input asp-for="Id" type="hidden" />
-    </div>
+    </div>*@
     <input type="submit" class="btn btn-danger m-1" value="Edit medicine" />
     <a class="btn btn-primary m-1" role="button" asp-controller="Admin" asp-action="GetMedicines">Cancel</a>
 </form>

@@ -84,7 +84,7 @@ namespace MedicineHelper.Controllers
                     if (result > 0)
                     {
                         var roleName = await Authenticate(registerModel.Email);
-                        if (roleName == "admin")
+                        if (roleName == "Admin")
                         {
                             return RedirectToAction("Index", "Admin");
                         }

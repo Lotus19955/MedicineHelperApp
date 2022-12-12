@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.DataBase.Entities;
+using MedicineHelperApp.Models;
 
 namespace MedicineHelperApp.MappingProfiles
 {
@@ -11,6 +12,9 @@ namespace MedicineHelperApp.MappingProfiles
             CreateMap<Medicine, MedicineDto>();
 
             CreateMap<MedicineDto, Medicine>();
+
+            CreateMap<MedicineModel, MedicineDto>()
+                .ForMember(dto => dto.Instructions, opt => opt.MapFrom(model => model.LinkToInstructions));
         }
     }
 }

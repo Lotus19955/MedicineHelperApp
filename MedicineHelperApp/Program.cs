@@ -1,7 +1,9 @@
+using MediatR;
 using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Data.Abstractions;
 using MedicineHelper.Data.Abstractions.Repositories;
+using MedicineHelper.Data.CQS.Commands;
 using MedicineHelper.Data.Repositories;
 using MedicineHelper.DataBase;
 using MedicineHelper.DataBase.Entities;
@@ -65,6 +67,7 @@ namespace MedicineHelperApp
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVaccinationService, VaccinationService>();
+            builder.Services.AddMediatR(typeof(AddMedicineDataFromTabletkaByCommand).Assembly);
 
             // Add repositories
             builder.Services.AddScoped<IRepository<Conclusion>, Repository<Conclusion>>();

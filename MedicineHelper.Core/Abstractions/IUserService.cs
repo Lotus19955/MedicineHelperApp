@@ -13,5 +13,6 @@ namespace MedicineHelper.Core.Abstractions
         Task DeleteUserAsync(string email);
         Task<int> UpdateUserAsync(UserDto user, Guid id);
         Task<int> UpdateUserAsync(UserDto user, string email);
+        Task<UserDto?> GetUserByRefreshTokenAsync(Guid token);
     }
 }

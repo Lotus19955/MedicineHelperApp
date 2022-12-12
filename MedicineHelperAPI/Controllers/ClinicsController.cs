@@ -63,11 +63,6 @@ namespace MedicineHelperWebAPI.Controllers
             IEnumerable<ClinicDto> articles = await _clinicService
                 .GetClinicAsync();
 
-            //var jobId = BackgroundJob.Enqueue(() => Console.WriteLine(HttpContext.Request.Method));
-            //var jobId2 = BackgroundJob.Schedule(() => Console.WriteLine(HttpContext.Request.Method),
-            //    TimeSpan.FromMinutes(1));
-
-
             return Ok(articles.ToList());
         }
 

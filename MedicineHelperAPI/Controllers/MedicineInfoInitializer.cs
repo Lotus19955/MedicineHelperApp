@@ -29,13 +29,13 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> AddMedicineInfo()
         {
             try
             {
                 //can be used cron calculator
-                var result = _medicineService.AddMedicineInfoTablekaByAsync();
+                RecurringJob.AddOrUpdate(() => _medicineService.AddMedicineInfoTablekaByAsync(),Cron.Weekly);
 
                 return Ok();
             }

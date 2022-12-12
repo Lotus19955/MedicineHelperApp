@@ -23,5 +23,6 @@ namespace MedicineHelper.DataBase.Entities
         public List<DiseaseHistory>? DiseaseHistory { get; set; }
         public List<MedicinePrescription>? MedicinePrescription { get; set; }
         public List<MedicineProcedure>? MedicineProcedure { get; set; }
+        public List<RefreshToken>? RefreshTokens { get; set; }
     }
 }

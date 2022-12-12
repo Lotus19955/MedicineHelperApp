@@ -41,8 +41,8 @@
                     }
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "ShowEditMedicine", "Admin", new {id = item.Id, nameMedicine = item.NameOfMedicine, Instruction = item.Instructions})
-                    <a asp-controller="Admin" asp-action="ShowDeleteMedicine" asp-route-id="@item.Id" asp-route-nameOfMedicine="@item.NameOfMedicine" class="m-1">Delete</a>
+                    <a class="btn btn-outline-danger m-1" asp-controller="Admin" asp-action="EditMedicine" asp-route-id="@item.Id" asp-route-nameOfMedicine="@item.NameOfMedicine" asp-route-Instructions="@item.Instructions">Edit</a>
+                    <a class="btn btn-outline-danger m-1" asp-controller="Admin" asp-action="DeleteMedicine" asp-route-id="@item.Id"asp-route-nameOfMedicine="@item.NameOfMedicine">Delete</a>
                 </td>
             </tr>
         }

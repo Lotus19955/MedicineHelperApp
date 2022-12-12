@@ -37,7 +37,7 @@
     <ProjectReference Include="..\MedicineHelper.Business\MedicineHelper.Business.csproj" />
     <ProjectReference Include="..\MedicineHelper.Data.Repositories\MedicineHelper.Data.Repositories.csproj" />
     <ProjectReference Include="..\MedicineHelper.DataBase\MedicineHelper.DataBase.csproj" />
-    <ProjectReference Include="..\MedicineHelperApp\MedicineHelperApp.csproj" />
+    <ProjectReference Include="..\MedicineHelperApp\MedicineHelperAppMVC.csproj" />
   </ItemGroup>
 
 </Project>
