@@ -55,11 +55,6 @@ namespace MedicineHelperWebAPI.Controllers
         {
             IEnumerable<DoctorDto> doctors = await _doctorService.GetAllDoctorAsync();
 
-            //var jobId = BackgroundJob.Enqueue(() => Console.WriteLine(HttpContext.Request.Method));
-            //var jobId2 = BackgroundJob.Schedule(() => Console.WriteLine(HttpContext.Request.Method),
-            //    TimeSpan.FromMinutes(1));
-
-
             return Ok(doctors.ToList());
         }
 

@@ -69,53 +69,53 @@ namespace MedicineHelperWebAPI.Controllers
             }
         }
 
-        ///// <summary>
-        ///// Register user
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <returns></returns>
-        //[Route("Refresh")]
-        //[HttpPost]
-        //public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestModel request)
-        //{
-        //    try
-        //    {
-        //        var user = await _userService.GetUserByRefreshTokenAsync(request.RefreshToken);
+        /// <summary>
+        /// Register user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("Refresh")]
+        [HttpPost]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestModel request)
+        {
+            try
+            {
+                var user = await _userService.GetUserByRefreshTokenAsync(request.RefreshToken);
 
-        //        var response = await _jwtUtil.GenerateTokenAsync(user);
+                var response = await _jwtUtil.GenerateTokenAsync(user);
 
-        //        await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
+                //await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
 
-        //        return Ok(response);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Log.Error(e.Message);
-        //        return StatusCode(500);
-        //    }
-        //}
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
+        }
 
 
-        ///// <summary>
-        ///// Register user
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <returns></returns>
-        //[Route("Revoke")]
-        //[HttpPost]
-        //public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequestModel request)
-        //{
-        //    try
-        //    {
-        //        await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
+        /// <summary>
+        /// Register user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("Revoke")]
+        [HttpPost]
+        public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequestModel request)
+        {
+            try
+            {
+                //await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Log.Error(e.Message);
-        //        return StatusCode(500);
-        //    }
-        //}
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
+        }
     }
 }

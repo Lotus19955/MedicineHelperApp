@@ -12,7 +12,7 @@ using Serilog;
 namespace MedicineHelperWebAPI.Controllers
 {
     /// <summary>
-    /// Controller for work with doctor
+    /// Controller for work with User
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -42,7 +42,7 @@ namespace MedicineHelperWebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetDoctorByEmail(string email)
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
             var clinic = _userService.GetUserByEmailAsync(email);
             if (clinic == null)
@@ -55,9 +55,9 @@ namespace MedicineHelperWebAPI.Controllers
         /// <summary>
         /// Get all users
         /// </summary>
-        /// <returns>Return all users</returns>
+        /// <returns></returns>
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllUsers()

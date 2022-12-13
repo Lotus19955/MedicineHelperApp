@@ -13,6 +13,10 @@
             <label for="NameOfMedicine" class="form-label">Medicine name:</label>
             <input asp-for="NameOfMedicine" type="text" class="form-control" id="NameOfMedicine" required />
             <span asp-validation-for="NameOfMedicine" class="text-danger"></span>
+
+            <label for="LinkToInstructions" class="form-label">Put linc to medicine:</label>
+            <input asp-for="LinkToInstructions" type="text" class="form-control" id="LinkToInstructions" required />
+            <span asp-validation-for="LinkToInstructions" class="text-danger"></span>
         </div>
         <div>
             <input asp-for="ReturnUrl" type="hidden" />

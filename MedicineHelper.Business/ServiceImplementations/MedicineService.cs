@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using HtmlAgilityPack;
+using MediatR;
 using MedicineHelper.Core;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.Data.Abstractions;
 using MedicineHelper.DataBase.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update.Internal;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Runtime.CompilerServices;
+using MedicineHelper.Data.CQS.Commands;
 
 namespace MedicineHelper.Business.ServicesImplementations
 {
@@ -17,86 +15,28 @@ namespace MedicineHelper.Business.ServicesImplementations
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public MedicineService(IMapper mapper, IUnitOfWork unitOfWork)
+        public MedicineService(IMapper mapper, IUnitOfWork unitOfWork, IMediator mediator)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
-        public List<string>? SearchMedicineInTabletkaBy(string nameOfMedicine)
+        public async Task<int> AddMedicineAsync(MedicineDto dto)
         {
             try
             {
-                var urlSearchSite = $"https://tabletka.by/search?request={nameOfMedicine}";
+                var entity = _mapper.Map<Medicine>(dto);
+                entity.Id = Guid.NewGuid();
+                await _unitOfWork.Medicine.AddAsync(entity);
+                var result = await _unitOfWork.Commit();
 
-                var web = new HtmlWeb();
-                var htmlDoc = web.Load(urlSearchSite);
-
-                var table = htmlDoc.DocumentNode.Descendants(0)
-                    .Where(node => node.Id == "base-select")
-                    .FirstOrDefault();
-
-                var links = table?.Descendants()
-                    .Where(x => x.Name == "a" && x.GetAttributeValue("href", string.Empty).StartsWith("/result"))
-                    .Select(x => x.GetAttributeValue("href", string.Empty))
-                    .Distinct()
-                    .ToList();
-
-                return links;
+                return result;
             }
             catch (Exception)
             {
-                throw;
-            }
-        }
-
-        public async Task<int> AddMedicineAsync(List<string>? listLinkMedicine)
-        {
-            try
-            {
-                var listMedicineDto = new List<MedicineDto>();
-                var urlTabletkaBy = $"https://tabletka.by";
-                var web = new HtmlWeb();
-                foreach (var link in listLinkMedicine)
-                {
-                    var htmlDoc = web.Load(urlTabletkaBy + link);
-
-                    var nameMedicine = htmlDoc.DocumentNode.Descendants()
-                        .Where(x => x.Name == "h1")
-                        .Select(x => x.FirstChild.InnerText)
-                        .FirstOrDefault()?
-                        .Replace(Environment.NewLine, string.Empty);
-
-                    var linkToInstruction = htmlDoc.DocumentNode.Descendants()
-                        .Where(x => x.Name == "a" && x.GetAttributeValue("href", string.Empty).StartsWith("/instructions"))
-                        .Select(x => x.GetAttributeValue("href", string.Empty))
-                        .FirstOrDefault();
-
-                    var medicineDto = new MedicineDto()
-                    {
-                        NameOfMedicine = nameMedicine,
-                        Instructions = urlTabletkaBy + linkToInstruction
-                    };
-
-                    listMedicineDto.Add(medicineDto);
-                }
-
-                var existsMedicines = await _unitOfWork.Medicine.Get()
-                    .Select(medicine => medicine.NameOfMedicine)
-                    .Distinct()
-                    .ToArrayAsync();
-
-                var entities = listMedicineDto.Where(dto => !existsMedicines.Contains(dto.NameOfMedicine))
-                    .Select(dto => _mapper.Map<Medicine>(dto)).ToList();
-
-                await _unitOfWork.Medicine.AddRangeAsync(entities);
-
-                return await _unitOfWork.Commit();
-            }
-            catch (Exception)
-            {
-
                 throw;
             }
         }
@@ -189,7 +129,7 @@ namespace MedicineHelper.Business.ServicesImplementations
         }
         public async Task AddMedicineInfoTablekaByAsync()
         {
-            List<MedicineDto> dtoList = new List<MedicineDto>();
+            List<MedicineDto> list = new List<MedicineDto>();
             var web = new HtmlWeb();
             var htmlDoc = web.Load("https://tabletka.by/drugs");
             var alphabetSearch = htmlDoc.DocumentNode.SelectNodes("//div[@class='box inner-page']/div/a/div");
@@ -201,7 +141,7 @@ namespace MedicineHelper.Business.ServicesImplementations
                 {
                     foreach (var medicine in medNod)
                     {
-                        dtoList.Add(
+                        list.Add(
                         new MedicineDto
                         {
                             Id = Guid.NewGuid(),
@@ -211,10 +151,7 @@ namespace MedicineHelper.Business.ServicesImplementations
                     }
                 }
             }
-            //TODO _mediator
-            var entities = dtoList.Select(dto => _mapper.Map<Medicine>(dto));
-            await _unitOfWork.Medicine.AddRangeAsync(entities);
-            await _unitOfWork.Commit();
+            await _mediator.Send(new AddMedicineDataFromTabletkaByCommand() { Medicines = list });
         }
     }
 }

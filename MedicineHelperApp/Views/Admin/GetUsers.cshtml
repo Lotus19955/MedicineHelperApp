@@ -48,9 +48,10 @@
                         @Html.DisplayFor(modelItem => item.RoleName)
                     </td>
                     <td>
-                        @if(item.RoleName != "admin")
+                        @if(item.RoleName != "Admin")
                         {
-                            <a asp-controller="Admin" asp-action="ShowDeleteUser" asp-route-id="@item.Id" asp-route-userEmail="@item.Email" class="m-1">Delete</a>
+                            <a asp-controller="Admin" asp-action="DeleteUser" asp-route-id="@item.Id" asp-route-userEmail="@item.Email" class="m-1">Delete</a>
+                    
                         }
                     </td>
                 </tr>

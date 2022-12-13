@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MedicineHelper.Core.Abstractions;
+using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace MedicineHelper.Controllers
 {
@@ -29,10 +31,10 @@ namespace MedicineHelper.Controllers
             {
                 return View();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -42,12 +44,13 @@ namespace MedicineHelper.Controllers
             try
             {
                 var usersDto = await _userService.GetAllUserAsync();
-                
+
                 return View(usersDto);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
         [HttpGet]
@@ -59,49 +62,31 @@ namespace MedicineHelper.Controllers
 
                 return View(clinicDto);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
-        
+
         [HttpGet]
-        public IActionResult ShowDeleteUser(Guid id, string userEmail)
+        public async Task<IActionResult> GetMedicines()
         {
             try
             {
-                var model = new UserModel();
-                model.Email = userEmail;
-                model.Id = id;
+                var listDto = await _medicineService.GetAllMedicineAsync();
 
-                return View(model);
+                return View(listDto);
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
-            }
-
-        }
-
-        [HttpGet]
-        public IActionResult ShowDeleteClinic(Guid id, string nameClinic)
-        {
-            try
-            {
-                var model = new ClinicModel();
-                model.NameClinic = nameClinic;
-                model.Id = id;
-
-                return View(model);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
         [HttpGet]
-        public IActionResult ShowDeleteMedicine(Guid id, string nameOfMedicine)
+        public IActionResult DeleteMedicine(Guid id, string nameOfMedicine)
         {
             try
             {
@@ -111,77 +96,10 @@ namespace MedicineHelper.Controllers
 
                 return View(model);
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        public IActionResult ShowEditClinic(Guid id, string nameClinic, string adress, string? operatingMode, string? contact)
-        {
-            try
-            {
-                var model = new ClinicModel();
-                model.NameClinic = nameClinic;
-                model.Adress = adress;
-                model.OperatingMode = operatingMode;
-                model.Contact = contact;
-                model.Id = id;
-
-                return View(model);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        public IActionResult ShowEditMedicine(Guid id, string nameMedicine, string? linkToInstructions)
-        {
-            try
-            {
-                var model = new MedicineModel();
-                model.NameOfMedicine = nameMedicine;
-                model.LinkToInstructions = linkToInstructions;
-                model.Id = id;
-
-                return View(model);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteUser(Guid id)
-        {
-            try
-            {
-                await _userService.DeleteUserAsync(id);
-
-                return RedirectToAction("GetUsers");
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteClinic(Guid id)
-        {
-            try
-            {
-                await _clinicService.DeleteClinicAsync(id);
-
-                return RedirectToAction("GetClinic");
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -194,14 +112,158 @@ namespace MedicineHelper.Controllers
 
                 return RedirectToAction("GetMedicines");
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+       
+
+        [HttpGet]
+        public IActionResult DeleteUser(Guid id, string userEmail)
+        {
+            try
+            {
+                var model = new UserModel();
+                model.Email = userEmail;
+                model.Id = id;
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditMedicalInstitution(ClinicModel model)
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(id);
+
+                return RedirectToAction("GetUsers");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult DeleteClinic(Guid id, string nameClinic)
+        {
+            try
+            {
+                var model = new ClinicModel();
+                model.NameClinic = nameClinic;
+                model.Id = id;
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteClinic(Guid id)
+        {
+            try
+            {
+                await _clinicService.DeleteClinicAsync(id);
+
+                return RedirectToAction("GetClinic");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        
+        [HttpGet]
+        public IActionResult EditMedicine(Guid id, string nameMedicine, string? Instructions)
+        {
+            try
+            {
+                var model = new MedicineModel();
+                model.NameOfMedicine = nameMedicine;
+                model.LinkToInstructions = Instructions;
+                model.Id = id;
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult EditClinic(Guid id, string nameClinic, string adress, string? operatingMode, string? contact)
+        {
+            try
+            {
+                var model = new ClinicModel();
+                model.NameClinic = nameClinic;
+                model.Adress = adress;
+                model.OperatingMode = operatingMode;
+                model.Contact = contact;
+                model.Id = id;
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddClinic()
+        {
+            try
+            {
+                var model = new ClinicModel();
+
+                return View();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddClinic(ClinicModel model)
+        {
+            try
+            {
+                var result = await _clinicService.CreateClinicAsync(_mapper.Map<ClinicDto>(model));
+
+                return RedirectToAction("GetMedicines");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditClinic(ClinicModel model)
         {
             try
             {
@@ -210,14 +272,15 @@ namespace MedicineHelper.Controllers
                 dto.Adress = model.Adress;
                 dto.OperatingMode = model.OperatingMode;
                 dto.Contact = model.Contact;
-                
+
                 await _clinicService.UpdateClinicAsync(dto, dto.Id);
 
                 return RedirectToAction("GetClinic");
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -234,24 +297,10 @@ namespace MedicineHelper.Controllers
 
                 return RedirectToAction("GetMedicines");
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetMedicines()
-        {
-            try
-            {
-                var listDto = await _medicineService.GetAllMedicineAsync();
-
-                return View(listDto);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -264,9 +313,10 @@ namespace MedicineHelper.Controllers
 
                 return View();
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -275,19 +325,14 @@ namespace MedicineHelper.Controllers
         {
             try
             {
-                var listLinkMedicine = _medicineService.SearchMedicineInTabletkaBy(model.NameOfMedicine);
-                if(listLinkMedicine != null)
-                {
-                    var result = await _medicineService.AddMedicineAsync(listLinkMedicine);
+                    var result = await _medicineService.AddMedicineAsync(_mapper.Map<MedicineDto>(model));
 
                     return RedirectToAction("GetMedicines");
-                }
-
-                return View();
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(ex.Message);
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
     }

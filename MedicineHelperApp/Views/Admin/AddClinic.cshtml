@@ -6,26 +6,26 @@
 }
 <div>
     <h4>Edit clinic</h4>
-    <p>@Model.NameClinic</p>
+    <p>Add new clinic</p>
 </div>
-<form asp-controller="Admin" asp-action="EditClinic" method="post">
+<form asp-controller="Admin" asp-action="AddClinic" method="post">
     <div class="mb-3">
         <label for="NameClinic" class="form-label">Clinic name:</label>
-        <input asp-for="NameClinic" type="text" class="form-control" id="NameClinic" value="@Model.NameClinic" required />
+        <input asp-for="NameClinic" type="text" class="form-control" id="NameClinic" required />
         <span asp-validation-for="NameClinic" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label for="Adress" class="form-label">Address:</label>
-        <textarea asp-for="Adress" class="form-control" id="Adress" rows="2" required>@Model.Adress</textarea>
+        <textarea asp-for="Adress" class="form-control" id="Adress" rows="2" required></textarea>
         <span asp-validation-for="Adress" class="text-danger"></span>
     </div>
     <div class="mb-3">
         <label for="OperatingMode" class="form-label">Operation mode:</label>
-        <textarea asp-for="OperatingMode" class="form-control" id="OperatingMode" rows="2">@Model.OperatingMode</textarea>
+        <textarea asp-for="OperatingMode" class="form-control" id="OperatingMode" rows="2"></textarea>
     </div>
     <div class="mb-3">
         <label for="Contact" class="form-label">Contact:</label>
-        <textarea asp-for="Contact" class="form-control" id="Contact" rows="3">@Model.Contact</textarea>
+        <textarea asp-for="Contact" class="form-control" id="Contact" rows="3"></textarea>
     </div>
     <input type="submit" class="btn btn-danger m-1" value="Edit clinic" />
     <a class="btn btn-primary m-1" role="button" asp-controller="Admin" asp-action="GetClinic">Cancel</a>

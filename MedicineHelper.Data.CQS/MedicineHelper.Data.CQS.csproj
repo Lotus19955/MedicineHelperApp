@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -8,17 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
-    <PackageReference Include="HtmlAgilityPack.CssSelectors.NetCore" Version="1.2.1" />
     <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassLibrary1\MedicineHelper.Data.Abstractions.csproj" />
     <ProjectReference Include="..\MedicineHelper.Core\MedicineHelper.Core.csproj" />
-    <ProjectReference Include="..\MedicineHelper.Data.CQS\MedicineHelper.Data.CQS.csproj" />
     <ProjectReference Include="..\MedicineHelper.DataBase\MedicineHelper.DataBase.csproj" />
   </ItemGroup>
 

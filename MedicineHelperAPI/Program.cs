@@ -16,6 +16,8 @@ using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MedicineHelperWebAPI.Utils;
+using MediatR;
+using MedicineHelper.Data.CQS.Commands;
 
 namespace MedicineHelperWebAPI
 {
@@ -72,6 +74,7 @@ namespace MedicineHelperWebAPI
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IVaccinationService, VaccinationService>();
+            builder.Services.AddMediatR(typeof(AddMedicineDataFromTabletkaByCommand).Assembly);
             builder.Services.AddScoped<IJwtUtil, JwtUtilSha256>();
 
             // Add repositories

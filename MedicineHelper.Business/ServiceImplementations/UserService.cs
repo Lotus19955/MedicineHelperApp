@@ -6,7 +6,8 @@ using MedicineHelper.Data.Abstractions;
 using MedicineHelper.DataBase.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using MediatR;
+using MedicineHelper.Data.CQS.Queries;
 
 namespace MedicineHelper.Business.ServicesImplementations
 {
@@ -15,19 +16,22 @@ namespace MedicineHelper.Business.ServicesImplementations
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public UserService(IMapper mapper, IConfiguration configuration, IUnitOfWork unitOfWork)
+        public UserService(IMapper mapper, IConfiguration configuration,
+            IUnitOfWork unitOfWork, IMediator mediator)
         {
             _mapper = mapper;
             _configuration = configuration;
             _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
         public async Task<bool> CheckUserPasswordAsync(string email, string password)
         {
             var dbPasswordHash = (await _unitOfWork.User.Get().FirstOrDefaultAsync(user => user.Email.Equals(email)))?.PasswordHash;
 
-            return dbPasswordHash != null && CreateMd5(password).Equals(dbPasswordHash.ToUpper());
+            return dbPasswordHash != null && CreateMd5($"{password}.{_configuration["Secret:PasswordSalt"]}").Equals(dbPasswordHash.ToUpper());
         }
 
         public async Task DeleteUserAsync(Guid id)
@@ -85,7 +89,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var usersDto = await _unitOfWork.User.Get()
-                    .Include(entity=>entity.Role)
+                    .Include(entity => entity.Role)
                     .Select(entities => _mapper.Map<UserDto>(entities)).ToListAsync();
 
                 return usersDto;
@@ -97,6 +101,12 @@ namespace MedicineHelper.Business.ServicesImplementations
             }
         }
 
+        public async Task<UserDto?> GetUserByRefreshTokenAsync(Guid token)
+        {
+            var user = await _mediator.Send(new GetUserByRefreshTokenQuery() { RefreshToken = token });
+            return user != null ?
+            _mapper.Map<UserDto>(user) : null;
+        }
         public UserDto? GetUserByEmailAsync(string email)
         {
             var user = _unitOfWork.User.FindBy(user => user.Email.Equals(email), user => user.Role).FirstOrDefault();
@@ -239,6 +249,7 @@ namespace MedicineHelper.Business.ServicesImplementations
                 throw;
             }
         }
+
         private string CreateMd5(string password)
         {
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
