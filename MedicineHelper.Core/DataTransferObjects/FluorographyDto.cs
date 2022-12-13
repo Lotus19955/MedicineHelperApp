@@ -2,6 +2,7 @@
 {
     public class FluorographyDto
     {
+        public Guid Id { get; set; }
         public DateTime DataOfFluorography { get; set; }
         public DateTime? EndDateOfFluorography { get; set; }
         public string? NumberFluorography { get; set; }
