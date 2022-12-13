@@ -4,6 +4,7 @@ using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace MedicineHelper.Controllers
 {
@@ -29,10 +30,10 @@ namespace MedicineHelper.Controllers
 
                 return View(model);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -46,10 +47,26 @@ namespace MedicineHelper.Controllers
 
                 return Redirect(model.ReturnUrl);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
 
-                throw;
+        [HttpGet]
+        public async Task<IActionResult> DetailsMedicalInstitutionPartialView(Guid id)
+        {
+            try
+            {
+                var dto = await _clinicService.GetByIdClinicAsync(id);
+
+                return PartialView(dto);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
     }

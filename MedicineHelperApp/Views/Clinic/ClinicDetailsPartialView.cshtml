@@ -1,0 +1,20 @@
+﻿@model MedicineHelper.Core.DataTransferObjects.ClinicDto
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button class="btn-close" data-bs-dismiss="modal" area-hidden="true"></button>
+    </div>
+    <h4 class="text-center">Clinic</h4>
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+            <dt>Name:</dt>
+            <dd>@Html.DisplayFor(model => model.Name)</dd>
+            <dt>Adress:</dt>
+            <dd>@Html.DisplayFor(model => model.Adress)</dd>
+            <dt>Operating mode:</dt>
+            <dd>@Html.DisplayFor(model => model.OperatingMode)</dd>
+            <dt>Contact:</dt>
+            <dd>@Html.DisplayFor(model => model.Contact)</dd>
+        </dl>
+    </div>
+</div>

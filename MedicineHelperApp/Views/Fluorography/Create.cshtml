@@ -11,13 +11,13 @@
     <form asp-controller="Fluorography" asp-action="Create" method="post">
         <div class="mb-3">
             <label for="DataOfExamination" class="form-label">Date of fluorography:</label>
-            <input asp-for="DataOfExamination" type="date" class="form-control" id="DataOfExamination" required />
-            <span asp-validation-for="DataOfExamination" class="text-danger"></span>
+            <input asp-for="DataOfFluorography" type="date" class="form-control" id="DataOfExamination" required />
+            <span asp-validation-for="DataOfFluorography" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label for="EndDateOfSurvey" class="form-label">Date of end of fluorography:</label>
-            <input asp-for="EndDateOfSurvey" type="date" class="form-control" id="EndDateOfSurvey" required />
-            <span asp-validation-for="EndDateOfSurvey" class="text-danger"></span>
+            <input asp-for="EndDateOfFluorography" type="date" class="form-control" id="EndDateOfSurvey" required />
+            <span asp-validation-for="EndDateOfFluorography" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label for="NumberFluorography" class="form-label">Number:</label>

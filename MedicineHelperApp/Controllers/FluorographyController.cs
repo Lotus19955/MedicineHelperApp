@@ -5,6 +5,8 @@ using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ReflectionIT.Mvc.Paging;
+using Serilog;
 
 namespace MedicineHelper.Controllers
 {
@@ -25,20 +27,36 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex, DateTime SearchDateStart, DateTime SearchDateEnd)
         {
             try
             {
                 var emailUser = HttpContext.User.Identity?.Name;
-                var dtoUser = _userService.GetUserByEmailAsync(emailUser);
-                var fluorographies = await _fluorographyService.GetAllFluorographiesAsync(dtoUser.Id);
+                var userDto = _userService.GetUserByEmailAsync(emailUser);
+                var fluorographies = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
+                if (SearchDateStart != DateTime.MinValue && SearchDateEnd != DateTime.MinValue)
+                {
+                    var dto = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
+                    if (pageIndex == 0)
+                    {
+                        pageIndex = 1;
+                    }
+                    var model = PagingList.Create(dto, 5, pageIndex);
 
-                return View(fluorographies);
+                    return View(model);
+                }
+                else
+                {
+                    var dto = await _fluorographyService.GetFluorographyForPeriodAsync(SearchDateStart, SearchDateEnd, userDto.Id);
+                    var model = PagingList.Create(dto, 5, pageIndex);
+
+                    return View(model);
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -54,10 +72,10 @@ namespace MedicineHelper.Controllers
 
                 return View(fluorographyModel);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -75,10 +93,81 @@ namespace MedicineHelper.Controllers
                 return RedirectToAction("Index");
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
 
-                throw;
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            try
+            {
+                return View(id);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(FluorographyModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var dto = await _fluorographyService.GetFluorographyByIdAsync(model.Id);
+                    dto.DataOfFluorography = model.DataOfFluorography;
+                    dto.EndDateOfFluorography = model.EndDateOfFluorography;
+                    dto.NumberFluorography = model.NumberFluorography;
+                    dto.ClinicDtoId = model.ClinicId;
+
+                    await _fluorographyService.UpdateFluorographyAsync(dto);
+
+                    return RedirectToAction("Index");
+                }
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Delete(FluorographyModel model)
+        {
+            try
+            {
+               return View(model.Id);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _fluorographyService.DeleteFluorographyAsync(id);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
     }
