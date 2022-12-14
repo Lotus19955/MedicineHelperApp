@@ -24,6 +24,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var entity = _mapper.Map<Doctor>(dto);
+                entity.Id = Guid.NewGuid();
                 await _unitOfWork.Doctor.AddAsync(entity);
                 var result = await _unitOfWork.Commit();
 
@@ -82,12 +83,12 @@ namespace MedicineHelper.Business.ServicesImplementations
                         PropertyValue = dto.Name
                     });
                 }
-                if (dto.Specializacion != sourceDto.Specializacion)
+                if (dto.Specialization != sourceDto.Specialization)
                 {
                     patchList.Add(new PatchModel()
                     {
-                        PropertyName = nameof(dto.Specializacion),
-                        PropertyValue = dto.Specializacion
+                        PropertyName = nameof(dto.Specialization),
+                        PropertyValue = dto.Specialization
                     });
                 }
                 if (dto.Rating != sourceDto.Rating)

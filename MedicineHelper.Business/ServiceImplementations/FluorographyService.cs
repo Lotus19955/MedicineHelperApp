@@ -24,6 +24,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var entity = _mapper.Map<Fluorography>(fluorographyDto);
+                entity.Id = Guid.NewGuid();
                 await _unitOfWork.Fluorography.AddAsync(entity);
                 var result = await _unitOfWork.Commit();
 

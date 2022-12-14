@@ -54,13 +54,10 @@
                 @Html.DisplayFor(modelItem => item.Result)
             </td>
             <td>
-                @Html.DisplayFor(modelItem=> item.ClinicDto.Name)
-            </td>
-            <td>
                 @Html.ActionLink(item.ClinicDto.Name, "ClinicDetailsPartialView", "Clinic", new { id = item.ClinicDtoId }, new { @class = "tempClass" })
             </td>
             <td>
-                <a class="btn btn-outline-secondary" asp-controller="Fluorography" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Fluorography" asp-action="Edit" asp-route-id="@item.Id" asp-route-dataOfFluorography="@item.DataOfFluorography" asp-route-endDateOfFluorography="@item.EndDateOfFluorography" asp-route-clinicId="@item.ClinicDtoId" asp-route-numberFluorography="@item.NumberFluorography">Edit</a>
             </td>
             <td>
                 <a class="btn btn-outline-danger" asp-controller="Fluorography" asp-action="Delete" asp-route-id="@item.Id">Delete</a>

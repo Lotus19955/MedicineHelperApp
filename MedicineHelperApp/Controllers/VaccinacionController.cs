@@ -50,7 +50,7 @@ namespace MedicineHelper.Controllers
                 var medicalInstitutionsDto = await _clinicService.GetClinicAsync();
 
                 var model = new VaccinationModel();
-                model.ClinicList = new SelectList(medicalInstitutionsDto, "Id", "NameClinic");
+                model.ClinicList = new SelectList(medicalInstitutionsDto, "Id", "Name");
                 model.ReturnUrl = Request.Headers["Referer"].ToString();
                 if (model.ReturnUrl == "https://localhost:7226/Clinic/Create")
                 {

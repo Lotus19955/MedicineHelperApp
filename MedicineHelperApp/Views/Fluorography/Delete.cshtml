@@ -1,0 +1,23 @@
+﻿@model FluorographyModel
+
+@{
+    ViewData["Title"] = "Delete fluorography";
+    Layout = "_Layout";
+}
+<div align="center">
+    <h4>Confirm delete</h4>
+    <p>@Model.DataOfFluorography</p>
+    <p>@Model.NumberFluorography</p>
+</div>
+<form asp-controller="Fluorography" asp-action="Delete" method="post" asp-route-id="@Model.Id">
+    <div>
+        <input type="submit" class="btn btn-danger m-1" value="Delete" />
+        <a class="btn btn-primary m-1" role="button" asp-controller="Fluorography" asp-action="Index">Cancel</a>
+    </div>
+</form>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

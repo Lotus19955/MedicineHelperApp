@@ -6,6 +6,7 @@
         public DateTime DateVisit { get; set; }
         public decimal? PriceVisit { get; set; }
 
+        public Guid? AppointmentId { get; set; }
         public Appointment Appointment { get; set; }
         public Clinic? Clinic { get; set; }
         public Guid? ClinicId { get; set; }

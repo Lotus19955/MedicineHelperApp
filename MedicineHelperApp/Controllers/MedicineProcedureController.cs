@@ -52,7 +52,7 @@ namespace MedicineHelper.Controllers
 
                 var medicineProcedureModel = new MedicineProcedureModel();
                 medicineProcedureModel.AppointmentId = id;
-                medicineProcedureModel.ClinicList = new SelectList(clinicDto, "Id", "NameClinic");
+                medicineProcedureModel.ClinicList = new SelectList(clinicDto, "Id", "Name");
                 medicineProcedureModel.ReturnUrl = Request.Headers["Referer"].ToString();
 
                 return View(medicineProcedureModel);

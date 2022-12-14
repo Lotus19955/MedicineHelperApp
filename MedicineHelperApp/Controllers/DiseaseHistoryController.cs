@@ -90,7 +90,7 @@ namespace MedicineHelper.Controllers
                     if (model.AppointmentId != null)
                     {
                         var dtoDoctorVisit = await _doctorVisitService.GetDoctorVisitByIdAsync(model.AppointmentId);
-                        dtoDoctorVisit.DiseaseHistoryId = diseaseHistoryLastId;
+                        //dtoDoctorVisit.DiseaseHistoryId = diseaseHistoryLastId;
                         await _doctorVisitService.UpdateDoctorVisitAsync(dtoDoctorVisit, dtoDoctorVisit.Id);
                     }
                     return Redirect(model.ReturnUrl);

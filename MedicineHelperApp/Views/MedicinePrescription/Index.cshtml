@@ -35,7 +35,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MedicinesDto.NameOfMedicine)
+                    @Html.ActionLink(item.MedicinesDto.NameOfMedicine, "ClinicDetailsPartialView", "Medicine", new { id = item.MedicinesDto.Id }, new { @class = "tempClass" })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartOfAdmission)
@@ -50,15 +50,7 @@
                     @Html.DisplayFor(modelItem => item.MedicinePrice)
                 </td>
                 <td>
-                    @*TODO*@
-                    <ul>
-@*                        @foreach (var itemDisease in item.DiseasesDto)
-                        {
-                            <li class="">
-                                @itemDisease.NameOfDisease
-                            </li>
-                        }
-*@                    </ul>
+                    <a class="btn btn-outline-danger" asp-controller="MedicinePrescription" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }

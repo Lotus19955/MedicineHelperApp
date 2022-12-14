@@ -51,7 +51,7 @@ namespace MedicineHelper.Controllers
                 var clinicDto = await _clinicService.GetClinicAsync();
                 var model = new MedicineСheckupModel();
                 model.AppointmentId = id;
-                model.ClinicList = new SelectList(clinicDto, "Id", "NameClinic");
+                model.ClinicList = new SelectList(clinicDto, "Id", "Name");
                 model.ReturnUrl = Request.Headers["Referer"].ToString();
                 if (model.ReturnUrl == "https://localhost:7226/Clinic/Create")
                 {

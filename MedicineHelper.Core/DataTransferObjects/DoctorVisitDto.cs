@@ -6,7 +6,7 @@
         public DateTime DateVisit { get; set; }
         public decimal PriceVisit { get; set; }
 
-        public int DiseaseHistoryId { get; set; }
+        public Guid DiseaseHistoryId { get; set; }
         public Guid AppointmentDtoId { get; set; }
         public AppointmentDto AppointmentDto { get; set; }
         public ClinicDto ClinicDto { get; set; }

@@ -1,4 +1,5 @@
-﻿using MessagePack.Formatters;
+﻿using MedicineHelper.Core.DataTransferObjects;
+using MessagePack.Formatters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MedicineHelperApp.Models
@@ -12,6 +13,6 @@ namespace MedicineHelperApp.Models
         public bool Result { get; set; }
         public Guid UserId { get; set; }
         public Guid ClinicId { get; set; }
-        public SelectList ClinicList { get; set; }
+        public SelectList? ClinicList { get; set; }
     }
 }

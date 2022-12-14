@@ -54,8 +54,8 @@ namespace MedicineHelper.Controllers
                 var clinicDto = await _clinicService.GetClinicAsync();
 
                 var model = new DoctorVisitModel();
-                model.ClinicList = new SelectList(clinicDto, "Id", "NameClinic");
-                model.DoctorList = new SelectList(doctorsDto, "Id", "FullNameDoctor");
+                model.ClinicList = new SelectList(clinicDto, "Id", "Name");
+                model.DoctorList = new SelectList(doctorsDto, "Id", "Name");
 
                 if (model.ReturnUrl == "https://localhost:7226/DoctorVisit/CreateDoctor")
                 {
@@ -108,7 +108,7 @@ namespace MedicineHelper.Controllers
 
                 var model = new DoctorVisitModel();
                 model.Id = id;
-                model.ClinicList = new SelectList(clinicDto, "Id", "NameClinic");
+                model.ClinicList = new SelectList(clinicDto, "Id", "Name");
                 model.DoctorList = new SelectList(doctorsDto, "Id", "Name");
                 model.ReturnUrl = Request.Headers["Referer"].ToString();
                 if (model.ReturnUrl == "https://localhost:7226/DoctorVisit/CreateDoctor")

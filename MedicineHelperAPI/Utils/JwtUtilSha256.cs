@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AspNetSample.Data.CQS.Commands;
+using MediatR;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelper.Data.CQS.Commands;
 using MedicineHelperWebAPI.Models.Responses;
@@ -62,12 +63,12 @@ namespace MedicineHelperWebAPI.Utils
             };
         }
 
-        //public async Task RemoveRefreshTokenAsync(Guid requestRefreshToken)
-        //{
-        //    await _mediator.Send(new RemoveRefreshTokenCommand()
-        //    {
-        //        TokenValue = requestRefreshToken
-        //    });
-        //}
+        public async Task RemoveRefreshTokenAsync(Guid requestRefreshToken)
+        {
+            await _mediator.Send(new RemoveRefreshTokenCommand()
+            {
+                TokenValue = requestRefreshToken
+            });
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace MedicineHelper.Controllers
                 var fluorographies = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
                 if (SearchDateStart != DateTime.MinValue && SearchDateEnd != DateTime.MinValue)
                 {
-                    var dto = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
+                    var dto = await _fluorographyService.GetFluorographyForPeriodAsync(SearchDateStart, SearchDateEnd,userDto.Id);
                     if (pageIndex == 0)
                     {
                         pageIndex = 1;
@@ -47,7 +47,7 @@ namespace MedicineHelper.Controllers
                 }
                 else
                 {
-                    var dto = await _fluorographyService.GetFluorographyForPeriodAsync(SearchDateStart, SearchDateEnd, userDto.Id);
+                    var dto = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
                     var model = PagingList.Create(dto, 5, pageIndex);
 
                     return View(model);
@@ -68,7 +68,7 @@ namespace MedicineHelper.Controllers
                 var clinic = await _clinicService.GetClinicAsync();
 
                 var fluorographyModel = new FluorographyModel();
-                fluorographyModel.ClinicList = new SelectList(clinic, "Id", "NameClinic");
+                fluorographyModel.ClinicList = new SelectList(clinic, "Id", "Name");
 
                 return View(fluorographyModel);
             }
@@ -101,11 +101,22 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id, DateTime dataOfFluorography, DateTime endDateOfFluorography, Guid clinicId, string numberFluorography)
         {
             try
             {
-                return View(id);
+                var clinicDto = await _clinicService.GetClinicAsync();
+                var model = new FluorographyModel()
+                {
+                    Id = id,
+                    DataOfFluorography = dataOfFluorography,
+                    EndDateOfFluorography = endDateOfFluorography,
+                    ClinicId = clinicId,
+                    ClinicList = new SelectList(clinicDto, "Id", "Name"),
+                    NumberFluorography = numberFluorography,
+                };
+
+                return View(model);
             }
             catch (Exception e)
             {
@@ -119,7 +130,7 @@ namespace MedicineHelper.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     var dto = await _fluorographyService.GetFluorographyByIdAsync(model.Id);
                     dto.DataOfFluorography = model.DataOfFluorography;
@@ -146,7 +157,7 @@ namespace MedicineHelper.Controllers
         {
             try
             {
-               return View(model.Id);
+               return View(model);
             }
             catch (Exception e)
             {

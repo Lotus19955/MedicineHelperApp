@@ -10,6 +10,11 @@
 
     <form asp-controller="MedicinePrescription" asp-action="Create" method="post">
         <div class="mb-3">
+            <label for="NameOfMedicine" class="form-label">Medicine name:</label>
+            <select asp-for="MedicinesDto.NameOfMedicine" asp-items="@Model.MedicineList"></select>
+            <a asp-controller="Medicine" asp-action="Create">Add medicine</a>
+        </div>
+        <div class="mb-3">
             <label for="StartOfAdmission" class="form-label">Start of admission:</label>
             <input asp-for="StartOfAdmission" type="datetime-local" class="form-control" id="StartOfAdmission" required />
             <span asp-validation-for="StartOfAdmission" class="text-danger"></span>
@@ -20,10 +25,10 @@
         </div>
         <div class="mb-3">
             <label for="MedicineDose" class="form-label">Medicine dose:</label>
-            <input asp-for="MedicineDose" type="number" id="MedicineDose" />
+            <input asp-for="MedicineDose" type="text" id="MedicineDose" />
         </div>
         <div class="mb-3">
-            <label for="MedicinePrice" class="form-label">Medicine price:</label>
+            <label for="MedicinePrice" class="form-label">Medicine price $:</label>
             <input asp-for="MedicinePrice" type="number" id="MedicinePrice" />
         </div>
         <div>

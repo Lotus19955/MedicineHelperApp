@@ -84,7 +84,7 @@ namespace MedicineHelperWebAPI.Controllers
 
                 var response = await _jwtUtil.GenerateTokenAsync(user);
 
-                //await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
+                await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
 
                 return Ok(response);
             }
@@ -107,7 +107,7 @@ namespace MedicineHelperWebAPI.Controllers
         {
             try
             {
-                //await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
+                await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
 
                 return Ok();
             }

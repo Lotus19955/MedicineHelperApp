@@ -36,5 +36,37 @@ namespace MedicineHelper.Business.ServicesImplementations
                 throw new ArgumentException();
             }
         }
+        public async Task<int> CreateMedicinePrescriptionAsync(MedicinePrescriptionDto dto)
+        {
+            try
+            {
+                var entity = _mapper.Map<MedicinePrescription>(dto);
+                entity.Id = Guid.NewGuid();
+                await _unitOfWork.MedicinePrescription.AddAsync(entity);
+                var result = await _unitOfWork.Commit();
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task DeleteMedicinePrescriptionAsync(Guid id)
+        {
+            try
+            {
+                var entity = await _unitOfWork.MedicinePrescription
+                    .FindBy(entity => entity.Id.Equals(id))
+                    .FirstOrDefaultAsync();
+
+                _unitOfWork.MedicinePrescription.Remove(entity);
+                await _unitOfWork.Commit();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

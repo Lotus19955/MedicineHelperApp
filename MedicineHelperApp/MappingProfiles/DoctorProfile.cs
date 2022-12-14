@@ -13,6 +13,8 @@ namespace MedicineHelperApp.MappingProfiles
 
             CreateMap<DoctorModel, DoctorDto>();
 
+            CreateMap<DoctorDto, DoctorModel>();
+
             CreateMap<DoctorDto, Doctor>();
         }
     }

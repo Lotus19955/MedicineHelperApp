@@ -97,17 +97,17 @@ namespace MedicineHelperWebAPI.Controllers
         /// <summary>
         /// Delete user
         /// </summary>
-        /// <param name="email">Id of email</param>
+        /// <param name="id">User id</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [Authorize]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteUser(string email)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
             try
             {
-                await _userService.DeleteUserAsync(email);
+                await _userService.DeleteUserAsync(id);
 
                 return Ok();
             }

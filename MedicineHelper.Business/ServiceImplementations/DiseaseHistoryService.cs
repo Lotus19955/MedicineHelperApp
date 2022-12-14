@@ -39,8 +39,8 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var entity = _mapper.Map<DiseaseHistory>(dto);
+                entity.Id = Guid.NewGuid();
                 await _unitOfWork.DiseaseHistory.AddAsync(entity);
-                var lastId = entity.Id;
                 var result = await _unitOfWork.Commit();
 
                 return result;
