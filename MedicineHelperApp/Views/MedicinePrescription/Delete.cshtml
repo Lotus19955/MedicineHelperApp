@@ -8,13 +8,12 @@
 <div align="center">
     <h4>Confirm delete</h4>
 </div>
-<form asp-controller="MedicinePrescription" asp-action="Delete" method="post" asp-route-id="@Model.Id">
-    <div class="alert alert-primary" role="alert">
+<form align="center" asp-controller="MedicinePrescription" asp-action="Delete" method="post" asp-route-id="@Model.Id">
+    <div >
         <input type="submit" class="btn btn-danger m-1" value="Delete" />
         <a class="btn btn-primary m-1" role="button" asp-controller="MedicinePrescription" asp-action="Index">Cancel</a>
     </div>
 </form>
-    )
 
 @section Scripts
     {

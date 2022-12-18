@@ -5,7 +5,7 @@
         public Guid Id { get; set; }
         public string? ApplicationOfVaccine { get; set; }
         public string? NameOfVaccine { get; set; }
-        public string? VacineDose { get; set; }
+        public string? VaccineCountry { get; set; }
         public string? VacineSeria { get; set; }
         public DateTime DateOfVaccination { get; set; }
         public DateTime? VaccinationExpirationDate { get; set; }

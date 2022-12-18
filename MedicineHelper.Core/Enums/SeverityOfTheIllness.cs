@@ -5,11 +5,14 @@ namespace MedicineHelper.Core.Enums;
 
 public enum SeverityOfTheIllness
 {
-    Easy = 1,
+    [Display(Name = "Easy")]
+    Easy,
     [Display(Name = "Medium Light")]
     MediumLight,
+    [Display(Name = "Medium")]
     Medium,
     [Display(Name = "Medium Heavy")]
     MediumHeavy,
+    [Display(Name = "Heavy")]
     Heavy
 }

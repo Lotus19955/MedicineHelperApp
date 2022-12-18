@@ -22,6 +22,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var entity = _mapper.Map<Vaccination>(dto);
+                entity.Id = Guid.NewGuid();
                 await _unitOfWork.Vaccination.AddAsync(entity);
                 var result = await _unitOfWork.Commit();
 
@@ -41,12 +42,49 @@ namespace MedicineHelper.Business.ServicesImplementations
                     .FindBy(entity=>entity.UserId.Equals(id))
                     .Include(dto => dto.Clinic)
                     .Select(vaccination => _mapper.Map<VaccinationDto>(vaccination))
+                    .AsNoTracking()
                     .ToListAsync();
                 return listVaccination;
             }
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+        public async Task<List<VaccinationDto>> GetPeriodVaccinationsAsync(DateTime SearchDateStart, DateTime SearchDateEnd, Guid userId)
+        {
+            try
+            {
+                var listVaccination = await _unitOfWork.Vaccination
+                    .FindBy(entity => entity.UserId.Equals(userId))
+                    .Where(entityData => entityData.DateOfVaccination >= SearchDateStart && entityData.DateOfVaccination <= SearchDateEnd)
+                    .Include(dto => dto.Clinic)
+                    .OrderBy(entity => entity.DateOfVaccination)
+                    .Select(vaccination => _mapper.Map<VaccinationDto>(vaccination))
+                    .AsNoTracking()
+                    .ToListAsync();
+                return listVaccination;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task Delete(Guid id)
+        {
+            try
+            {
+                var entity = await _unitOfWork.Vaccination
+                    .FindBy(entity => entity.Id.Equals(id))
+                    .FirstOrDefaultAsync();
+
+                _unitOfWork.Vaccination.Remove(entity);
+                await _unitOfWork.Commit();
+            }
+
+            catch (Exception)
+            {
                 throw;
             }
         }

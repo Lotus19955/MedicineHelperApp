@@ -45,7 +45,6 @@ namespace MedicineHelper.Business.ServicesImplementations
                     .Where(user => user.UserId.Equals(userId))
                     .Include(entity => entity.Clinic)
                     .Include(entity => entity.Doctor)
-                    .Include(entity => entity.DiseaseHistory.Disease)
                     .Include(entity => entity.Appointment)
                     .Select(doctorVisit => _mapper.Map<DoctorVisitDto>(doctorVisit))
                     .AsNoTracking()
@@ -59,6 +58,29 @@ namespace MedicineHelper.Business.ServicesImplementations
                 throw;
             }
         }
+        public async Task<List<DoctorVisitDto>> GetPeriodDoctorVisitAsync(DateTime SearchDateStart, DateTime SearchDateEnd, Guid userId)
+        {
+            try
+            {
+                var listDoctorVisit = await _unitOfWork.DoctorVisit.Get()
+                   .Where(user => user.UserId.Equals(userId))
+                   .Where(entityData => entityData.DateVisit >= SearchDateStart && entityData.DateVisit <= SearchDateEnd)
+                   .Include(entity => entity.Clinic)
+                   .Include(entity => entity.Doctor)
+                   .Include(entity => entity.Appointment)
+                   .OrderBy(entity => entity.DateVisit)
+                   .Select(doctorVisit => _mapper.Map<DoctorVisitDto>(doctorVisit))
+                   .AsNoTracking()
+                   .ToListAsync();
+
+                return listDoctorVisit;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         public async Task<AppointmentDto> GetAppointmentAsync(Guid doctorVisitId)
         {
@@ -125,12 +147,12 @@ namespace MedicineHelper.Business.ServicesImplementations
                 var patchList = new List<PatchModel>();
                 if(dto != null)
                 {
-                    if (!dto.DiseaseHistoryId.Equals(sourceDto.DiseaseHistoryId))
+                    if (!dto.ConclusionId.Equals(sourceDto.ConclusionId))
                     {
                         patchList.Add(new PatchModel()
                         {
-                            PropertyName = nameof(dto.DiseaseHistoryId),
-                            PropertyValue = dto.DiseaseHistoryId
+                            PropertyName = nameof(dto.ConclusionId),
+                            PropertyValue = dto.ConclusionId
                         });
                     }
                     if (!dto.DateVisit.Equals(sourceDto.DateVisit))

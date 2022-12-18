@@ -8,6 +8,9 @@ using MedicineHelper.DataBase.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.Design;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Core;
+using MedicineHelperWebAPI.Utils;
+using Serilog;
 
 namespace MedicineHelperWebAPI.Controllers
 {
@@ -38,12 +41,20 @@ namespace MedicineHelperWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetMedicineById(Guid id)
         {
-            var clinic = await _medicineService.GetByIdMedicineAsync(id);
-            if (clinic == null)
+            try
             {
-                return NotFound();
+                var clinic = await _medicineService.GetByIdMedicineAsync(id);
+                if (clinic == null)
+                {
+                    return NotFound();
+                }
+                return Ok(clinic);
             }
-            return Ok(clinic);
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -61,7 +72,7 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Update medicine
         /// </summary>
         /// <param name="id"></param>
         /// <param name="model"></param>
@@ -70,21 +81,30 @@ namespace MedicineHelperWebAPI.Controllers
         [Authorize]
         public IActionResult UpdateMedicine(Guid id, [FromBody] AddOrUpdateClinicRequestModel? model)
         {
-            if (model != null)
+            try
             {
-                var oldValue = _medicineService.GetByIdMedicineAsync(id);
-
-                if (oldValue == null)
+                if (model != null)
                 {
-                    return NotFound();
+                    var oldValue = _medicineService.GetByIdMedicineAsync(id);
+
+                    if (oldValue == null)
+                    {
+                        return NotFound();
+                    }
+                    var dto = _mapper.Map<MedicineDto>(oldValue);
+                    _medicineService.UpdateMedicineAsync(dto, id);
+
+                    return Ok();
                 }
-                var dto = _mapper.Map<MedicineDto>(oldValue);
-                _medicineService.UpdateMedicineAsync(dto, id);
 
-                return Ok();
+                return BadRequest();
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
+            
         }
 
         /// <summary>
@@ -104,9 +124,10 @@ namespace MedicineHelperWebAPI.Controllers
 
                 return Ok();
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(new ErrorModel { Message = ex.Message });
+                Log.Error(e.Message);
+                return StatusCode(500);
             }
         }
     }

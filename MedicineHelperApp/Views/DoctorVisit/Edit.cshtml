@@ -1,4 +1,5 @@
-﻿@model DoctorVisitModel
+﻿@using MedicineHelperApp.Models;
+@model DoctorVisitModel
 
 @{
     ViewData["Title"] = "Edit visit";
@@ -6,35 +7,40 @@
 }
 
 <div>
-    <h2>Edit visit</h2>
+    <h2 class="text-center">Edit visit</h2>
 
     <form asp-controller="DoctorVisit" asp-action="Edit" method="post">
+
         <div class="mb-3">
             <label for="DateVisit" class="form-label">Date of visit:</label>
             <input asp-for="DateVisit" type="date" class="form-control" asp-format="{0:yyyy-MM-dd}" id="DateVisit" required />
-@*            <span asp-validation-for="DateVisit" class="text-danger"></span>
-*@        </div>
+        </div>
+
         <div class="mb-3">
             <label for="ClinicId" class="form-label">Clinic:</label>
             <select asp-for="ClinicId" asp-items="@Model.ClinicList"></select>
-            <a asp-controller="Clinic" asp-action="Create">Add clinic</a>
+            <a class="btn btn-success" asp-controller="Clinic" asp-action="Create">Add clinic</a>
         </div>
+
         <div class="mb-3">
             <label for="DoctorId" class="form-label">Doctor:</label>
             <select asp-for="DoctorId" asp-items="@Model.DoctorList"></select>
-            <a asp-controller="DoctorVisit" asp-action="CreateDoctor">Add doctor</a>
+            <a class="btn btn-success" asp-controller="DoctorVisit" asp-action="CreateDoctor">Add doctor</a>
         </div>
+
         <div class="mb-3">
             <label for="PriceVisit" class="form-label">Visit price:</label>
             <input asp-for="PriceVisit" type="number" class="form-control" id="PriceVisit" required />
-@*            <span asp-validation-for="PriceVisit" class="text-danger"></span>
-*@        </div>
+        </div>
+
         <div>
             <input asp-for="Id" type="hidden" />
             <input asp-for="ReturnUrl" type="hidden" />
         </div>
-        <input type="submit" class="btn btn-primary m-1" value="Edit" />
-        <a class="btn btn-primary m-1" role="button" asp-controller="DoctorVisit" asp-action="Index">Cancel</a>
+
+        <input type="submit" class="btn btn-primary" value="Edit" />
+        <a class="btn btn btn-danger" role="button" asp-controller="DoctorVisit" asp-action="Index">Back</a>
+
     </form>
 </div>
 

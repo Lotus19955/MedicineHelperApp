@@ -1,15 +1,27 @@
-﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.MedicineProcedureDto>
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.MedicineProcedureDto>
 
 @{
     ViewData["Title"] = "Medicine procedure";
     Layout = "_layout";
 }
 
-<h2>Medicine procedure</h2>
+<div class="text-center">
+    <h2 class="text-center">Medicine procedure</h2>
+    <form asp-controller="MedicineProcedure" asp-action="Index" method="get">
+        <div>
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
+        </div>
+    </form>
+</div>
 
 <p>
-    <a asp-action="Create">Add medicine procedure</a>
+    <a class="btn btn-success" asp-action="Create">Add medicine procedure</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -25,6 +37,7 @@
             <th>
                 Clinic
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -43,7 +56,22 @@
                 <td>
                     @Html.DisplayFor(modelItem=> item.ClinicDto.Name)
                 </td>
+                <td>
+                <a class="btn btn-danger" asp-controller="MedicineProcedure" asp-action="Delete" asp-route-id="@item.Id" asp-route-name="@item.NameOfProcedure">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div aria-label="Medicine procedure">
+    <vc:pager paging-list="@Model" />
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

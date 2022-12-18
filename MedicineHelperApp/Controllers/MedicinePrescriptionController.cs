@@ -7,12 +7,12 @@ using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ReflectionIT.Mvc.Paging;
 using Serilog;
 
 namespace MedicineHelper.Controllers
 {
-    //[Authorize(Roles = "user")]
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class MedicinePrescriptionController : Controller
     {
         private readonly IMapper _mapper;
@@ -29,15 +29,27 @@ namespace MedicineHelper.Controllers
             _medicineService = medicineService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime SearchDateStart, DateTime SearchDateEnd, int pageIndex = 1)
         {
             try
             {
                 var emailUser = HttpContext.User.Identity?.Name;
                 var userDto = _userService.GetUserByEmailAsync(emailUser);
-                var listMedicinePrescription = await _medicinePrescriptionService.GetAllMedicinePrescriptionAsync(userDto.Id);
 
-                return View(listMedicinePrescription);
+                if (SearchDateStart == DateTime.MinValue && SearchDateEnd == DateTime.MinValue)
+                {
+                    var listMedicinePrescription = await _medicinePrescriptionService.GetAllMedicinePrescriptionAsync(userDto.Id);
+
+                    var model = PagingList.Create(listMedicinePrescription, 5, pageIndex);
+                    return View(model);
+                }
+                else
+                {
+                    var listMedicinePrescription = await _medicinePrescriptionService.GetPeriodMedicinePrescriptionAsync(SearchDateStart, SearchDateEnd, userDto.Id);
+                    var model = PagingList.Create(listMedicinePrescription, 5, pageIndex);
+
+                    return View(model);
+                }
             }
             catch (Exception e)
             {
@@ -54,7 +66,7 @@ namespace MedicineHelper.Controllers
                 var medicines = await _medicineService.GetAllMedicineAsync();
                 var model = new MedicinePrescriptionModel();
                 model.AppointmentId = id;
-                model.MedicineList = new SelectList(medicines, "NameOfMedicine", "NameOfMedicine");
+                model.MedicineList = new SelectList(medicines, "Id", "NameOfMedicine");
                 model.ReturnUrl = Request.Headers["Referer"].ToString();
 
                 return View(model);
@@ -90,6 +102,7 @@ namespace MedicineHelper.Controllers
         {
             try
             {
+                
                 return View(model);
             }
             catch (Exception e)
@@ -106,6 +119,25 @@ namespace MedicineHelper.Controllers
             {
                 await _medicinePrescriptionService.DeleteMedicinePrescriptionAsync(id);
 
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+                var medicine = await _medicineService.GetByIdMedicineAsync(id);
+                if (medicine.Instructions != null)
+                {
+                    return Redirect(medicine.Instructions);
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception e)

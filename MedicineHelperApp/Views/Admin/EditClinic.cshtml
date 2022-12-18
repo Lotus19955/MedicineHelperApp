@@ -4,9 +4,9 @@
     ViewData["Title"] = "Admin";
     Layout = "_AdminLayout";
 }
-<div>
+<div aling="center">
     <h4>Edit clinic</h4>
-    <p>@Model.NameClinic</p>
+    <h1>@Model.NameClinic</h1>
 </div>
 <form asp-controller="Admin" asp-action="EditClinic" method="post">
     <div class="mb-3">
@@ -27,8 +27,8 @@
         <label for="Contact" class="form-label">Contact:</label>
         <textarea asp-for="Contact" class="form-control" id="Contact" rows="3">@Model.Contact</textarea>
     </div>
-    <input type="submit" class="btn btn-danger m-1" value="Edit clinic" />
-    <a class="btn btn-primary m-1" role="button" asp-controller="Admin" asp-action="GetClinic">Cancel</a>
+    <input type="submit" class="btn btn-success" value="Edit" />
+    <a class="btn btn-primary" role="button" asp-controller="Admin" asp-action="GetClinic">Cancel</a>
 </form>
 
 @section Scripts

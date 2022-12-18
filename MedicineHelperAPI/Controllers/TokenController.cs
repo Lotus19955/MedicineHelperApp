@@ -30,7 +30,7 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         /// <summary>
-        /// Register user
+        /// Create JWT Token for user
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -70,7 +70,7 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         /// <summary>
-        /// Register user
+        /// Refresh JWT Token for user
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -97,7 +97,7 @@ namespace MedicineHelperWebAPI.Controllers
 
 
         /// <summary>
-        /// Register user
+        /// Revoke refresh JWT Token
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>

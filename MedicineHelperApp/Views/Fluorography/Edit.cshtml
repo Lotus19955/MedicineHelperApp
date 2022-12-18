@@ -6,18 +6,16 @@
 }
 
 <div>
-    <h2>Edit fluorography</h2>
+    <h2 class="text-center">Edit fluorography</h2>
 
     <form asp-controller="Fluorography" asp-action="Edit" method="post">
         <div class="mb-3">
             <label for="DataOfFluorography" class="form-label">Date of fluorography:</label>
             <input asp-for="DataOfFluorography" type="date" class="form-control" id="DataOfFluorography" value="@Model.DataOfFluorography" required />
-            <span asp-validation-for="DataOfFluorography" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label for="EndDateOfFluorography" class="form-label">End date of fluorography:</label>
             <input asp-for="EndDateOfFluorography" type="date" class="form-control" id="EndDateOfFluorography" value="@Model.EndDateOfFluorography" required />
-            <span asp-validation-for="EndDateOfFluorography" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label for="NumberFluorography" class="form-label">Number of fluorography:</label>
@@ -34,11 +32,11 @@
         <div class="mb-3">
             <label for="ClinicId" class="form-label">Clinic:</label>
             <select asp-for="ClinicId" asp-items="@Model.ClinicList"></select>
-            <a asp-controller="Clinic" asp-action="Create">Add clinic</a>
+            <a class="btn btn-success" asp-controller="Clinic" asp-action="Create">Add clinic</a>
         </div>
 
-        <input type="submit" class="btn btn-danger m-1" value="Save" />
-        <a class="btn btn-primary m-1" role="button" asp-controller="Fluorography" asp-action="Index">Cancel</a>
+        <input type="submit" class="btn btn-success" value="Save" />
+        <a class="btn btn-primary" role="button" asp-controller="Fluorography" asp-action="Index">Cancel</a>
     </form>
 </div>
 

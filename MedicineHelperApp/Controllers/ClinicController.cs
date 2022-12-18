@@ -8,7 +8,7 @@ using Serilog;
 
 namespace MedicineHelper.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class ClinicController : Controller
     {
         private readonly IMapper _mapper;
@@ -55,13 +55,13 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DetailsMedicalInstitutionPartialView(Guid id)
+        public async Task<IActionResult> DetailsClinic(Guid id)
         {
             try
             {
                 var dto = await _clinicService.GetByIdClinicAsync(id);
 
-                return PartialView(dto);
+                return View(dto);
             }
             catch (Exception e)
             {

@@ -13,11 +13,13 @@ namespace MedicineHelperApp.MappingProfiles
                 .ForMember(dto => dto.MedicinesDto, opt => opt.MapFrom(entity => entity.Medicine));
 
             CreateMap<MedicinePrescriptionDto, MedicinePrescription>()
-                .ForMember(dto => dto.Medicine, opt => opt.MapFrom(entity => entity.MedicinesDto));
+                .ForMember(dto => dto.MedicineId, opt => opt.MapFrom(entity => entity.MedicinesDto.Id));
 
-            CreateMap<MedicinePrescriptionModel, MedicinePrescriptionDto>();
+            CreateMap<MedicinePrescriptionModel, MedicinePrescriptionDto>()
+                .ForMember(dto => dto.MedicinesDto, opt => opt.MapFrom(entity => entity.MedicinesDto));
 
-            CreateMap<MedicinePrescriptionDto, MedicinePrescriptionModel>();
+            CreateMap<MedicinePrescriptionDto, MedicinePrescriptionModel>()
+                .ForMember(dto => dto.MedicinesDto, opt => opt.MapFrom(entity => entity.MedicinesDto));
         }
     }
 }

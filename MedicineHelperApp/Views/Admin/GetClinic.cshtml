@@ -7,7 +7,7 @@
 
 <h2 class="text-center">Clinic</h2>
 <p>
-    <a asp-controller="Admin" asp-action="AddClinic" class="m-1">Add clinic</a>
+    <a class="btn btn-success" asp-controller="Admin" asp-action="AddClinic" class="m-1">Add clinic</a>
 </p>
 <div>
     <table class="table">
@@ -25,6 +25,7 @@
                 <th>
                     Contact
                 </th>
+                <th></th>
                 <th></th>
             </tr>
         </thead>
@@ -45,10 +46,10 @@
                         @Html.DisplayFor(modelItem => item.Contact)
                     </td>
                     <td>
-                        <a class="btn" asp-controller="Admin" asp-action="EditClinic" asp-route-id="@item.Id" asp-route-nameClinic="@item.Name" asp-route-adress="@item.Adress" asp-route-operatingMode="@item.OperatingMode" asp-route-contact="@item.Contact">Edit</a>
-                        <a class="btn" asp-controller="Admin" asp-action="DeleteClinic" asp-route-id="@item.Id">Delete</a>
-
-
+                        <a class="btn btn-primary" asp-controller="Admin" asp-action="EditClinic" asp-route-id="@item.Id" asp-route-nameClinic="@item.Name" asp-route-adress="@item.Adress" asp-route-operatingMode="@item.OperatingMode" asp-route-contact="@item.Contact">Edit</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" asp-controller="Admin" asp-action="DeleteClinic" asp-route-nameClinic="@item.Name" asp-route-id="@item.Id">Delete</a>
                     </td>
                 </tr>
             }

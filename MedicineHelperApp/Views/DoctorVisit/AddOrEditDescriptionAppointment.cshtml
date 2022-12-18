@@ -6,7 +6,7 @@
 }
 
 <div>
-    <h2>Add or edit notes</h2>
+    <h2 class="text-center">Add or edit notes</h2>
 
     <form asp-controller="DoctorVisit" asp-action="AddOrEditDescriptionAppointment" method="post">
         <div class="mb-3">
@@ -16,8 +16,8 @@
         </div>
         <input asp-for="Id" type="hidden" />
         <input asp-for="ReturnUrl" type="hidden" />
-        <input type="submit" class="btn btn-primary m-1" value="Add" />
-        <a class="btn btn-primary m-1" role="button" asp-controller="DoctorVisit" asp-action="Index">Cancel</a>
+        <input type="submit" class="btn btn-success" value="Add" />
+        <a class="btn btn-primary" role="button" asp-controller="DoctorVisit" asp-action="Index">Cancel</a>
     </form>
 </div>
 

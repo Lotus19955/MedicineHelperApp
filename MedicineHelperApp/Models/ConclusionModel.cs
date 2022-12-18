@@ -5,13 +5,14 @@ namespace MedicineHelperApp.Models
 {
     public class ConclusionModel
     {
-        public string NameOfAnalysis { get; set; }
+        public Guid Id { get; set; }
+        public string NameOfConclusion { get; set; }
         [DataType(DataType.Date)]
-        public DateTime DateOfAnalysis { get; set; }
-        public byte[]? ScanOfAnalysisDocument { get; set; }
+        public DateTime DateOfConclusion { get; set; }
+        public byte[]? ScanOfConclusionDocument { get; set; }
         public Guid UserId { get; set; }
         public Guid? AppointmentId { get; set; }
-        public Guid ClinicId { get; set; }
+        public Guid? ClinicId { get; set; }
         public SelectList ClinicList { get; set; }
         public string? ReturnUrl { get; set; }
     }

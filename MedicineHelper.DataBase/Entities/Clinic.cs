@@ -13,7 +13,7 @@
         public List<DoctorVisit> DoctorVisits { get; set; }
         public List<Vaccination> Vaccinations { get; set; }
         public List<Fluorography>? Fluorographys { get; set; }
-        public List<Conclusion> Analyses { get; set; }
+        public List<Conclusion> Conclusion { get; set; }
         public List<MedicinePrescription> MedicinePrescription { get; set; }
         public List<MedicineProcedure> MedicineProcedure { get; set; }
     }

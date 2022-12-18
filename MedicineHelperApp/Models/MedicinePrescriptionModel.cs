@@ -12,7 +12,7 @@ namespace MedicineHelperApp.Models
         public decimal? MedicinePrice { get; set; }
         public Guid UserId { get; set; }
         public MedicineDto? MedicinesDto { get; set; }
-        public SelectList? MedicineList { get; set; }
+        public SelectList MedicineList { get; set; }
         public Guid? AppointmentId { get; set; }
         public string? ReturnUrl { get; set; }
     }

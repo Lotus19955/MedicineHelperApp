@@ -4,14 +4,15 @@
     ViewData["Title"] = "Admin";
     Layout = "_AdminLayout";
 }
-<div>
+<div align="center">
     <h4>Are you sure you want to remove the medicine?</h4>
-    <p>@Model.NameOfMedicine</p>
+    <h2>@Model.NameOfMedicine</h2>
 </div>
-<form asp-controller="Admin" asp-action="DeleteMedicine" method="post" asp-route-id="@Model.Id">
-    <div></div>
-    <input type="submit" class="btn btn-danger m-1" value="Delete medicine" />
-    <a class="btn btn-primary m-1" role="button" asp-controller="Admin" asp-action="GetMedicines">Cancel</a>
+<form align="center" asp-controller="Admin" asp-action="DeleteMedicine" method="post" asp-route-id="@Model.Id">
+    <div>
+        <input type="submit" class="btn btn-danger" value="Delete" />
+        <a class="btn btn-primary" role="button" asp-controller="Admin" asp-action="GetMedicines">Cancel</a>
+    </div>
 </form>
 
 @section Scripts

@@ -9,9 +9,11 @@ namespace MedicineHelperApp.MappingProfiles
     {
         public MedicineProfile()
         {
-            CreateMap<Medicine, MedicineDto>();
+            CreateMap<Medicine, MedicineDto>()
+                .ForMember(dto => dto.Instructions, opt => opt.MapFrom(model => model.Instructions));
 
-            CreateMap<MedicineDto, Medicine>();
+            CreateMap<MedicineDto, Medicine>()
+                .ForMember(dto => dto.Instructions, opt => opt.MapFrom(model => model.Instructions));
 
             CreateMap<MedicineModel, MedicineDto>()
                 .ForMember(dto => dto.Instructions, opt => opt.MapFrom(model => model.LinkToInstructions));

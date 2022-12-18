@@ -46,7 +46,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             {
                 var entity = await _unitOfWork.Clinic.FindBy(entity => entity.Id.Equals(id))
                     .Include(include => include.DoctorVisits)
-                    .Include(include => include.Analyses)
+                    .Include(include => include.Conclusion)
                     .Include(include => include.Vaccinations)
                     .Include(include => include.Fluorographys)
                     .Include(include => include.MedicinePrescription)

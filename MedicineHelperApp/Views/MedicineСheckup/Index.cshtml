@@ -1,0 +1,82 @@
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.MedicineСheckupDto>
+
+@{
+    ViewData["Title"] = "Medicine checkup";
+    Layout = "_layout";
+}
+
+<div class="text-center">
+    <h2 class="text-center">Medicine checkup</h2>
+    <form asp-controller="MedicineСheckup" asp-action="Index" method="get">
+        <div>
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
+        </div>
+    </form>
+</div>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Add medicine checkup</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name of medicine checkup
+            </th>
+            <th>
+                Clinic
+            </th>
+            <th>
+                Date of medicine checkup
+            </th>
+            <th>
+                Price of medicine checkup
+            </th>
+            <th>
+                Note
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink(item.ClinicDto.Name, "DetailsClinic", "Clinic", new { id = item.ClinicDtoId }, new { @class = "tempClass" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfMedicineСheckup)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceOfMedicineСheckup)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem=> item.Note)
+                </td>
+                <td>
+                    <a class="btn btn-danger" asp-controller="MedicineСheckup" asp-action="Delete" asp-route-id="@item.Id" asp-route-name="@item.Name">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div aria-label="Medicine checkup">
+    <vc:pager paging-list="@Model" />
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

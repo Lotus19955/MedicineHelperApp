@@ -1,4 +1,5 @@
-﻿@model DoctorModel
+﻿@using MedicineHelperApp.Models;
+@model DoctorModel
 
 @{
     ViewData["Title"] = "Add doctor";
@@ -6,7 +7,7 @@
 }
 
 <div>
-    <h2>Add doctor</h2>
+    <h2 class="text-center">Add doctor</h2>
 
     <form asp-controller="DoctorVisit" asp-action="CreateDoctor" method="post">
         <div class="mb-3">
@@ -34,7 +35,7 @@
         <div>
             <input asp-for="ReturnUrl" type="hidden" />
         </div>
-        <input type="submit" class="btn btn-primary m-1" value="Add" />
+        <input type="submit" class="btn btn-success" value="Add" />
     </form>
 </div>
 

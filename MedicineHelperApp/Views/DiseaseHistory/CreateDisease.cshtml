@@ -6,7 +6,7 @@
 }
 
 <div>
-    <h2>Add disease</h2>
+    <h2 class ="text-center">Add disease</h2>
 
     <form asp-controller="DiseaseHistory" asp-action="CreateDisease" method="post">
         <div class="mb-3">
@@ -16,12 +16,12 @@
         </div>
         <div class="mb-3">
             <label for="ShotDescriptionDisease" class="form-label">Short description of disease:</label>
-            <textarea asp-for="ShotDescriptionDisease" class="form-control" id="ShotDescriptionDisease" rows="4"></textarea>
+            <textarea asp-for="ShotDescriptionDisease" class="form-control" id="ShotDescriptionDisease" rows="2"></textarea>
         </div>
         <div>
-            <input asp-for="ReturnUrl" type="hidden" />
+            <input type="submit" class="btn btn-success" value="Add" />
+            <a class="btn btn-primary" asp-controller="DiseaseHistory" asp-action="Create">Back</a>
         </div>
-        <input type="submit" class="btn btn-primary m-1" value="add" />
     </form>
 </div>
 

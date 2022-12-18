@@ -11,5 +11,7 @@ namespace MedicineHelper.Core.Abstractions
     {
         Task<int> CreateMedicineProcedureAsync(MedicineProcedureDto dto);
         Task<List<MedicineProcedureDto>> GetAllMedicineProcedureAsync(Guid id);
+        Task Delete(Guid id);
+        Task<List<MedicineProcedureDto>> GetPeriodMedicineProcedureAsync(DateTime SearchDateStart, DateTime SearchDateEnd, Guid userId);
     }
 }

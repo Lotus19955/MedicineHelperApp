@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MedicineHelper.Controllers
 {
@@ -17,8 +18,8 @@ namespace MedicineHelper.Controllers
 
 
 
-        public AccountController(IUserService userService, 
-            IRoleService roleService, 
+        public AccountController(IUserService userService,
+            IRoleService roleService,
             IMapper mapper)
         {
             _userService = userService;
@@ -35,16 +36,25 @@ namespace MedicineHelper.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
+            var isEmailCorrect = await _userService.IsUserExistAsync(loginModel.Email);
             var isPasswordCorrect = await _userService.CheckUserPasswordAsync(loginModel.Email, loginModel.Password);
-            if (isPasswordCorrect)
-            {
-                var roleName = await Authenticate(loginModel.Email);
-                if (roleName == "Admin")
-                {
-                    return RedirectToAction("Index", "Admin");
-                }
 
-                return RedirectToAction("Index", "Home");
+            if (isEmailCorrect)
+            {
+                if (isPasswordCorrect)
+                {
+                    var roleName = await Authenticate(loginModel.Email);
+                    if (roleName == "Admin")
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    await Authenticate(loginModel.Email);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {

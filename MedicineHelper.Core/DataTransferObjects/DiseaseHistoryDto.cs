@@ -4,10 +4,11 @@ namespace MedicineHelper.Core.DataTransferObjects
 {
     public class DiseaseHistoryDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public DateTime DateOfDisease { get; set; }
         public DateTime? DateOfRecovery { get; set; }
-        public bool TypeOfTreatment { get; set; }
+        public bool BoolTypeOfTreatment { get; set; }
+        public string TypeOfTreatment { get; set; }
         public SeverityOfTheIllness SeverityOfTheIllness { get; set; }
         public string? NameOfDisease { get; set; }
         public DiseaseDto Disease { get; set; }

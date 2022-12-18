@@ -11,11 +11,13 @@ namespace MedicineHelper.Business.ServicesImplementations
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMedicineService _medicineService;
 
-        public MedicinePrescriptionService(IMapper mapper, IUnitOfWork unitOfWork)
+        public MedicinePrescriptionService(IMapper mapper, IUnitOfWork unitOfWork, IMedicineService medicineService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _medicineService = medicineService;
         }
 
         public async Task<List<MedicinePrescriptionDto>> GetAllMedicinePrescriptionAsync(Guid id)
@@ -34,6 +36,25 @@ namespace MedicineHelper.Business.ServicesImplementations
             {
 
                 throw new ArgumentException();
+            }
+        }
+        public async Task<List<MedicinePrescriptionDto>> GetPeriodMedicinePrescriptionAsync(DateTime SearchDateStart, DateTime SearchDateEnd, Guid userId)
+        {
+            try
+            {
+                var prescribedMedication = await _unitOfWork.MedicinePrescription
+                   .Get().Where(entity => entity.UserId.Equals(userId))
+                   .Where(entityData => entityData.StartOfAdmission >= SearchDateStart && entityData.EndOfAdmission <= SearchDateEnd)
+                   .Include(include => include.Medicine)
+                   .OrderBy(entity => entity.StartOfAdmission)
+                   .Select(entity => _mapper.Map<MedicinePrescriptionDto>(entity))
+                   .ToListAsync();
+
+                return prescribedMedication;
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
         public async Task<int> CreateMedicinePrescriptionAsync(MedicinePrescriptionDto dto)

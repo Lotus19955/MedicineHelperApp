@@ -5,25 +5,27 @@
     Layout = "_LoginLayout";
 }
 
-<div>
-    <h2>Login</h2>
+<h2 style ="text-align: center;">Login</h2>
+<form asp-controller="Account" asp-action="Login" method="post">
+    <div class="container">
+        <label for="email" class="form-label">Email:</label>
+        <input asp-for="Email" type="email" class="form-control" id="email" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
 
-    <form asp-controller="Account" asp-action="Login" method="post">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input asp-for="Email" type="email" class="form-control" id="email" required />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password:</label>
-            <input asp-for="Password" type="password" class="form-control" id="password" required />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
+        <label for="password" class="form-label">Password:</label>
+        <input asp-for="Password" type="password" class="form-control" id="password" required />
+        <span asp-validation-for="Password" class="text-danger"></span>
 
-        <input type="submit" class="btn btn-primary m-1" value="Login" />
-        <a class="btn btn-primary m-1" role="button" asp-controller="Account" asp-action="Register">Registration</a>
-    </form>
-</div>
+        <button type="submit">Login</button>
+        <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Registration</a>
+
+        <div>
+            <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>
+        </div>
+    </div>
+</form>
 
 @section Scripts
     {

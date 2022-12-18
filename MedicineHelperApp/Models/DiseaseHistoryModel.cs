@@ -5,9 +5,11 @@ namespace MedicineHelperApp.Models
 {
     public class DiseaseHistoryModel
     {
+        public Guid Id { get; set; }
         public DateTime DateOfDisease { get; set; }
         public DateTime? DateOfRecovery { get; set; }
-        public bool TypeOfTreatment { get; set; }
+        public bool BoolTypeOfTreatment { get; set; }
+        public string TypeOfTreatment { get; set; }
         public SeverityOfTheIllness SeverityOfTheIllnessList { get; set; }
         public string? NameOfDisease { get; set; }
         public Guid DiseaseId { get; set; }

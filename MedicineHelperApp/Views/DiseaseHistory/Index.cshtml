@@ -1,15 +1,27 @@
-﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.DiseaseHistoryDto>
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.DiseaseHistoryDto>
 
 @{
     ViewData["Title"] = "Disease history";
     Layout = "_layout";
 }
 
-<h2>Disease history</h2>
+<div class="text-center">
+    <h2 class="text-center">Disease history</h2>
+    <form asp-controller="DiseaseHistory" asp-action="Index" method="get">
+        <div>
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
+        </div>
+    </form>
+</div>
 
 <p>
-    <a asp-action="Create">Add disease</a>
+    <a class="btn btn-success" asp-action="Create">Add disease history</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -28,6 +40,7 @@
             <th>
                 Severity of the illness
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -49,7 +62,22 @@
                 <td>
                     @Html.DisplayFor(modelItem=> item.SeverityOfTheIllness)
                 </td>
+                <td>
+                    <a class="btn btn-danger" asp-controller="DiseaseHistory" asp-action="DeleteDiseaseHistory" asp-route-id="@item.Id" asp-route-name="@item.NameOfDisease">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div aria-label="Disease history">
+    <vc:pager paging-list="@Model" />
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

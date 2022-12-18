@@ -1,4 +1,5 @@
-﻿@model MedicinePrescriptionModel
+﻿@using MedicineHelperApp.Models;
+@model MedicinePrescriptionModel
 
 @{
     ViewData["Title"] = "Add medicine prescription";
@@ -6,22 +7,22 @@
 }
 
 <div>
-    <h2>Add medicine prescription</h2>
+    <h2 class="text-center">Add medicine prescription</h2>
 
     <form asp-controller="MedicinePrescription" asp-action="Create" method="post">
         <div class="mb-3">
-            <label for="NameOfMedicine" class="form-label">Medicine name:</label>
-            <select asp-for="MedicinesDto.NameOfMedicine" asp-items="@Model.MedicineList"></select>
-            <a asp-controller="Medicine" asp-action="Create">Add medicine</a>
+            <label for="MedicinesDto.Id" class="form-label">Medicine name:</label>
+            <select asp-for="MedicinesDto.Id" asp-items="@Model.MedicineList"></select>
+            <a class="btn btn-success" asp-controller="Medicine" asp-action="Create">Add medicine</a>
         </div>
         <div class="mb-3">
             <label for="StartOfAdmission" class="form-label">Start of admission:</label>
-            <input asp-for="StartOfAdmission" type="datetime-local" class="form-control" id="StartOfAdmission" required />
+            <input asp-for="StartOfAdmission" type="datetime-local" class="form-control" id="StartOfAdmission" value="@DateTime.UtcNow" required />
             <span asp-validation-for="StartOfAdmission" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label for="EndOfAdmission" class="form-label">End of admission:</label>
-            <input asp-for="EndOfAdmission" type="date" class="form-control" id="EndOfAdmission" not required />
+            <input asp-for="EndOfAdmission" type="datetime-local" class="form-control" id="EndOfAdmission" value="@DateTime.UtcNow" not required />
         </div>
         <div class="mb-3">
             <label for="MedicineDose" class="form-label">Medicine dose:</label>
@@ -35,7 +36,8 @@
             <input asp-for="AppointmentId" type="hidden" />
             <input asp-for="ReturnUrl" type="hidden" />
         </div>
-        <input type="submit" class="btn btn-primary m-1" value="Add" />
+        <input type="submit" class="btn btn-success" value="Add" />
+        <a class="btn btn-primary" role="button" asp-controller="MedicinePrescription" asp-action="Index">Back</a>
     </form>
 </div>
 

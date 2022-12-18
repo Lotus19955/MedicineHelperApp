@@ -54,5 +54,41 @@ namespace MedicineHelper.Business.ServicesImplementations
                 throw;
             }
         }
+        public async Task<List<MedicineProcedureDto>> GetPeriodMedicineProcedureAsync(DateTime SearchDateStart, DateTime SearchDateEnd, Guid userId)
+        {
+            try
+            {
+                var listPhysicalTherapy = await _unitOfWork.MedicineProcedure
+                   .FindBy(entity => entity.UserId.Equals(userId))
+                   .Where(entityData => entityData.StartProcedure >= SearchDateStart && entityData.EndProcedure <= SearchDateEnd)
+                   .Include(include => include.Clinic)
+                   .OrderBy(entity => entity.StartProcedure)
+                   .Select(entity => _mapper.Map<MedicineProcedureDto>(entity))
+                   .ToListAsync();
+
+                return listPhysicalTherapy;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        public async Task Delete(Guid id)
+        {
+            try
+            {
+                var entity = await _unitOfWork.MedicineProcedure
+                    .FindBy(entity => entity.Id.Equals(id))
+                    .FirstOrDefaultAsync();
+
+                _unitOfWork.MedicineProcedure.Remove(entity);
+                await _unitOfWork.Commit();
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

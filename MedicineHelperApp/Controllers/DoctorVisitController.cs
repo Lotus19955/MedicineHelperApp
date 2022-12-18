@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ReflectionIT.Mvc.Paging;
+using Serilog;
 
 namespace MedicineHelper.Controllers
 {
@@ -16,32 +19,46 @@ namespace MedicineHelper.Controllers
         private readonly IUserService _userService;
         private readonly IDoctorService _doctorService;
         private readonly IClinicService _clinicService;
+        private readonly IConclusionService _conclusionService;
 
         public DoctorVisitController(IMapper mapper, IDoctorVisitService doctorVisitService,
-            IUserService userService, IDoctorService doctorService, IClinicService clinicService)
+            IUserService userService, IDoctorService doctorService, IClinicService clinicService, IConclusionService conclusionService)
         {
             _mapper = mapper;
             _doctorVisitService = doctorVisitService;
             _userService = userService;
             _doctorService = doctorService;
             _clinicService = clinicService;
+            _conclusionService = conclusionService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index( DateTime SearchDateStart, DateTime SearchDateEnd, int pageIndex = 1)
         {
             try
             {
                 var emailUser = HttpContext.User.Identity.Name;
                 var userDto = _userService.GetUserByEmailAsync(emailUser);
-                var listDoctorVisits = await _doctorVisitService.GetAllDoctorVisitAsync(userDto.Id);
-                
-                return View(listDoctorVisits);
-            }
-            catch (Exception)
-            {
 
-                throw;
+                if (SearchDateStart == DateTime.MinValue && SearchDateEnd == DateTime.MinValue)
+                {
+                    var listDoctorVisits = await _doctorVisitService.GetAllDoctorVisitAsync(userDto.Id);
+
+                    var pages = PagingList.Create(listDoctorVisits, 5, pageIndex);
+                    return View(pages);
+                }
+                else
+                {
+                    var listDoctorVisits = await _doctorVisitService.GetPeriodDoctorVisitAsync(SearchDateStart, SearchDateEnd, userDto.Id);
+                    var pages = PagingList.Create(listDoctorVisits, 5, pageIndex);
+
+                    return View(pages);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -56,7 +73,6 @@ namespace MedicineHelper.Controllers
                 var model = new DoctorVisitModel();
                 model.ClinicList = new SelectList(clinicDto, "Id", "Name");
                 model.DoctorList = new SelectList(doctorsDto, "Id", "Name");
-
                 if (model.ReturnUrl == "https://localhost:7226/DoctorVisit/CreateDoctor")
                 {
                     model.ReturnUrl = "https://localhost:7226/DoctorVisit/Index";
@@ -69,10 +85,10 @@ namespace MedicineHelper.Controllers
 
                 return View(model);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -91,11 +107,7 @@ namespace MedicineHelper.Controllers
                 return RedirectToAction("Index");
 
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpGet]
@@ -123,11 +135,7 @@ namespace MedicineHelper.Controllers
                 return View(model);
 
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpPost]
@@ -149,11 +157,7 @@ namespace MedicineHelper.Controllers
 
                 return View(model);
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpGet]
@@ -164,17 +168,10 @@ namespace MedicineHelper.Controllers
                 var model = new AppointmentModel();
                 model.Id = id;
                 model.ReturnUrl = Request.Headers["Referer"].ToString();
-                //if (model.ReturnUrl == "https://localhost:7226/DoctorVisit/AddOrEditDescriptionAppointment")
-                //{
-                //    model.ReturnUrl = "https://localhost:7226/DoctorVisit/Appointment";
-                //}
 
                 return View(model);
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpPost]
@@ -195,11 +192,7 @@ namespace MedicineHelper.Controllers
                     return View(model);
                 }
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpGet] 
@@ -212,10 +205,7 @@ namespace MedicineHelper.Controllers
 
                 return View(appointmentDto);
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpGet]
@@ -227,10 +217,7 @@ namespace MedicineHelper.Controllers
 
                 return RedirectToAction("Appointment", new {id, nameOfDisease});
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpGet]
@@ -243,11 +230,7 @@ namespace MedicineHelper.Controllers
 
                 return View(model);
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpPost]
@@ -260,12 +243,39 @@ namespace MedicineHelper.Controllers
 
                 return Redirect(model.ReturnUrl);
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
+        [HttpGet]
+        public IActionResult Delete(Guid id, string name)
+        {
+            try
+            {
+                var model = new DoctorVisitModel();
+                model.DoctorName = name;
+                model.Id = id;
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _doctorService.Delete(id);
+
+                return RedirectToAction("Index", "DoctorVisit");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
     }
 }

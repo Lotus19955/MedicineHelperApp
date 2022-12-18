@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ReflectionIT.Mvc.Paging;
 using Serilog;
 using Serilog.Events;
 using System.Reflection;
@@ -89,6 +90,11 @@ namespace MedicineHelperApp
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             builder.Configuration.AddJsonFile("secrets.json");
+
+            builder.Services.AddPaging(options => {
+                options.ViewName = "Bootstrap5";
+                options.PageParameterName = "pageindex";
+            });
 
             var app = builder.Build();
 
