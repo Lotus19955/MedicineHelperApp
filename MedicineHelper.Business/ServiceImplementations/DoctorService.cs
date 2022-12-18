@@ -24,6 +24,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var entity = _mapper.Map<Doctor>(dto);
+                entity.Id = Guid.NewGuid();
                 await _unitOfWork.Doctor.AddAsync(entity);
                 var result = await _unitOfWork.Commit();
 
@@ -82,12 +83,12 @@ namespace MedicineHelper.Business.ServicesImplementations
                         PropertyValue = dto.Name
                     });
                 }
-                if (dto.Specializacion != sourceDto.Specializacion)
+                if (dto.Specialization != sourceDto.Specialization)
                 {
                     patchList.Add(new PatchModel()
                     {
-                        PropertyName = nameof(dto.Specializacion),
-                        PropertyValue = dto.Specializacion
+                        PropertyName = nameof(dto.Specialization),
+                        PropertyValue = dto.Specialization
                     });
                 }
                 if (dto.Rating != sourceDto.Rating)
@@ -106,15 +107,15 @@ namespace MedicineHelper.Business.ServicesImplementations
                 throw;
             }
         }
-        public async Task DeleteDoctorAsync(Guid id)
+        public async Task Delete(Guid id)
         {
             try
             {
-                var entity = await _unitOfWork.Doctor
+                var entity = await _unitOfWork.DoctorVisit
                     .FindBy(entity => entity.Id.Equals(id))
                     .FirstOrDefaultAsync();
 
-                _unitOfWork.Doctor.Remove(entity);
+                _unitOfWork.DoctorVisit.Remove(entity);
                 await _unitOfWork.Commit();
             }
             catch (Exception)

@@ -2,6 +2,7 @@
 {
     public class MedicineProcedureDto
     {
+        public Guid Id { get; set; }
         public string? NameOfProcedure { get; set; }
         public DateTime StartProcedure { get; set; }
         public DateTime? EndProcedure { get; set; }

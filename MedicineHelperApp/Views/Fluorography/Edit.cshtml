@@ -1,0 +1,47 @@
+﻿@model FluorographyModel
+
+@{
+    ViewData["Title"] = "Edit fluorography";
+    Layout = "_Layout";
+}
+
+<div>
+    <h2 class="text-center">Edit fluorography</h2>
+
+    <form asp-controller="Fluorography" asp-action="Edit" method="post">
+        <div class="mb-3">
+            <label for="DataOfFluorography" class="form-label">Date of fluorography:</label>
+            <input asp-for="DataOfFluorography" type="date" class="form-control" id="DataOfFluorography" value="@Model.DataOfFluorography" required />
+        </div>
+        <div class="mb-3">
+            <label for="EndDateOfFluorography" class="form-label">End date of fluorography:</label>
+            <input asp-for="EndDateOfFluorography" type="date" class="form-control" id="EndDateOfFluorography" value="@Model.EndDateOfFluorography" required />
+        </div>
+        <div class="mb-3">
+            <label for="NumberFluorography" class="form-label">Number of fluorography:</label>
+            <input asp-for="NumberFluorography" type="text" class="form-control" id="NumberFluorography" value="@Model.NumberFluorography" required />
+            <span asp-validation-for="NumberFluorography" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Result" class="form-check-label">Result of fluorography:</label>
+            <input asp-for="Result" type="radio" class="form-check-input" id="Result" value="true" required />
+            <span asp-validation-for="Result">Positive</span>
+            <input asp-for="Result" type="radio" checked="checked" class="form-check-input" id="Result" value="false" required />
+            <span asp-validation-for="Result">Negative</span>
+        </div>
+        <div class="mb-3">
+            <label for="ClinicId" class="form-label">Clinic:</label>
+            <select asp-for="ClinicId" asp-items="@Model.ClinicList"></select>
+            <a class="btn btn-success" asp-controller="Clinic" asp-action="Create">Add clinic</a>
+        </div>
+
+        <input type="submit" class="btn btn-success" value="Save" />
+        <a class="btn btn-primary" role="button" asp-controller="Fluorography" asp-action="Index">Cancel</a>
+    </form>
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -39,7 +39,7 @@
                         @Html.DisplayFor(modelItem => item.FirstName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Birthday)
+                        @Html.DisplayFor(modelItem => item.DateOfBirth)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
@@ -50,7 +50,7 @@
                     <td>
                         @if(item.RoleName != "Admin")
                         {
-                            <a asp-controller="Admin" asp-action="DeleteUser" asp-route-id="@item.Id" asp-route-userEmail="@item.Email" class="m-1">Delete</a>
+                            <a class="btn btn-danger" asp-controller="Admin" asp-action="DeleteUser" asp-route-id="@item.Id" asp-route-userEmail="@item.Email" class="m-1">Delete</a>
                     
                         }
                     </td>

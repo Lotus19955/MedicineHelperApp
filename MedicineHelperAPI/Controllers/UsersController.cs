@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
@@ -44,12 +45,20 @@ namespace MedicineHelperWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            var clinic = _userService.GetUserByEmailAsync(email);
-            if (clinic == null)
+            try
             {
-                return NotFound();
+                var clinic = _userService.GetUserByEmailAsync(email);
+                if (clinic == null)
+                {
+                    return NotFound();
+                }
+                return Ok(clinic);
             }
-            return Ok(clinic);
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -62,9 +71,17 @@ namespace MedicineHelperWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllUsers()
         {
-            IEnumerable<UserDto> users = await _userService.GetAllUserAsync();
+            try
+            {
+                IEnumerable<UserDto> users = await _userService.GetAllUserAsync();
 
-            return Ok(users.ToList());
+                return Ok(users.ToList());
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -74,7 +91,7 @@ namespace MedicineHelperWebAPI.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         //[HttpPost("{Update}")]
-        //[Authorize]
+        ////[Authorize]
         //public IActionResult UpdateUser(string email, [FromBody] AddOrUpdateUserRequestModel? model)
         //{
         //    if (model != null)
@@ -97,23 +114,24 @@ namespace MedicineHelperWebAPI.Controllers
         /// <summary>
         /// Delete user
         /// </summary>
-        /// <param name="email">Id of email</param>
+        /// <param name="id">User id</param>
         /// <returns></returns>
         [HttpDelete("{id}")]
         [Authorize]
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorModel), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> DeleteUser(string email)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
             try
             {
-                await _userService.DeleteUserAsync(email);
+                await _userService.DeleteUserAsync(id);
 
                 return Ok();
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(new ErrorModel { Message = ex.Message });
+                Log.Error(e.Message);
+                return StatusCode(500);
             }
         }
 

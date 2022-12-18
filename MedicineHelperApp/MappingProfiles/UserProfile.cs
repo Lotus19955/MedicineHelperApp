@@ -18,6 +18,10 @@ namespace MedicineHelperApp.MappingProfiles
                 .ForMember(dto => dto.Password, opt => opt.MapFrom(model => model.Password));
 
             CreateMap<UserDto, User>();
+
+            CreateMap<UserDto, UserModel>();
+
+            CreateMap<UserModel, UserDto>();
         }
     }
 }

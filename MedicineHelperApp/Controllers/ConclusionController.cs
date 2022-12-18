@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperApp.Models;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ReflectionIT.Mvc.Paging;
+using Serilog;
 
 namespace MedicineHelper.Controllers
 {
@@ -27,21 +29,16 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pageIndex, DateTime SearchDateStart,
-            DateTime SearchDateEnd, bool AllDates)
+        public async Task<IActionResult> Index(DateTime SearchDateStart,DateTime SearchDateEnd, int pageIndex = 1)
         {
             try
             {
                 var emailUser = HttpContext.User.Identity?.Name;
                 var userDto = _userService.GetUserByEmailAsync(emailUser);
 
-                if (!AllDates)
+                if (SearchDateStart == DateTime.MinValue && SearchDateEnd == DateTime.MinValue)
                 {
                     var listConclusions = await _conclusionService.GetAllConclusionAsync(userDto.Id);
-                    if (pageIndex == 0)
-                    {
-                        pageIndex = 1;
-                    }
                     var model =  PagingList.Create(listConclusions, 5, pageIndex);
                     return View(model);
                 }
@@ -53,9 +50,10 @@ namespace MedicineHelper.Controllers
                     return View(model);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -68,7 +66,7 @@ namespace MedicineHelper.Controllers
 
                 var conclusionModel = new ConclusionModel();
                 conclusionModel.AppointmentId = id;
-                conclusionModel.ClinicList = new SelectList(clinicDto, "Id", "NameClinc");
+                conclusionModel.ClinicList = new SelectList(clinicDto, "Id", "Name");
                 conclusionModel.ReturnUrl = Request.Headers["Referer"].ToString();
                 if (conclusionModel.ReturnUrl == "https://localhost:7226/Clinic/Create")
                 {
@@ -97,10 +95,8 @@ namespace MedicineHelper.Controllers
                      
                     var analysisDto = _mapper.Map<ConclusionDto>(conclusionModel);
                     await _conclusionService.CreateConclusionAsync(analysisDto);
-                    
-                    var returnUrl = conclusionModel.ReturnUrl;
 
-                    return Redirect(returnUrl);
+                    return RedirectToAction("Index", "Conclusion");
                 }
                 else
                 {
@@ -111,6 +107,39 @@ namespace MedicineHelper.Controllers
             {
 
                 throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Delete(Guid id, string name)
+        {
+            try
+            {
+                var model = new ConclusionModel();
+                model.NameOfConclusion = name;
+                model.Id = id;
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _conclusionService.DeleteConclusion(id);
+
+                return RedirectToAction("Index", "Conclusion");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
     }

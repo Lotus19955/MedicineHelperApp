@@ -7,7 +7,8 @@ namespace MedicineHelper.DataBase.Entities
         public Guid Id { get; set; }
         public DateTime DateOfDisease { get; set; }
         public DateTime? DateOfRecovery { get; set; }
-        public bool TypeOfTreatment { get; set; }
+        public bool BoolTypeOfTreatment { get; set; }
+        public string TypeOfTreatment { get; set; }
         public SeverityOfTheIllness SeverityOfTheIllness { get; set; }
 
         public Disease Disease { get; set; }

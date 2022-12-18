@@ -156,20 +156,12 @@ namespace MedicineHelper.Business.ServicesImplementations
                         PropertyValue = dto.FirstName
                     });
                 }
-                if (dto.Birthday != sourceDto.Birthday)
+                if (dto.DateOfBirth != sourceDto.DateOfBirth)
                 {
                     patchList.Add(new PatchModel()
                     {
-                        PropertyName = nameof(dto.Birthday),
-                        PropertyValue = dto.Birthday
-                    });
-                }
-                if (dto.Email != sourceDto.Email)
-                {
-                    patchList.Add(new PatchModel()
-                    {
-                        PropertyName = nameof(dto.Email),
-                        PropertyValue = dto.Email
+                        PropertyName = nameof(dto.DateOfBirth),
+                        PropertyValue = dto.DateOfBirth
                     });
                 }
                 if (dto.Avatar != sourceDto.Avatar)
@@ -214,12 +206,12 @@ namespace MedicineHelper.Business.ServicesImplementations
                         PropertyValue = dto.FirstName
                     });
                 }
-                if (dto.Birthday != sourceDto.Birthday)
+                if (dto.DateOfBirth != sourceDto.DateOfBirth)
                 {
                     patchList.Add(new PatchModel()
                     {
-                        PropertyName = nameof(dto.Birthday),
-                        PropertyValue = dto.Birthday
+                        PropertyName = nameof(dto.DateOfBirth),
+                        PropertyValue = dto.DateOfBirth
                     });
                 }
                 if (dto.Email != sourceDto.Email)
@@ -250,6 +242,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             }
         }
 
+
         private string CreateMd5(string password)
         {
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
@@ -260,5 +253,21 @@ namespace MedicineHelper.Business.ServicesImplementations
                 return Convert.ToHexString(hashBytes);
             }
         }
+    public async Task DeleteAvatar(Guid id)
+    {
+        try
+        {
+            var entity = await _unitOfWork.User
+                .FindBy(entity => entity.Id.Equals(id))
+                .FirstOrDefaultAsync();
+
+                entity.Avatar = null;
+                await _unitOfWork.Commit();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
+}
 }

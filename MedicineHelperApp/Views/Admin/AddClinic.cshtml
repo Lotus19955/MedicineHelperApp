@@ -4,9 +4,9 @@
     ViewData["Title"] = "Admin";
     Layout = "_AdminLayout";
 }
+
 <div>
-    <h4>Edit clinic</h4>
-    <p>Add new clinic</p>
+    <h4 class="text-center">Add new clinic</h4>
 </div>
 <form asp-controller="Admin" asp-action="AddClinic" method="post">
     <div class="mb-3">
@@ -21,14 +21,14 @@
     </div>
     <div class="mb-3">
         <label for="OperatingMode" class="form-label">Operation mode:</label>
-        <textarea asp-for="OperatingMode" class="form-control" id="OperatingMode" rows="2"></textarea>
+        <textarea asp-for="OperatingMode" class="form-control" id="OperatingMode" rows="1"></textarea>
     </div>
     <div class="mb-3">
         <label for="Contact" class="form-label">Contact:</label>
-        <textarea asp-for="Contact" class="form-control" id="Contact" rows="3"></textarea>
+        <textarea asp-for="Contact" class="form-control" id="Contact" rows="1"></textarea>
     </div>
-    <input type="submit" class="btn btn-danger m-1" value="Edit clinic" />
-    <a class="btn btn-primary m-1" role="button" asp-controller="Admin" asp-action="GetClinic">Cancel</a>
+    <input class="btn btn-success" class="btn btn-danger m-1" value="Add" />
+    <a class="btn btn-primary" role="button" asp-controller="Admin" asp-action="GetClinic">Cancel</a>
 </form>
 
 @section Scripts

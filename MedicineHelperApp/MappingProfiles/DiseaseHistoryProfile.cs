@@ -11,10 +11,13 @@ namespace MedicineHelperApp.MappingProfiles
         {
             CreateMap<DiseaseHistory, DiseaseHistoryDto>()
                 .ForMember(dto => dto.NameOfDisease, opt => opt.MapFrom(entity => entity.Disease.Name));
-
-            CreateMap<DiseaseHistoryModel, DiseaseHistoryDto>();
-
             CreateMap<DiseaseHistoryDto, DiseaseHistory>();
+
+            CreateMap<DiseaseHistoryModel, DiseaseHistoryDto>()
+                .ForMember(dto => dto.SeverityOfTheIllness, opt => opt.MapFrom(entity => entity.SeverityOfTheIllnessList));
+
+            CreateMap<DiseaseHistoryDto, DiseaseHistoryModel>()
+                .ForMember(dto => dto.SeverityOfTheIllnessList, opt => opt.MapFrom(entity => entity.SeverityOfTheIllness));
         }
     }
 }

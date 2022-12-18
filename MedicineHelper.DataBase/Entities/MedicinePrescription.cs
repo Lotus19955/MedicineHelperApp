@@ -12,7 +12,5 @@
         public Guid MedicineId { get; set; }
         public User User { get; set; }
         public Guid UserId { get; set; }
-        public Appointment? Appointment { get; set; }
-        public Guid? AppointmentId { get; set; }
     }
 }

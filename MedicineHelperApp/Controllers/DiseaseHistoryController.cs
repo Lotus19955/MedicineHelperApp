@@ -7,6 +7,8 @@ using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ReflectionIT.Mvc.Paging;
+using Serilog;
 
 namespace MedicineHelper.Controllers
 {
@@ -27,20 +29,30 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime SearchDateStart, DateTime SearchDateEnd, int pageIndex = 1)
         {
             try
             {
                 var emailUser = HttpContext.User.Identity.Name;
                 var userDto = _userService.GetUserByEmailAsync(emailUser);
-                var listDiseaseHistory = await _diseaseHistoryService.GetAllDiseaseHistoryAsync(userDto.Id);
+                if (SearchDateStart == DateTime.MinValue && SearchDateEnd == DateTime.MinValue)
+                {
+                    var listDiseaseHistory = await _diseaseHistoryService.GetAllDiseaseHistoryForUserAsync(userDto.Id);
+                    var model = PagingList.Create(listDiseaseHistory, 5, pageIndex);
+                    return View(model);
+                }
+                else
+                {
+                    var listDiseaseHistory = await _diseaseHistoryService.GetAllDiseaseHistoryForUserAsyncForPeriod(SearchDateStart, SearchDateEnd, userDto.Id);
+                    var model = PagingList.Create(listDiseaseHistory, 5, pageIndex);
 
-                return View(listDiseaseHistory);
+                    return View(model);
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -66,10 +78,10 @@ namespace MedicineHelper.Controllers
                 return View(model);
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -87,12 +99,6 @@ namespace MedicineHelper.Controllers
                     var dto = _mapper.Map<DiseaseHistoryDto>(model);
                     var diseaseHistoryLastId = await _diseaseHistoryService.CreateDiseaseHistoryAsync(dto);
 
-                    if (model.AppointmentId != null)
-                    {
-                        var dtoDoctorVisit = await _doctorVisitService.GetDoctorVisitByIdAsync(model.AppointmentId);
-                        dtoDoctorVisit.DiseaseHistoryId = diseaseHistoryLastId;
-                        await _doctorVisitService.UpdateDoctorVisitAsync(dtoDoctorVisit, dtoDoctorVisit.Id);
-                    }
                     return Redirect(model.ReturnUrl);
                 }
                 else
@@ -100,9 +106,10 @@ namespace MedicineHelper.Controllers
                     return View(model);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -116,11 +123,7 @@ namespace MedicineHelper.Controllers
 
                 return View(model);
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
         }
 
         [HttpPost]
@@ -131,12 +134,41 @@ namespace MedicineHelper.Controllers
                 var dto = _mapper.Map<DiseaseDto>(model);
                 await _diseaseHistoryService.CreateDiseaseAsync(dto);
 
-                return Redirect(model.ReturnUrl);
+                return RedirectToAction("Create", "DiseaseHistory");
             }
-            catch (Exception)
-            {
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
+        }
 
-                throw;
+        [HttpGet]
+        public IActionResult DeleteDiseaseHistory(Guid id, string name)
+        {
+            try
+            {
+                var model = new DiseaseModel();
+                model.NameOfDisease = name;
+                model.Id = id;
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteDiseaseHistory(Guid id)
+        {
+            try
+            {
+                await _diseaseHistoryService.DeleteDiseaseHistory(id);
+
+                return RedirectToAction("Index", "DiseaseHistory");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
     }

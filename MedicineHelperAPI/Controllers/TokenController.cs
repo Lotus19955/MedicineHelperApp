@@ -30,7 +30,7 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         /// <summary>
-        /// Register user
+        /// Create JWT Token for user
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -70,7 +70,7 @@ namespace MedicineHelperWebAPI.Controllers
         }
 
         /// <summary>
-        /// Register user
+        /// Refresh JWT Token for user
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -84,7 +84,7 @@ namespace MedicineHelperWebAPI.Controllers
 
                 var response = await _jwtUtil.GenerateTokenAsync(user);
 
-                //await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
+                await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
 
                 return Ok(response);
             }
@@ -97,7 +97,7 @@ namespace MedicineHelperWebAPI.Controllers
 
 
         /// <summary>
-        /// Register user
+        /// Revoke refresh JWT Token
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -107,7 +107,7 @@ namespace MedicineHelperWebAPI.Controllers
         {
             try
             {
-                //await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
+                await _jwtUtil.RemoveRefreshTokenAsync(request.RefreshToken);
 
                 return Ok();
             }

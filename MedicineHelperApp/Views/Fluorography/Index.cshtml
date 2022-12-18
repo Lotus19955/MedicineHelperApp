@@ -1,22 +1,27 @@
-﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.FluorographyDto>
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.FluorographyDto>
 
 @{
     ViewData["Title"] = "Fluorography";
     Layout = "_layout";
 }
 
-<h2 class="text-center">Fluorography</h2>
-<div class="card-text">
+<div class="text-center">
+    <h2 class="text-center">Fluorography</h2>
     <form asp-controller="Fluorography" asp-action="Index" method="get">
-        Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
-        End date: <input type="date" name="SearchDateEnd" />
-        <input type="submit" value="Поиск" />
+        <div>
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
+        </div>
     </form>
 </div>
 
 <p>
-    <a asp-action="Create">Add fluorography</a>
+    <a class="btn btn-success" asp-action="Create">Add fluorography</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -36,9 +41,10 @@
                 Clinic
             </th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
-    <tbody>
+<tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -54,20 +60,27 @@
                 @Html.DisplayFor(modelItem => item.Result)
             </td>
             <td>
-                @Html.DisplayFor(modelItem=> item.ClinicDto.Name)
+                @Html.ActionLink(item.ClinicDto.Name, "DetailsClinic", "Clinic", new { id = item.ClinicDtoId }, new { @class = "tempClass" })
             </td>
             <td>
-                @Html.ActionLink(item.ClinicDto.Name, "ClinicDetailsPartialView", "Clinic", new { id = item.ClinicDtoId }, new { @class = "tempClass" })
+                 <a class="btn btn-primary" asp-controller="Fluorography" asp-action="Edit" asp-route-id="@item.Id" asp-route-dataOfFluorography="@item.DataOfFluorography" asp-route-endDateOfFluorography="@item.EndDateOfFluorography" asp-route-clinicId="@item.ClinicDtoId" asp-route-numberFluorography="@item.NumberFluorography">Edit</a>
             </td>
             <td>
-                <a class="btn btn-outline-secondary" asp-controller="Fluorography" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-            </td>
-            <td>
-                <a class="btn btn-outline-danger" asp-controller="Fluorography" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a class="btn btn-danger" asp-controller="Fluorography" asp-action="Delete" asp-route-id="@item.Id" asp-route-date="@item.DataOfFluorography">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
 
+<div aria-label="Fluorography">
+    <vc:pager paging-list="@Model" />
+</div>
 
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

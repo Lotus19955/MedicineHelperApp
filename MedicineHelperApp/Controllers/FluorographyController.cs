@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperApp.Models;
@@ -27,22 +28,16 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pageIndex, DateTime SearchDateStart, DateTime SearchDateEnd)
+        public async Task<IActionResult> Index(DateTime SearchDateStart, DateTime SearchDateEnd, int pageIndex = 1)
         {
             try
             {
                 var emailUser = HttpContext.User.Identity?.Name;
                 var userDto = _userService.GetUserByEmailAsync(emailUser);
-                var fluorographies = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
-                if (SearchDateStart != DateTime.MinValue && SearchDateEnd != DateTime.MinValue)
+                if (SearchDateStart == DateTime.MinValue && SearchDateEnd == DateTime.MinValue)
                 {
-                    var dto = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
-                    if (pageIndex == 0)
-                    {
-                        pageIndex = 1;
-                    }
-                    var model = PagingList.Create(dto, 5, pageIndex);
-
+                    var fluorographies = await _fluorographyService.GetAllFluorographiesAsync(userDto.Id);
+                    var model = PagingList.Create(fluorographies, 5, pageIndex);
                     return View(model);
                 }
                 else
@@ -50,7 +45,7 @@ namespace MedicineHelper.Controllers
                     var dto = await _fluorographyService.GetFluorographyForPeriodAsync(SearchDateStart, SearchDateEnd, userDto.Id);
                     var model = PagingList.Create(dto, 5, pageIndex);
 
-                    return View(model);
+                    return View(model); ;
                 }
             }
             catch (Exception e)
@@ -68,7 +63,7 @@ namespace MedicineHelper.Controllers
                 var clinic = await _clinicService.GetClinicAsync();
 
                 var fluorographyModel = new FluorographyModel();
-                fluorographyModel.ClinicList = new SelectList(clinic, "Id", "NameClinic");
+                fluorographyModel.ClinicList = new SelectList(clinic, "Id", "Name");
 
                 return View(fluorographyModel);
             }
@@ -101,11 +96,22 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id, DateTime dataOfFluorography, DateTime endDateOfFluorography, Guid clinicId, string numberFluorography)
         {
             try
             {
-                return View(id);
+                var clinicDto = await _clinicService.GetClinicAsync();
+                var model = new FluorographyModel()
+                {
+                    Id = id,
+                    DataOfFluorography = dataOfFluorography,
+                    EndDateOfFluorography = endDateOfFluorography,
+                    ClinicId = clinicId,
+                    ClinicList = new SelectList(clinicDto, "Id", "Name"),
+                    NumberFluorography = numberFluorography,
+                };
+
+                return View(model);
             }
             catch (Exception e)
             {
@@ -119,7 +125,7 @@ namespace MedicineHelper.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     var dto = await _fluorographyService.GetFluorographyByIdAsync(model.Id);
                     dto.DataOfFluorography = model.DataOfFluorography;
@@ -146,7 +152,7 @@ namespace MedicineHelper.Controllers
         {
             try
             {
-               return View(model.Id);
+               return View(model);
             }
             catch (Exception e)
             {
@@ -156,10 +162,12 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id, DateTime date)
         {
             try
             {
+                var model = new FluorographyModel();
+                model.Id = id;
                 await _fluorographyService.DeleteFluorographyAsync(id);
 
                 return RedirectToAction("Index");

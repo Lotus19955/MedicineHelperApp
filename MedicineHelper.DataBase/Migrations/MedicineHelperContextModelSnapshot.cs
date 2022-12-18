@@ -83,14 +83,14 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<Guid?>("ClinicId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DateOfAnalysis")
+                    b.Property<DateTime>("DateOfConclusion")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("NameOfAnalysis")
+                    b.Property<string>("NameOfConclusion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("ScanOfAnalysisDocument")
+                    b.Property<byte[]>("ScanOfConclusionDocument")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<Guid>("UserId")
@@ -132,6 +132,9 @@ namespace MedicineHelper.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("BoolTypeOfTreatment")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("DateOfDisease")
                         .HasColumnType("datetime2");
 
@@ -144,8 +147,9 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<int>("SeverityOfTheIllness")
                         .HasColumnType("int");
 
-                    b.Property<bool>("TypeOfTreatment")
-                        .HasColumnType("bit");
+                    b.Property<string>("TypeOfTreatment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -187,7 +191,13 @@ namespace MedicineHelper.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AppointmentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ConclusionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateVisit")
@@ -196,7 +206,7 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<Guid?>("DiseaseHistoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("DoctorId")
+                    b.Property<Guid?>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("PriceVisit")
@@ -209,7 +219,7 @@ namespace MedicineHelper.DataBase.Migrations
 
                     b.HasIndex("ClinicId");
 
-                    b.HasIndex("DiseaseHistoryId");
+                    b.HasIndex("ConclusionId");
 
                     b.HasIndex("DoctorId");
 
@@ -365,11 +375,11 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<DateTime>("DateOfMedicineСheckup")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("FilesOfMedicineСheckup")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PriceOfMedicineСheckup")
@@ -432,14 +442,14 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Property<byte[]>("Avatar")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FulFirst")
+                    b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -468,6 +478,9 @@ namespace MedicineHelper.DataBase.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ApplicationOfVaccine")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ClinicId")
                         .HasColumnType("uniqueidentifier");
 
@@ -475,11 +488,6 @@ namespace MedicineHelper.DataBase.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NameOfVaccine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NoteOfVaccine")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
@@ -489,7 +497,6 @@ namespace MedicineHelper.DataBase.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("VaccineProducingCountry")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VacineSeria")
@@ -528,7 +535,7 @@ namespace MedicineHelper.DataBase.Migrations
                         .HasForeignKey("AppointmentId");
 
                     b.HasOne("MedicineHelper.DataBase.Entities.Clinic", "Clinic")
-                        .WithMany("Analyses")
+                        .WithMany("Conclusion")
                         .HasForeignKey("ClinicId");
 
                     b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
@@ -569,15 +576,13 @@ namespace MedicineHelper.DataBase.Migrations
                         .WithMany("DoctorVisits")
                         .HasForeignKey("ClinicId");
 
-                    b.HasOne("MedicineHelper.DataBase.Entities.DiseaseHistory", "DiseaseHistory")
-                        .WithMany()
-                        .HasForeignKey("DiseaseHistoryId");
+                    b.HasOne("MedicineHelper.DataBase.Entities.Conclusion", null)
+                        .WithMany("DoctorVisit")
+                        .HasForeignKey("ConclusionId");
 
                     b.HasOne("MedicineHelper.DataBase.Entities.Doctor", "Doctor")
                         .WithMany("DoctorVisits")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DoctorId");
 
                     b.HasOne("MedicineHelper.DataBase.Entities.User", "User")
                         .WithMany("DoctorVisits")
@@ -586,8 +591,6 @@ namespace MedicineHelper.DataBase.Migrations
                         .IsRequired();
 
                     b.Navigation("Clinic");
-
-                    b.Navigation("DiseaseHistory");
 
                     b.Navigation("Doctor");
 
@@ -613,7 +616,7 @@ namespace MedicineHelper.DataBase.Migrations
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.MedicinePrescription", b =>
                 {
-                    b.HasOne("MedicineHelper.DataBase.Entities.Appointment", "Appointment")
+                    b.HasOne("MedicineHelper.DataBase.Entities.Appointment", null)
                         .WithMany("MedicinePrescription")
                         .HasForeignKey("AppointmentId");
 
@@ -632,8 +635,6 @@ namespace MedicineHelper.DataBase.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Appointment");
 
                     b.Navigation("Medicine");
 
@@ -740,7 +741,7 @@ namespace MedicineHelper.DataBase.Migrations
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Clinic", b =>
                 {
-                    b.Navigation("Analyses");
+                    b.Navigation("Conclusion");
 
                     b.Navigation("DoctorVisits");
 
@@ -751,6 +752,11 @@ namespace MedicineHelper.DataBase.Migrations
                     b.Navigation("MedicineProcedure");
 
                     b.Navigation("Vaccinations");
+                });
+
+            modelBuilder.Entity("MedicineHelper.DataBase.Entities.Conclusion", b =>
+                {
+                    b.Navigation("DoctorVisit");
                 });
 
             modelBuilder.Entity("MedicineHelper.DataBase.Entities.Disease", b =>

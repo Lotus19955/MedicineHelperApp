@@ -10,11 +10,12 @@ namespace MedicineHelperApp.MappingProfiles
         public DoctorVisitProfile()
         {
             CreateMap<DoctorVisit, DoctorVisitDto>()
-                .ForMember(dto => dto.NameOfDisease, opt => opt.MapFrom(entity => entity.DiseaseHistory.Disease.Name))
+                .ForMember(dto => dto.ClinicDtoId, opt => opt.MapFrom(entity => entity.ClinicId))
                 .ForMember(dto => dto.ClinicDto, opt => opt.MapFrom(entity => entity.Clinic))
                 .ForMember(dto => dto.DoctorDto, opt => opt.MapFrom(entity => entity.Doctor))
-                .ForMember(dto => dto.DoctorDtoId, opt => opt.MapFrom(entity => entity.Id))
-                .ForMember(dto => dto.AppointmentDto, opt => opt.MapFrom(entity => entity.Appointment));
+                .ForMember(dto => dto.DoctorDtoId, opt => opt.MapFrom(entity => entity.DoctorId))
+                .ForMember(dto => dto.AppointmentDto, opt => opt.MapFrom(entity => entity.Appointment))
+                .ForMember(dto => dto.UserDtoId, opt => opt.MapFrom(entity => entity.UserId));
 
             CreateMap<DoctorVisitModel, DoctorVisitDto>()
                 .ForMember(dto => dto.ClinicDtoId, opt => opt.MapFrom(model => model.ClinicId))
@@ -23,9 +24,13 @@ namespace MedicineHelperApp.MappingProfiles
                 .ForMember(dto => dto.UserDtoId, opt => opt.MapFrom(model => model.UserId));
 
             CreateMap<DoctorVisitDto, DoctorVisit>()
-                .ForMember(entity => entity.ClinicId, opt => opt.MapFrom(dto => dto.ClinicDtoId))
-                .ForMember(entity => entity.DoctorId, opt => opt.MapFrom(dto => dto.DoctorDtoId))
-                .ForMember(entity => entity.UserId, opt => opt.MapFrom(dto => dto.UserDtoId));
+                .ForMember(dto => dto.ClinicId, opt => opt.MapFrom(entity => entity.ClinicDtoId))
+                .ForMember(dto => dto.Clinic, opt => opt.MapFrom(entity => entity.ClinicDto))
+                .ForMember(dto => dto.Doctor, opt => opt.MapFrom(entity => entity.DoctorDto))
+                .ForMember(dto => dto.DoctorId, opt => opt.MapFrom(entity => entity.DoctorDtoId))
+                .ForMember(dto => dto.Appointment, opt => opt.MapFrom(entity => entity.AppointmentDto))
+                .ForMember(dto => dto.UserId, opt => opt.MapFrom(entity => entity.UserDtoId));
+
         }
     }
 }

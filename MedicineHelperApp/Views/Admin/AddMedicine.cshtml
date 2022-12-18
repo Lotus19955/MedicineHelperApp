@@ -6,7 +6,7 @@
 }
 
 <div>
-    <h2>Add new medicine</h2>
+    <h2 class ="text-center">Add new medicine</h2>
 
     <form asp-controller="Admin" asp-action="AddMedicine" method="post">
         <div class="mb-3">
@@ -14,14 +14,16 @@
             <input asp-for="NameOfMedicine" type="text" class="form-control" id="NameOfMedicine" required />
             <span asp-validation-for="NameOfMedicine" class="text-danger"></span>
 
-            <label for="LinkToInstructions" class="form-label">Put linc to medicine:</label>
+            <label for="LinkToInstructions" class="form-label">Put link to medicine:</label>
             <input asp-for="LinkToInstructions" type="text" class="form-control" id="LinkToInstructions" required />
             <span asp-validation-for="LinkToInstructions" class="text-danger"></span>
         </div>
         <div>
             <input asp-for="ReturnUrl" type="hidden" />
         </div>
-        <input type="submit" class="btn btn-primary m-1" value="Add medicine" />
+        <input type="submit" class="btn btn-success" value="Add" />
+        <a class="btn btn-primary" role="button" asp-controller="Admin" asp-action="GetClinic">Cancel</a>
+
     </form>
 </div>
 

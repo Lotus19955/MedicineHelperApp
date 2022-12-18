@@ -27,6 +27,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var entity = _mapper.Map<MedicineСheckup>(dto);
+                entity.Id = Guid.NewGuid();
                 await _unitOfWork.MedicineСheckup.AddAsync(entity);
                 var result = await _unitOfWork.Commit();
 
@@ -44,7 +45,8 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var listMedicineСheckup = await _unitOfWork.MedicineСheckup
-                    .FindBy(entity=>entity.UserId.Equals(id))
+                    .FindBy(entity => entity.UserId.Equals(id))
+                    .Include(entity => entity.Clinic)
                     .Select(medicineСheckup => _mapper.Map<MedicineСheckupDto>(medicineСheckup))
                     .ToListAsync();
                 return listMedicineСheckup;
@@ -56,5 +58,42 @@ namespace MedicineHelper.Business.ServicesImplementations
             }
         }
 
+        public async Task<List<MedicineСheckupDto>> GetPeriodMedicineСheckupAsync(DateTime SearchDateStart, DateTime SearchDateEnd, Guid userId)
+        {
+            try
+            {
+                var listMedicineСheckup = await _unitOfWork.MedicineСheckup
+                    .FindBy(entity => entity.UserId.Equals(userId))
+                    .Where(entityData => entityData.DateOfMedicineСheckup >= SearchDateStart && entityData.DateOfMedicineСheckup <= SearchDateEnd)
+                    .Include(entity => entity.Clinic)
+                    .OrderBy(entity => entity.DateOfMedicineСheckup)
+                    .Select(medicineСheckup => _mapper.Map<MedicineСheckupDto>(medicineСheckup))
+
+                    .ToListAsync();
+                return listMedicineСheckup;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task DeleteMedicineСheckup(Guid id)
+        {
+            try
+            {
+                var entity = await _unitOfWork.MedicineСheckup
+                    .FindBy(entity => entity.Id.Equals(id))
+                    .FirstOrDefaultAsync();
+
+                _unitOfWork.MedicineСheckup.Remove(entity);
+                await _unitOfWork.Commit();
+            }
+
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

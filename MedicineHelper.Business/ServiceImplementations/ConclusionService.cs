@@ -19,19 +19,17 @@ namespace MedicineHelper.Business.ServicesImplementations
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IOrderedQueryable<ConclusionDto>> GetAllConclusionAsync(Guid userId)
+        public async Task<List<ConclusionDto>> GetAllConclusionAsync(Guid id)
         {
             try
             {
-                var listAnalysis = await _unitOfWork.Conclusion
-                    .FindBy(entity => entity.UserId.Equals(userId))
-                    .AsNoTracking()
-                    .Include(include => include.Clinic)
-                    .Select(conclusion => _mapper.Map<ConclusionDto>(conclusion))
+                var conclusionList = await _unitOfWork.Conclusion
+                    .FindBy(entity => entity.UserId.Equals(id))
+                    .Include(entity => entity.Clinic)
+                    .Select(entity => _mapper.Map<ConclusionDto>(entity))
                     .ToListAsync();
-                var queryList = listAnalysis.AsQueryable().OrderBy(x => x.DateOfConclusion);
 
-                return queryList;
+                return conclusionList;
             }
             catch (Exception)
             {
@@ -46,9 +44,9 @@ namespace MedicineHelper.Business.ServicesImplementations
             {
                 var listAnalysis = await _unitOfWork.Conclusion
                     .FindBy(entity => entity.UserId.Equals(userId))
-                    .Where(entityData => entityData.DateOfAnalysis >= SearchDateStart && entityData.DateOfAnalysis <=SearchDateEnd)
+                    .Where(entityData => entityData.DateOfConclusion >= SearchDateStart && entityData.DateOfConclusion <=SearchDateEnd)
                     .Include(include => include.Clinic)
-                    .OrderBy(entity => entity.DateOfAnalysis)
+                    .OrderBy(entity => entity.DateOfConclusion)
                     .Select(conclusion => _mapper.Map<ConclusionDto>(conclusion))
                     .ToListAsync();
 
@@ -58,7 +56,6 @@ namespace MedicineHelper.Business.ServicesImplementations
             {
                 throw;
             }
-
         }
 
         public async Task<int> CreateConclusionAsync(ConclusionDto conclusionDto)
@@ -66,6 +63,7 @@ namespace MedicineHelper.Business.ServicesImplementations
             try
             {
                 var conclusion = _mapper.Map<Conclusion>(conclusionDto);
+                conclusion.Id = Guid.NewGuid();
                 await _unitOfWork.Conclusion.AddAsync(conclusion);
                 var resultAdd = await _unitOfWork.Commit();
 
@@ -74,6 +72,23 @@ namespace MedicineHelper.Business.ServicesImplementations
             catch (Exception)
             {
                 throw new ArgumentException();
+            }
+        }
+        public async Task DeleteConclusion(Guid id)
+        {
+            try
+            {
+                var entity = await _unitOfWork.Conclusion
+                    .FindBy(entity => entity.Id.Equals(id))
+                    .FirstOrDefaultAsync();
+
+                _unitOfWork.Conclusion.Remove(entity);
+                await _unitOfWork.Commit();
+            }
+
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

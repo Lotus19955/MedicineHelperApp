@@ -6,58 +6,68 @@
     <title>@ViewData["Title"] - Medicine Helper</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebAppMedicalAssistantMVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MedicineHelperAppMVC.styles.css" asp-append-version="true" />
+
 </head>
-<body>
+<body style="background-color:#DDFFF0">
     <header>
-        <div class="nav justify-content-center border border-dark border-3 rounded-3 p-3 text-center text-primary m-1 fs-2">
-            <a class="nav-link" asp-controller="Home" asp-action="Index">Medicine Helper</a>
-        </div>
-    </header>
-    
-    <div class="d-flex m-1 p-1 border border-dark border-2 rounded-3">
-        <menu class="justify-content-start p-0 m-1">
-            <div class="border-1 rounded-3 p-2 text-center">
-                <img style='width:80px; height:80px;' class="rounded-circle" />
-                @*TODO*@
-@*                            <img style='width:100px; height:150px;' src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.AvatarByte))" />
-*@
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #516BEB;">
+
+        <div class="container-fluid">
+
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">Medicine Helper</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="DoctorVisit" asp-action="Index">Doctors visit</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="DiseaseHistory" asp-action="Index">Disease History</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="Conclusion" asp-action="Index">Conclusions</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="Fluorography" asp-action="Index">Fluorography</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="MedicineСheckup" asp-action="Index">Medicine checkup</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="MedicineProcedure" asp-action="Index">Medicine procedure</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="Vaccination" asp-action="Index">Vaccination</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="MedicinePrescription" asp-action="Index">Medicine prescription</a>
+                        </li>
+
+                         <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-controller="Home" asp-action="GetOrEditUserInfo">User menu</a>
+                        </li>
+                </ul>
             </div>
-            <ul class="nav nav-pills flex-column nav-justified border border-dark border-2 rounded-3 p-2">
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="DoctorVisit" asp-action="Index">Doctors visit</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="DiseaseHistory" asp-action="Index">Disease History</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="Conclusion" asp-action="Index">Conclusions</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="Fluorography" asp-action="Index">Fluorography</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="MedicineCheckup" asp-action="Index">Medicine checkup</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="MedicineProcedure" asp-action="Index">Medicine procedure</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="Vaccinacion" asp-action="Index">Vaccinacion</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="MedicinePrescription" asp-action="Index">Medicine prescription</a>
-                </li>
-                <li class="nav-item m-1">
-                    <a class="nav-link active" asp-controller="Home" asp-action="GetOrEditUserInfo">Settings</a>
-                </li>
-            </ul>
-        </menu>
-        <div class="ms-2 p-1 border border-dark border-2 rounded-3">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
         </div>
+        </nav>
+    </header>
+    <div style="background-color:#DDFFF0">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
     </div>
 
     <footer class="border-top footer text-muted">

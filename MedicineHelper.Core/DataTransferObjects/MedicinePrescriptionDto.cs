@@ -2,6 +2,7 @@
 {
     public class MedicinePrescriptionDto
     {
+        public Guid Id { get; set; }
         public DateTime StartOfAdmission { get; set; }
         public DateTime EndOfAdmission { get; set; }
         public string? MedicineDose { get; set; }

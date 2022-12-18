@@ -5,6 +5,7 @@ using MedicineHelperWebAPI.Models.Requests;
 using MedicineHelperWebAPI.Models.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace MedicineHelperWebAPI.Controllers
 {
@@ -36,12 +37,22 @@ namespace MedicineHelperWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetDoctorById(Guid id)
         {
-            var clinic = await _doctorService.GetByIdDoctorAsync(id);
-            if (clinic == null)
+            try
             {
-                return NotFound();
+                var clinic = await _doctorService.GetByIdDoctorAsync(id);
+                if (clinic == null)
+                {
+                    return NotFound();
+                }
+                return Ok(clinic);
             }
-            return Ok(clinic);
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
+            
+            
         }
 
        /// <summary>
@@ -53,9 +64,18 @@ namespace MedicineHelperWebAPI.Controllers
         [ProducesResponseType(typeof(Nullable), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllDoctors()
         {
-            IEnumerable<DoctorDto> doctors = await _doctorService.GetAllDoctorAsync();
+            try
+            {
+                IEnumerable<DoctorDto> doctors = await _doctorService.GetAllDoctorAsync();
 
-            return Ok(doctors.ToList());
+                return Ok(doctors.ToList());
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
+            
         }
 
         /// <summary>
@@ -68,21 +88,30 @@ namespace MedicineHelperWebAPI.Controllers
         [Authorize]
         public IActionResult UpdateDocotor(Guid id, [FromBody] AddOrUpdateDoctorRequestModel? model)
         {
-            if (model != null)
+            try
             {
-                var oldValue = _doctorService.GetByIdDoctorAsync(id);
-
-                if (oldValue == null)
+                if (model != null)
                 {
-                    return NotFound();
+                    var oldValue = _doctorService.GetByIdDoctorAsync(id);
+
+                    if (oldValue == null)
+                    {
+                        return NotFound();
+                    }
+                    var dto = _mapper.Map<DoctorDto>(oldValue);
+                    _doctorService.UpdateDoctorAsync(dto, id);
+
+                    return Ok();
                 }
-                var dto = _mapper.Map<DoctorDto>(oldValue);
-                _doctorService.UpdateDoctorAsync(dto, id);
 
-                return Ok();
+                return BadRequest();
             }
-
-            return BadRequest();
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return StatusCode(500);
+            }
+            
         }
 
         /// <summary>
@@ -98,13 +127,14 @@ namespace MedicineHelperWebAPI.Controllers
         {
             try
             {
-                await _doctorService.DeleteDoctorAsync(id);
+                await _doctorService.Delete(id);
 
                 return Ok();
             }
-            catch (ArgumentException ex)
+            catch (Exception e)
             {
-                return BadRequest(new ErrorModel { Message = ex.Message });
+                Log.Error(e.Message);
+                return StatusCode(500);
             }
         }
     } 

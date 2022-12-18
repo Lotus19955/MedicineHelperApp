@@ -1,15 +1,27 @@
-﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.MedicinePrescriptionDto>
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.MedicinePrescriptionDto>
 
 @{
     ViewData["Title"] = "Medicine prescription";
     Layout = "_layout";
 }
 
-<h2>Medicine prescription</h2>
+<div class="text-center">
+    <h2 class="text-center">Medicine prescription</h2>
+    <form asp-controller="MedicinePrescription" asp-action="Index" method="get">
+        <div>
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
+        </div>
+    </form>
+</div>
 
 <p>
-        <a asp-action="Create">Add medicine prescription</a>
+    <a class="btn btn-success" asp-action="Create">Add medicine prescription</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -28,6 +40,7 @@
             <th>
                 Medicine price
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -35,7 +48,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MedicinesDto.NameOfMedicine)
+                    @Html.ActionLink(item.MedicinesDto.NameOfMedicine, "Details", "MedicinePrescription", new { id = item.MedicinesDto.Id }, new { @class = "tempClass" })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartOfAdmission)
@@ -50,17 +63,21 @@
                     @Html.DisplayFor(modelItem => item.MedicinePrice)
                 </td>
                 <td>
-                    @*TODO*@
-                    <ul>
-@*                        @foreach (var itemDisease in item.DiseasesDto)
-                        {
-                            <li class="">
-                                @itemDisease.NameOfDisease
-                            </li>
-                        }
-*@                    </ul>
+                    <a class="btn btn-danger" asp-controller="MedicinePrescription" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div aria-label="Medicine prescription">
+    <vc:pager paging-list="@Model" />
+</div>
+
+@section Scripts
+    {
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+        <script src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

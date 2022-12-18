@@ -1,0 +1,94 @@
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.VaccinationDto>
+
+@{
+    ViewData["Title"] = "Vaccination";
+    Layout = "_layout";
+}
+
+<div class="text-center">
+    <h2 class="text-center">Vaccination</h2>
+    <form asp-controller="Vaccination" asp-action="Index" method="get">
+        <div>
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
+        </div>
+    </form>
+</div>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Add vaccination</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name of vaccine
+            </th>
+            <th>
+                Appointment of vaccine
+            </th>
+            <th>
+                Vaccine seria
+            </th>
+            <th>
+                Vaccine Country
+            </th>
+            <th>
+                Date of vaccine
+            </th>
+            <th>
+                End date of vaccine
+            </th>
+            <th>
+                Clinic
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOfVaccine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApplicationOfVaccine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VacineSeria)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VaccineCountry)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfVaccination)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VaccinationExpirationDate)
+                </td>
+                <td>
+                    @Html.ActionLink(item.ClinicDto.Name, "DetailsClinic", "Clinic", new { id = item.ClinicId }, new { @class = "tempClass" })
+                </td>
+                <td>   
+                    <a class="btn btn-danger" asp-controller="Vaccination" asp-action="Delete" asp-route-id="@item.Id" asp-route-name="@item.NameOfVaccine">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div aria-label="Vaccination">
+    <vc:pager paging-list="@Model" />
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

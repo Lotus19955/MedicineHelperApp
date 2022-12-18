@@ -1,44 +1,42 @@
-﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.ConclusionDto>
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.ConclusionDto>
+
 @{
-    ViewData["Title"] = "Мои медицинские иследования";
+    ViewData["Title"] = "Conclusion";
     Layout = "_layout";
 }
 
 <div class="text-center">
-    <h2 class="text-center">Мои медицинские иследования</h2>
-    <form asp-controller="MedicalExamination" asp-action="Index" method="get">
+    <h2 class="text-center">Conclusion</h2>
+    <form asp-controller="Conclusion" asp-action="Index" method="get">
         <div>
-            Дата начала поиска: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
-            Дата окончания поиска: <input type="date" name="SearchDateEnd" />
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
         </div>
-        <div class="mb-3">
-            <label for="Result" class="form-check-label">Показать медицинские иследования за весь период:</label>
-            Да<input type="radio" class="form-check-input" name="AllDates" value="false" checked="checked" />
-            Нет<input type="radio" class="form-check-input" name="AllDates" value="true" />
-        </div>
-        <input type="submit" value="Поиск" />
     </form>
 </div>
 
 <p>
-    <a class="btn btn-outline-success" asp-action="Create">Add conclusion</a>
+    <a class="btn btn-success" asp-action="Create">Add conclusion</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                Название исследования
+                Name of Conclusion
             </th>
             <th>
-                Дата иследования
+                Date of Conclusion
             </th>
             <th>
-                Медицинское учреждение
+                Clinic
             </th>
             <th>
-                Цена исследования
+                Files
             </th>
-            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -47,30 +45,28 @@
         {
             <tr>
                 <td>
-                    @Html.ActionLink(item.NameOfConclusion, "DetailsMedicalExaminationPartialView", "MedicalExamination", new { id = item.Id }, new { @class = "tempClass" })
+                    @Html.DisplayFor(modelItem => item.NameOfConclusion)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DateOfConclusion)
                 </td>
                 <td>
-                    @Html.ActionLink(item.ClinicDto.Name, "DetailsMedicalInstitutionPartialView", "MedicalInstitution", new { id = item.ClinicDtoId }, new { @class = "tempClass" })
+                    @Html.ActionLink(item.ClinicDto.Name, "DetailsClinic", "Clinic", new { id = item.ClinicDtoId }, new { @class = "tempClass" })
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AppointmentId)
+                    @Html.DisplayFor(modelItem => item.ScanOfConclusionDocument)
                 </td>
                 <td>
-                    <a class="btn btn-outline-secondary" asp-controller="Conclusion" asp-action="Create">Add</a>
-                <td>
-                    @*<a class="btn btn-outline-danger" asp-controller="MedicalExamination" asp-action="Delete" asp-route-id="@item.Id" asp-route-nameOfMedicalExamination="@item.NameOfMedicalExamination" asp-route-dateOfMedicalExamination="@item.DateOfMedicalExamination">Удалить</a>*@
+                    <a class="btn btn-danger" asp-controller="Conclusion" asp-action="Delete" asp-route-id="@item.Id" asp-route-id="@item.Id" asp-route-name="@item.NameOfConclusion">Delete</a>
                 </td>
-
             </tr>
         }
     </tbody>
 </table>
-<nav>
-    <vc:pager paging-list="@Model" class="page-item" />
-</nav>
+
+<div aria-label="Conclusion">
+    <vc:pager paging-list="@Model" />
+</div>
 
 @section Scripts
     {

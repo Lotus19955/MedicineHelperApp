@@ -190,24 +190,7 @@ namespace MedicineHelper.Controllers
         }
 
         
-        [HttpGet]
-        public IActionResult EditMedicine(Guid id, string nameMedicine, string? Instructions)
-        {
-            try
-            {
-                var model = new MedicineModel();
-                model.NameOfMedicine = nameMedicine;
-                model.LinkToInstructions = Instructions;
-                model.Id = id;
-
-                return View(model);
-            }
-            catch (Exception e)
-            {
-                Log.Error($"{e.Message}");
-                return StatusCode(500);
-            }
-        }
+        
 
         [HttpGet]
         public IActionResult EditClinic(Guid id, string nameClinic, string adress, string? operatingMode, string? contact)

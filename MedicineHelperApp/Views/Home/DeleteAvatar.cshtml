@@ -1,0 +1,22 @@
+﻿@model UserModel
+
+@{
+    ViewData["Title"] = "Delete medicine checkup";
+    Layout = "_Layout";
+}
+
+<div align="center">
+    <h4>Confirm delete</h4>
+</div>
+<form align="center" asp-controller="Home" asp-action="DeleteAvatar" method="post" asp-route-id="@Model.Id">
+    <div >
+        <input type="submit" class="btn btn-danger" value="Delete" />
+        <a class="btn btn-primary" role="button" asp-controller="Home" asp-action="GetOrEditUserInfo">Cancel</a>
+    </div>
+</form>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

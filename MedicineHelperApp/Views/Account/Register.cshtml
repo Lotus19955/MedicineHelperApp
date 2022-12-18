@@ -5,29 +5,25 @@
     Layout = "_LoginLayout";
 }
 
-<div>
-    <h2>Registration</h2>
-    <form asp-controller="Account" asp-action="Register" method="post">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input asp-for="Email" type="email" class="form-control" id="email" required />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password:</label>
-            <input asp-for="Password" type="password" class="form-control" id="password" required />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label for="password-confirmation" class="form-label">Password confirm:</label>
-            <input type="password" asp-for="PasswordConfirmation" class="form-control" id="password-confirmation">
-            <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+<h2 style="text-align: center;">Registration</h2>
+<form asp-controller="Account" asp-action="Register" method="post">
+    <div class="container">
+        <label for="email" class="form-label">Email:</label>
+        <input asp-for="Email" type="email" class="form-control" id="email" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
 
-        </div>
+        <label for="password" class="form-label">Password:</label>
+        <input asp-for="Password" type="password" class="form-control" id="password" required />
+        <span asp-validation-for="Password" class="text-danger"></span>
 
-        <input type="submit" class="btn btn-primary" value="Registration" />
-    </form>
-</div>
+        <label for="password-confirmation" class="form-label">Password confirm:</label>
+        <input type="password" asp-for="PasswordConfirmation" class="form-control" id="password-confirmation">
+        <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+
+        <button type="submit">Registration</button>
+        <a class="btn btn-danger" asp-controller="Account" asp-action="Login">Back</a>
+    </div>
+</form>
 
 @section Scripts
     {

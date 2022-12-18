@@ -1,15 +1,27 @@
-﻿@model IEnumerable<MedicineHelper.Core.DataTransferObjects.DoctorVisitDto>
+﻿@using ReflectionIT.Mvc.Paging;
+@addTagHelper *, ReflectionIT.Mvc.Paging
+@model PagingList<MedicineHelper.Core.DataTransferObjects.DoctorVisitDto>
 
 @{
     ViewData["Title"] = "Doctor visit";
     Layout = "_layout";
 }
 
-<h2>Visits</h2>
+<div class="text-center">
+    <h2 class="text-center">Doctor visit</h2>
+    <form asp-controller="DoctorVisit" asp-action="Index" method="get">
+        <div>
+            Start date: <input type="date" name="SearchDateStart" value="@DateTime.UtcNow" />
+            End date: <input type="date" name="SearchDateEnd" />
+            <input type="submit" value="Search" />
+        </div>
+    </form>
+</div>
 
 <p>
-    <a asp-action="Create">Add new visit</a>
+    <a class="btn btn-success"  asp-action="Create">Add new visit</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -23,14 +35,10 @@
                 Doctor name
             </th>
             <th>
-                Disease history
-            </th>
-            <th>
                 Visit price
             </th>
-            <th>
-                Appointment
-            </th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -41,40 +49,33 @@
                     @Html.DisplayFor(modelItem => item.DateVisit)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ClinicDto.Name)
+                    @Html.ActionLink(item.ClinicDto.Name, "DetailsClinic", "Clinic", new { id = item.ClinicDtoId }, new { @class = "tempClass" })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DoctorDto.Name)
                 </td>
                 <td>
-                    @if(item.NameOfDisease != null)
-                    {
-                        @Html.DisplayFor(modelItem => item.NameOfDisease)
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Add disease", "Create", "DDiseaseHistory", new {id = item.Id})
-                    }
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem=> item.PriceVisit)
                 </td>
                 <td>
-                    @if(item.AppointmentDto!=null)
-                    {
-                        @Html.ActionLink("Check appointment", "Appointment", "DoctorVisit", new {id = item.Id, nameOfDisease = item.NameOfDisease})
-@*                        <a class="link-primary" href="~/DoctorVisit/Appointment/@item.Id?nameOfDisease=@item.NameOfDisease">Смотреть назначение</a>
-*@                    }
-                    else
-                    {
-                        @Html.ActionLink("Add appointment", "CreateAppointment", "DoctorVisit", new {id = item.Id, nameOfDisease = item.NameOfDisease})
-@*                        <a class="link-primary" href="~/DoctorVisit/CreateAppointment/@item.Id">Добавить назначение</a>
-*@                    }
+                    <a class="btn btn-primary"  asp-controller="DoctorVisit" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 </td>
                 <td>
-                    <a asp-controller="DoctorVisit" asp-action="Edit" asp-route-id="@item.Id" >Edit</a>
+                    <a class="btn btn-danger" asp-controller="DoctorVisit" asp-action="Delete" asp-route-id="@item.Id" asp-route-name="@item.DoctorName">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div aria-label="Doctor visit">
+    <vc:pager paging-list="@Model" />
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/js/modalWindow.js" asp-append-version="true"></script>
+}

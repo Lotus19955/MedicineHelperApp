@@ -11,5 +11,6 @@ namespace MedicineHelper.Core.Abstractions
         Task<DoctorVisitDto> GetDoctorVisitByIdAsync(Guid? appontmentId);
         Task<int> UpdateDoctorVisitAsync(DoctorVisitDto dto, Guid dtoId);
         Task<int> UpdateAppointmentAsync(AppointmentDto dto, Guid dtoId);
+        Task<List<DoctorVisitDto>> GetPeriodDoctorVisitAsync(DateTime SearchDateStart, DateTime SearchDateEnd, Guid userId);
     }
 }

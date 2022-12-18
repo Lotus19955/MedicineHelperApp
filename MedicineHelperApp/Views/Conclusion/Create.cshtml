@@ -1,45 +1,33 @@
-﻿@using MedicineHelper.Core.Enums;
-@model DiseaseHistoryModel
+﻿@using MedicineHelperApp.Models;
+@model ConclusionModel
 
 @{
-    ViewData["Title"] = "Add disease history";
+    ViewData["Title"] = "Add visit to doctor";
     Layout = "_Layout";
 }
 
 <div>
-    <h2>Add disease history</h2>
+    <h2 class="text-center">>Add visit</h2>
 
-    <form asp-controller="DiseaseHistory" asp-action="Create" method="post">
+    <form asp-controller="Conclusion" asp-action="Create" method="post" width="100%">
+        
         <div class="mb-3">
-            <label for="DiseaseId" class="form-label">Disease name:</label>
-            <select asp-for="DiseaseId" asp-items="@Model.DiseaseList"></select>
-            <a asp-controller="DiseaseHistory" asp-action="CreateDisease">Add Disease</a>
-        </div>
-        <div class="mb-3">
-            <label for="DateOfDisease" class="form-label">Date of disease:</label>
-            <input asp-for="DateOfDisease" type="date" class="form-control" id="DateOfDisease" required />
-            <span asp-validation-for="DateOfDisease" class="text-danger"></span>
+            <label for="NameOfConclusion" class="form-label">Name of conclusion:</label>
+            <input asp-for="NameOfConclusion" type="text" class="form-control" id="NameOfConclusion" required />
         </div>
         <div class="mb-3">
-            <label for="DateOfRecovery" class="form-label">Date of recovery:</label>
-            <input asp-for="DateOfRecovery" type="date" class="form-control" id="DateOfRecovery" />
+            <label for="ClinicId" class="form-label">Clinic:</label>
+            <select asp-for="ClinicId" asp-items="@Model.ClinicList"></select>
+            <a class="btn btn-success" asp-controller="Clinic" asp-action="Create">Add clinic</a>
         </div>
         <div class="mb-3">
-            <label for="FormOfTransferredDiseaseList" class="form-label">Severity of the illness:</label>
-            <select asp-for="SeverityOfTheIllnessList" asp-items="Html.GetEnumSelectList<SeverityOfTheIllness>()"></select>
+            <label for="DateOfConclusion" class="form-label">Date of conclusion:</label>
+            <input asp-for="DateOfConclusion" type="date" class="form-control" asp-format="{0:yyyy-MM-dd}" id="DateOfConclusion" required />
+            <span asp-validation-for="DateOfConclusion" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label for="TypeOfTreatment" class="form-check-label">Tupe of treatment:</label>
-            <input asp-for="TypeOfTreatment" type="radio" class="form-check-input" id="Result" value="true" required />
-            <span asp-validation-for="TypeOfTreatment">Stationary</span>
-            <input asp-for="TypeOfTreatment" type="radio" checked="checked" class="form-check-input" id="Result" value="false" required />
-            <span asp-validation-for="TypeOfTreatment">Outpatient</span>
-        </div>
-        <div>
-            <input asp-for="AppointmentId" type="hidden" />
-            <input asp-for="ReturnUrl" type="hidden" />
-        </div>
-        <input type="submit" class="btn btn-primary m-1" value="Add" />
+
+        <input type="submit" class="btn btn-success" value="Add" />
+        <a class="btn btn-danger" asp-controller="Conclusion" asp-action="Index">Back</a>
     </form>
 </div>
 

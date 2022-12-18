@@ -1,5 +1,6 @@
 ﻿@using MedicineHelper.Core.Enums;
-@model DiseaseHistoryModel
+@using MedicineHelperApp.Models;
+@model DiseaseHistoryModel 
 
 @{
     ViewData["Title"] = "Add disease history";
@@ -7,39 +8,40 @@
 }
 
 <div>
-    <h2>Add disease history</h2>
+    <h2 class="text-center">Add disease history</h2>
 
     <form asp-controller="DiseaseHistory" asp-action="Create" method="post">
         <div class="mb-3">
             <label for="DiseaseId" class="form-label">Disease name:</label>
             <select asp-for="DiseaseId" asp-items="@Model.DiseaseList"></select>
-            <a asp-controller="DiseaseHistory" asp-action="CreateDisease">Add Disease</a>
+            <a class="btn btn-success" asp-controller="DiseaseHistory" asp-action="CreateDisease">Add Disease</a>
         </div>
         <div class="mb-3">
             <label for="DateOfDisease" class="form-label">Date of disease:</label>
-            <input asp-for="DateOfDisease" type="date" class="form-control" id="DateOfDisease" required />
+            <input asp-for="DateOfDisease" type="datetime-local" class="form-control" id="DateOfDisease" value="@DateTime.UtcNow" required />
             <span asp-validation-for="DateOfDisease" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label for="DateOfRecovery" class="form-label">Date of recovery:</label>
-            <input asp-for="DateOfRecovery" type="date" class="form-control" id="DateOfRecovery" />
+            <input asp-for="DateOfRecovery" type="datetime-local" class="form-control" id="DateOfRecovery" value="@DateTime.UtcNow" />
         </div>
         <div class="mb-3">
             <label for="FormOfTransferredDiseaseList" class="form-label">Severity of the illness:</label>
             <select asp-for="SeverityOfTheIllnessList" asp-items="Html.GetEnumSelectList<SeverityOfTheIllness>()"></select>
         </div>
         <div class="mb-3">
-            <label for="TypeOfTreatment" class="form-check-label">Tupe of treatment:</label>
-            <input asp-for="TypeOfTreatment" type="radio" class="form-check-input" id="Result" value="true" required />
-            <span asp-validation-for="TypeOfTreatment">Stationary</span>
-            <input asp-for="TypeOfTreatment" type="radio" checked="checked" class="form-check-input" id="Result" value="false" required />
-            <span asp-validation-for="TypeOfTreatment">Outpatient</span>
+            <label for="BoolTypeOfTreatment" class="form-check-label">Tupe of treatment:</label>
+            <input asp-for="BoolTypeOfTreatment" type="radio" class="form-check-input" id="Result" value="true" required />
+            <span asp-validation-for="BoolTypeOfTreatment">Stationary</span>
+            <input asp-for="BoolTypeOfTreatment" type="radio" checked="checked" class="form-check-input" id="Result" value="false" required />
+            <span asp-validation-for="BoolTypeOfTreatment">Outpatient</span>
         </div>
         <div>
             <input asp-for="AppointmentId" type="hidden" />
             <input asp-for="ReturnUrl" type="hidden" />
         </div>
-        <input type="submit" class="btn btn-primary m-1" value="Add" />
+        <input type="submit" class="btn btn-success" value="Add" />
+        <a class="btn btn-primary" asp-controller="DiseaseHistory" asp-action="Index">Back</a>
     </form>
 </div>
 

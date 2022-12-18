@@ -1,22 +1,25 @@
 ﻿using AutoMapper;
+using MedicineHelper.Business.ServicesImplementations;
 using MedicineHelper.Core.Abstractions;
 using MedicineHelper.Core.DataTransferObjects;
 using MedicineHelperApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ReflectionIT.Mvc.Paging;
+using Serilog;
 
 namespace MedicineHelper.Controllers
 {
     [Authorize(Roles = "User")]
-    public class VaccinacionController : Controller
+    public class VaccinationController : Controller
     {
         private readonly IMapper _mapper;
         private readonly IVaccinationService _vaccinationService;
         private readonly IUserService _userService;
         private readonly IClinicService _clinicService;
 
-        public VaccinacionController(IMapper mapper, IVaccinationService vaccinationService,
+        public VaccinationController(IMapper mapper, IVaccinationService vaccinationService,
             IUserService userService, IClinicService clinicService)
         {
             _mapper = mapper;
@@ -26,19 +29,31 @@ namespace MedicineHelper.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime SearchDateStart, DateTime SearchDateEnd, int pageIndex = 1)
         {
             try
             {
                 var emailUser = HttpContext.User.Identity.Name;
                 var userDto = _userService.GetUserByEmailAsync(emailUser);
-                var listVaccinations = await _vaccinationService.GetAllVaccinationsAsync(userDto.Id);
+                if (SearchDateStart == DateTime.MinValue && SearchDateEnd == DateTime.MinValue)
+                {
+                    var listVaccinations = await _vaccinationService.GetAllVaccinationsAsync(userDto.Id);
 
-                return View(listVaccinations);
+                    var model = PagingList.Create(listVaccinations, 5, pageIndex);
+                    return View(model);
+                }
+                else
+                {
+                    var listVaccinations = await _vaccinationService.GetPeriodVaccinationsAsync(SearchDateStart, SearchDateEnd, userDto.Id);
+                    var model = PagingList.Create(listVaccinations, 5, pageIndex);
+
+                    return View(model);
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -50,7 +65,7 @@ namespace MedicineHelper.Controllers
                 var medicalInstitutionsDto = await _clinicService.GetClinicAsync();
 
                 var model = new VaccinationModel();
-                model.ClinicList = new SelectList(medicalInstitutionsDto, "Id", "NameClinic");
+                model.ClinicList = new SelectList(medicalInstitutionsDto, "Id", "Name");
                 model.ReturnUrl = Request.Headers["Referer"].ToString();
                 if (model.ReturnUrl == "https://localhost:7226/Clinic/Create")
                 {
@@ -60,10 +75,10 @@ namespace MedicineHelper.Controllers
                 return View(model);
 
             }
-            catch (Exception)
+            catch(Exception e)
             {
-
-                throw;
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
@@ -88,12 +103,40 @@ namespace MedicineHelper.Controllers
                     return View(model);
                 }
             }
-            catch (Exception)
-            {
+            catch (Exception e) { Log.Error($"{e.Message}"); return StatusCode(500); }
+        }
 
-                throw;
+        [HttpGet]
+        public IActionResult Delete(Guid id, string name)
+        {
+            try
+            {
+                var model = new VaccinationModel();
+                model.NameOfVaccine = name;
+                model.Id = id;
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                await _vaccinationService.Delete(id);
+
+                return RedirectToAction("Index", "Vaccination");
+            }
+            catch (Exception e)
+            {
+                Log.Error($"{e.Message}");
+                return StatusCode(500);
+            }
+        }
     }
 }

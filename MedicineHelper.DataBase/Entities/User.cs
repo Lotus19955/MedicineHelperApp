@@ -9,9 +9,9 @@ namespace MedicineHelper.DataBase.Entities
         public string PasswordHash { get; set; }
         public DateTime RegistrationDate { get; set; }
         public byte[]? Avatar { get; set; }
-        public string? FulFirst { get; set; }
+        public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         public Guid RoleId { get; set; }
         public Role Role { get; set; }

@@ -6,7 +6,7 @@
 }
 
 <div>
-    <h2>Add clinic</h2>
+    <h2 class ="text-center">Add Clinic</h2>
 
     <form asp-controller="Clinic" asp-action="Create" method="post">
         <div class="mb-3">
@@ -21,16 +21,16 @@
         </div>
         <div class="mb-3">
             <label for="OperatingMode" class="form-label">Operating mode:</label>
-            <textarea asp-for="OperatingMode" class="form-control" id="OperatingMode" rows="2"></textarea>
+            <textarea asp-for="OperatingMode" class="form-control" id="OperatingMode" rows="1"></textarea>
         </div>
         <div class="mb-3">
             <label for="Contact" class="form-label">Contact:</label>
-            <textarea asp-for="Contact" class="form-control" id="Contact" rows="3"></textarea>
+            <textarea asp-for="Contact" class="form-control" id="Contact" rows="1"></textarea>
         </div>
         <div>
             <input asp-for="ReturnUrl" type="hidden" />
         </div>
-        <input type="submit" class="btn btn-primary m-1" value="Add"/>
+        <input type="submit" class="btn btn-success" value="Add" />
     </form>
 </div>
 
