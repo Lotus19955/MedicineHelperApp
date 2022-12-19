@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Core", "Medi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Data.Repositories", "MedicineHelper.Data.Repositories\MedicineHelper.Data.Repositories.csproj", "{8B27B905-E735-4733-A47B-9004B38BBF33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Data.Abstractions", "ClassLibrary1\MedicineHelper.Data.Abstractions.csproj", "{2BD3F540-C2EE-4141-BF8C-C8144C706E76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelper.Data.Abstractions", "MedicineHelper.Data.Abstractions\MedicineHelper.Data.Abstractions.csproj", "{2BD3F540-C2EE-4141-BF8C-C8144C706E76}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicineHelperWebAPI", "MedicineHelperAPI\MedicineHelperWebAPI.csproj", "{FA4872FF-500B-4C55-BBD0-C2243B677C3E}"
 EndProject
